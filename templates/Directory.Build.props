@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-12 | sources: ms-learn, dotnet-blog -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-12 | sources: ms-learn, dotnet-blog, house -->
 <!-- Copy to the repository root. Every project inherits these; override per-project only with a recorded reason. -->
 <Project>
 
@@ -10,6 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
+    <!-- House: always on, not just in CI — a warning is an error the moment it's introduced. Suppress with NoWarn/pragma only alongside a comment explaining why. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
