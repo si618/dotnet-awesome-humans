@@ -5,8 +5,8 @@ This repository defines opinionated best practices for modern .NET development. 
 ## What this repository is
 
 - The **source of truth for "what good looks like"** in .NET: runtime, BCL, SDK/tooling, C#, F#, ASP.NET Core, testing, and library selection.
-- A set of **copy-paste-ready reference files** under `reference/` that encode those opinions.
-- A **living document**: every resource records when it was last reviewed and last used, and skills under `skills/` keep it current.
+- A set of **copy-paste-ready template files** under `templates/` that encode those opinions.
+- A **living reference**: every resource records when it was last reviewed and last used, and skills under `skills/` keep it current.
 
 This repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills specification](https://agentskills.io/specification); nothing here should assume a specific agent product (CLAUDE.md exists only as a pointer to this file).
 
@@ -15,28 +15,28 @@ This repository is **LLM- and agent-agnostic**. Skills follow the [Agent Skills 
 When generating or reviewing .NET code for another project:
 
 1. Read the relevant file(s) under `opinions/` — each leads with the opinion, then rationale, then sources.
-2. Use `reference/` files as the canonical starting point for `.editorconfig`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Prefer copying them verbatim and trimming, over authoring from scratch.
+2. Use `templates/` files as the canonical starting point for `.editorconfig`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Prefer copying them verbatim and trimming, over authoring from scratch.
 3. Always target the versions declared in the frontmatter of the opinion files (`targets:`) — never silently downgrade to an older TFM or language version.
 4. When you use a resource as a reference, update its `last-used` frontmatter date (see [Metadata](#metadata)).
 
 ## Maintaining this repo (maintainer mode)
 
-- All substantive content changes must trace back to sources listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Do not fold in guidance from unvetted sources; instead, propose the source for admission via the `vet-awesome-human` skill.
+- All substantive content changes must trace back to sources listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Do not fold in guidance from unvetted sources; instead, propose the source for admission via the `vet-source` skill.
 - Opinions target the **latest released** .NET / C# / F# versions. Previews may be mentioned in a clearly marked "coming next" note but never as the opinion itself.
-- Use the skills rather than ad-hoc edits for version bumps (`refresh-dotnet-versions`), content sweeps (`harvest-awesome-humans`), and staleness checks (`audit-freshness`).
+- Use the skills rather than ad-hoc edits for version bumps (`refresh-dotnet-versions`), content sweeps (`harvest-sources`), and staleness checks (`audit-freshness`).
 - Keep opinions **opinionated**: one recommendation, not a menu. Alternatives get at most one line explaining why they lost.
 
 ### Orchestration and model economy
 
 Maintenance skills involve wide, shallow work (sweeping sources, fetching pages, checking versions) and narrow, deep work (deciding what an opinion should say). Split them accordingly:
 
-- **Fan out the sweeps to lower-cost subagents.** Web searches, feed checks, page fetches, and per-source summarization are cheap-model work — run them in parallel where the host supports it. Subagents return raw findings (links, dates, extracted claims), never edits.
-- **Reserve the strongest available model as the "oracle".** Only the oracle — the orchestrating model — synthesizes subagent findings, resolves conflicts between sources, and actually updates `opinions/` and `reference/`. Opinion-shaping judgment is exactly where model quality matters; never delegate the final edit to a cheap model.
+- **Fan out the sweeps to lower-cost worker agents.** Web searches, feed checks, page fetches, and per-source summarization are cheap-model work — run them in parallel where the host supports it. Worker agents return raw findings (links, dates, extracted claims), never edits.
+- **Reserve the strongest available model as the "editor".** Only the editor — the orchestrating model — synthesizes worker-agent findings, resolves conflicts between sources, and actually updates `opinions/` and `templates/`. Opinion-shaping judgment is exactly where model quality matters; never delegate the final edit to a cheap model.
 - This split is a recommendation, not a requirement — a single-model host can run everything itself, but should still keep the gather/decide separation.
 
 ## Metadata
 
-Every file under `opinions/` (and documented reference files where a comment header is possible) carries YAML frontmatter:
+Every file under `opinions/` (and documented template files where a comment header is possible) carries YAML frontmatter:
 
 ```yaml
 ---
@@ -57,6 +57,7 @@ Rules:
 
 - **Opinion first.** State the recommendation in the first sentence. Rationale follows. Sources last.
 - Concise enough for a human to skim; precise enough for an agent to apply mechanically.
+- Include actual code examples wherever an opinion is easier shown than told — minimal, idiomatic for the declared `targets`, and preferring a before/after pair when superseding an old idiom. The same applies to `templates/`: exemplar code files are welcome alongside configuration.
 - Code samples must compile against the declared `targets`.
 - British or American spelling — either, but consistent within a file.
 

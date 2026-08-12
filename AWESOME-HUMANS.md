@@ -4,14 +4,14 @@ The vetted sources behind every opinion in this repository. Content only enters 
 
 ## Admission criteria
 
-To join the club, a source must have an **established, proven track record**:
+A **source** is the published work of an awesome human — an individual or a publication. Admission requires an **established, proven track record**:
 
 1. **Longevity** — sustained, consistent publishing. Tier 1 requires roughly a decade or more; Tier 2 requires 8+ years.
 2. **Depth** — original insight (internals, measurements, worked reasoning), not paraphrased release notes.
 3. **Accuracy** — a history of being right; corrections issued when wrong.
 4. **Independence of signal** — the content stands on its own merit, not on marketing reach or algorithm-chasing.
 
-Candidates that don't yet qualify are tracked under [Watch list](#watch-list) and re-evaluated by the `vet-awesome-human` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
+Candidates that don't yet qualify are tracked under [Watch list](#watch-list) and re-evaluated by the `vet-source` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
 
 Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
 

@@ -10,7 +10,7 @@ metadata:
 
 # Audit freshness
 
-Make staleness visible. This skill only **reports** — it never edits content. Follow-up work goes to `refresh-dotnet-versions` (version drift) or `harvest-awesome-humans` (content drift).
+Make staleness visible. This skill only **reports** — it never edits content. Follow-up work goes to `refresh-dotnet-versions` (version drift) or `harvest-sources` (content drift).
 
 ## Tolerances
 
@@ -24,14 +24,14 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 
 ## Steps
 
-1. **Collect frontmatter** from every file under `opinions/` and any commented headers in `reference/` files: `targets`, `last-reviewed`, `last-used`, `sources`.
+1. **Collect frontmatter** from every file under `opinions/` and any commented headers in `templates/` files: `targets`, `last-reviewed`, `last-used`, `sources`.
 2. **Determine the latest released versions** of .NET, C#, and F# (same sources as `refresh-dotnet-versions`, step 1). Skip this check if offline and say so in the report.
-3. **Evaluate each resource** against the tolerances above. Malformed or missing frontmatter is itself a finding (severity: high — the living-repository mechanism depends on it).
-4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no activity recorded in over a year as candidates for `vet-awesome-human` re-evaluation.
+3. **Evaluate each resource** against the tolerances above. Malformed or missing frontmatter is itself a finding (severity: high — the living-reference mechanism depends on it).
+4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no activity recorded in over a year as candidates for `vet-source` re-evaluation.
 5. **Produce the report**, ordered most-stale first:
    - Per resource: path, findings, days over tolerance, and which skill fixes it.
    - Summary counts: fresh / stale / malformed, plus the oldest `last-reviewed` in the repository.
-6. **Recommend next actions** — typically "run `refresh-dotnet-versions`" or "run `harvest-awesome-humans`" — but do not run them unless asked.
+6. **Recommend next actions** — typically "run `refresh-dotnet-versions`" or "run `harvest-sources`" — but do not run them unless asked.
 
 ## Edge cases
 

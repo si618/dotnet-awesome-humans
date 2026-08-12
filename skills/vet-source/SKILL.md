@@ -1,5 +1,5 @@
 ---
-name: vet-awesome-human
+name: vet-source
 description: Evaluate a candidate source (blog, author, channel, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
@@ -8,13 +8,13 @@ metadata:
   change-flow: branch-pr
 ---
 
-# Vet awesome human
+# Vet a source
 
 Apply the admission criteria in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) to a candidate source, or re-evaluate an existing one. The roster is the trust boundary for every opinion in this repository — err on the side of declining.
 
 ## Orchestration
 
-Where the host supports subagents, delegate the evidence gathering (step 2's archive digging and post sampling) to **lower-cost subagents** — they return dates, links, and extracted observations only. The orchestrating model acts as the **oracle**: it alone weighs the evidence, makes the admission decision, and edits the roster.
+Where the host supports worker agents, delegate the evidence gathering (step 2's archive digging and post sampling) to **lower-cost worker agents** — they return dates, links, and extracted observations only. The orchestrating model acts as the **editor**: it alone weighs the evidence, makes the admission decision, and edits the roster.
 
 ## Steps
 
