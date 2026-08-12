@@ -1,6 +1,6 @@
 ---
 name: refresh-dotnet-versions
-description: Detect new .NET, C#, and F# releases and update all opinions and reference files in this repository to target them. Use when a new .NET SDK/runtime, C# language version, or F# version has shipped, or when asked to check whether the repository targets the latest released versions.
+description: Detect new .NET, C#, and F# releases and update all opinions and templates in this repository to target them. Use when a new .NET SDK/runtime, C# language version, or F# version has shipped, or when asked to check whether the repository targets the latest released versions.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -18,7 +18,7 @@ The `dotnet-release-watch` GitHub Action (`.github/workflows/dotnet-release-watc
 
 ## Orchestration
 
-Where the host supports subagents, delegate the web lookups (step 1's version checks, step 5's "What's new" reading) to **lower-cost subagents** in parallel — they return raw findings only. The orchestrating model acts as the **oracle**: it alone decides what changes and edits `opinions/` and `reference/`.
+Where the host supports worker agents, delegate the web lookups (step 1's version checks, step 5's "What's new" reading) to **lower-cost worker agents** in parallel — they return raw findings only. The orchestrating model acts as the **editor**: it alone decides what changes and edits `opinions/` and `templates/`.
 
 ## Steps
 
@@ -27,9 +27,9 @@ Where the host supports subagents, delegate the web lookups (step 1's version ch
    - C#: check <https://learn.microsoft.com/dotnet/csharp/whats-new/> for the latest released language version.
    - F#: check <https://learn.microsoft.com/dotnet/fsharp/whats-new/>.
    - GA releases only. Previews and RCs never become the target; they may be noted in a "coming next" aside.
-2. **Compare against the repository's current targets.** Grep the `targets:` frontmatter across `opinions/` and the version pins in `reference/` (`global.json` SDK version, `<TargetFramework>` in project files, `<LangVersion>` if pinned). If everything already matches, report "up to date" and stop.
+2. **Compare against the repository's current targets.** Grep the `targets:` frontmatter across `opinions/` and the version pins in `templates/` (`global.json` SDK version, `<TargetFramework>` in project files, `<LangVersion>` if pinned). If everything already matches, report "up to date" and stop.
 3. **Create a working branch** (never commit to the default branch): `git switch -c <user-prefix>/refresh-dotnet-<version>`. Respect any branch-naming convention in the host environment's instructions.
-4. **Update reference files** under `reference/`: `global.json`, TFMs in exemplar projects, and anything version-pinned. Prefer `latestFeature` roll-forward policies where the opinion says so.
+4. **Update template files** under `templates/`: `global.json`, TFMs in exemplar projects, and anything version-pinned. Prefer `latestFeature` roll-forward policies where the opinion says so.
 5. **Update each opinion file** under `opinions/`:
    - Read the release's "What's new" from Tier 1 sources in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) (`dotnet-blog`, `ms-learn`) and per-feature deep-dives from Tier 2 (`andrew-lock`'s "Exploring .NET" series when available).
    - Fold in new language/runtime features where they change an existing opinion (e.g. a new syntax supersedes an old idiom). New features that warrant a brand-new opinion get a stub with a `TODO` and a source link.
