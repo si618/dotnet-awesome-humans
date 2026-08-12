@@ -3,7 +3,7 @@
 # changes.
 #
 # The PR is a TRIGGER, not the update: it refreshes only .github/state/dotnet-releases.json.
-# Folding the release into opinions/ and reference/ is done by running the
+# Folding the release into opinions/ and templates/ is done by running the
 # skills/refresh-dotnet-versions skill against the PR's branch (manually or, later, by a
 # follow-on automation).
 #
@@ -71,4 +71,4 @@ jobs:
             ${{ steps.diff.outputs.summary }}
             ```
 
-            **This PR is a trigger, not the update.** It only refreshes `.github/state/dotnet-releases.json`. To fold the release into the opinions and reference files, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill against this branch, then merge both together.
+            **This PR is a trigger, not the update.** It only refreshes `.github/state/dotnet-releases.json`. To fold the release into the opinions and templates, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill against this branch, then merge both together.
