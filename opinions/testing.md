@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-12
 last-used: 2026-08-12
-sources: [ms-learn, meziantou, andrew-lock]
+sources: [ms-learn, meziantou, andrew-lock, house]
 ---
 
 # Testing
@@ -32,7 +32,7 @@ Tests are first-class code: same review bar, same conventions.
 
 ## Naming and structure
 
-- **Name tests `UnitOfWork_Scenario_ExpectedBehaviour`** and structure bodies with explicit Arrange / Act / Assert comments. <!-- repository convention -->
+- **House: name tests `UnitOfWork_Scenario_ExpectedBehaviour`** and structure bodies with explicit Arrange / Act / Assert comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
 
   ```csharp
   public class BasketTests

@@ -27,6 +27,7 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
    - **Noise** — release chatter, product marketing, one-off tips that don't generalize. Skip.
 5. **Apply the edits on a working branch** (never the default branch; follow the host environment's branch-naming convention):
    - Keep opinions opinionated — one recommendation. If a new post contradicts the current opinion, prefer the stronger-sourced or better-evidenced position and note the supersession in one line.
+   - **Never remove or dilute House-marked content** (`house` source id — see HOUSE-OPINIONS.md). If a source contradicts a house opinion, the house opinion stands; add the community position as the one-line note. If a source newly agrees with one, add the citation alongside the House marking — the marking stays.
    - Add the post's source id to the opinion's `sources:` frontmatter and update `last-reviewed:`.
 6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: date, window covered, sources swept, posts folded in.
 7. **Open a PR** to the default branch summarizing per-source findings and per-opinion changes. A human reviews before it becomes "the opinion".

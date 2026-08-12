@@ -20,6 +20,8 @@ Candidates that don't yet qualify are tracked under [Watch list](#watch-list) an
 
 Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
 
+**Reserved id: `house`.** The repository owner's own opinions carry the `house` source id — see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is repository ownership, not track record, so it is exempt from the admission criteria; in exchange, every house opinion must be visibly marked **House:** where it appears, and house opinions win conflicts with sourced ones (the sourced position is kept as a one-line note). The `house` id never appears in the roster tables below.
+
 ## Tier 1 — decade-class track record
 
 | id                | Source                                                                                         | Focus                                                          | Since                                       | Notes                                                                                                                                                          |
