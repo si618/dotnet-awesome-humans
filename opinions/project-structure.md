@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-12
 last-used: 2026-08-12
-sources: [ms-learn, dotnet-blog, gerald-versluis]
+sources: [ms-learn, dotnet-blog, gerald-versluis, house]
 ---
 
 # Project structure & SDK
@@ -15,6 +15,7 @@ One solution format, central package management, versions pinned at the root. Th
 - **Pin the SDK with `global.json`** (roll-forward `latestFeature`, per [templates/global.json](../templates/global.json)); use `sdk.paths` to trial preview SDKs per-repo without touching the machine. ([Versluis — sdk.paths](https://blog.verslu.is/), [What's new in .NET 10](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
 - **Central Package Management (`Directory.Packages.props`) is mandatory** for multi-project repositories; note NU1510 now flags pruned direct references. [templates/Directory.Packages.props](../templates/Directory.Packages.props) is the canonical starting point, including `CentralPackageTransitivePinningEnabled`. ([Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Shared build settings live in `Directory.Build.props`** — TFM, `LangVersion` (latest), nullable enabled, analyzers on, warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props); the ideal project file is then nearly empty (see [templates/projects/](../templates/projects/)).
+- **House:** the warnings-as-errors setting above is always on, never CI-only, and every suppression carries a comment giving the reason — canonical statement in [ci.md](ci.md).
 - **Run one-shot tools with `dotnet tool exec` / `dnx`** instead of installing them globally; note `dnx` bypasses `global.json` SDK selection. ([What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk), [Breaking changes](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use file-based apps (`dotnet run app.cs`) for scripts and samples** — they now support publish and NativeAOT; prefer them over scratch console projects. ([What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/sdk))
 - **Target the latest release regardless of LTS/STS** (this repository's freshness policy); .NET 10 is LTS through November 2028.

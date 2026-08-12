@@ -2,7 +2,7 @@
 targets: [net10.0]
 last-reviewed: 2026-08-12
 last-used: 2026-08-12
-sources: [meziantou, ms-learn]
+sources: [meziantou, ms-learn, house]
 ---
 
 # CI & automation
@@ -14,13 +14,14 @@ Supply-chain hygiene is not optional in the agentic era.
 - **Pin GitHub Actions to commit SHAs, not mutable tags** — tags move silently; SHAs don't. Automate the sweep across repositories. ([Meziantou — SHA pinning](https://www.meziantou.net/enable-sha-pinning-for-github-actions-across-personal-repositories.htm))
 - **Never interpolate user-provided input into workflow scripts** — pass it via environment variables and parse deliberately (script-injection is the top Actions vulnerability). ([Meziantou — Safely passing extra arguments](https://www.meziantou.net/safely-passing-extra-arguments-in-github-actions-workflows-using-powershell.htm))
 - **CI builds are pinned and reproducible:** `global.json` decides the SDK, lock files or CPM decide packages — a CI run must not float versions the repo didn't choose.
+- **House:** Warnings are treated as errors everywhere, not only in CI — a warning discovered on the build machine and not the workstation is one that shipped a day late. Suppressing a warning — `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry — always carries an inline comment stating why; an unexplained suppression is reverted on sight, since the reviewer should never have to reconstruct the reason.
 
 ## Pipeline shape
 
 **One pipeline, four explicit stages — restore, build, test, publish — each forbidding the previous stage's work.** `--no-restore` on build and `--no-build` on test/publish guarantee every stage runs against exactly the outputs of the one before it, instead of silently rebuilding with different flags. The shape is platform-agnostic; GitHub Actions is the worked example here because that is where the cited guidance lives.
 
 - **Restore** with `--locked-mode` so a lock-file drift fails the build rather than floating a version.
-- **Build** once, in `Release`, with `-warnaserror` — warnings are errors _in CI only_, so local iteration stays fluid but nothing warns its way into main. Enforce style the same way: analyzers in the build, `dotnet format --verify-no-changes` as a step. ([Meziantou — Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou — The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
+- **Build** once, in `Release`, with `-warnaserror` — keep the switch even though the template sets `TreatWarningsAsErrors`: the property covers compiler and analyzer diagnostics, while the switch also promotes MSBuild engine warnings (e.g. MSB3277 assembly-version conflicts) that the property leaves as warnings. **House:** `TreatWarningsAsErrors` is set unconditionally in [templates/Directory.Build.props](../templates/Directory.Build.props), so those warnings fail the build on every workstation, not only in CI — this file previously recommended CI-only enforcement to keep local iteration fluid, and the house rule supersedes it, because a build that is only red in CI is a warning that already reached a PR. Enforce style the same way: analyzers in the build, `dotnet format --verify-no-changes` as a step. ([Meziantou — Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou — The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 - **Test** via `dotnet test` on Microsoft.Testing.Platform (native in the .NET 10 SDK — see [testing](testing.md)); publish TRX and coverage as build artifacts so failures are diagnosable without a rerun. ([What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
 - **Publish/pack** with `--no-build` and upload the output as the single artifact that later stages (deploy, release) consume — never rebuild for deployment.
 

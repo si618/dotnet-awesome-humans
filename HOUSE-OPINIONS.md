@@ -28,6 +28,7 @@ _Nothing waiting._
 
 ## Woven
 
-| Date       | Opinion                                                                                    | Woven into                                                                    | Provenance |
-| ---------- | ------------------------------------------------------------------------------------------ | ----------------------------------------------------------------------------- | ---------- |
-| 2026-08-12 | Test naming `UnitOfWork_Scenario_ExpectedBehaviour` + explicit Arrange/Act/Assert comments | [opinions/testing.md](opinions/testing.md) (retrofitted — predates this file) | Owner      |
+| Date       | Opinion                                                                                                       | Woven into                                                                                                                                                           | Provenance |
+| ---------- | ------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ---------- |
+| 2026-08-12 | Test naming `UnitOfWork_Scenario_ExpectedBehaviour` + explicit Arrange/Act/Assert comments                    | [opinions/testing.md](opinions/testing.md) (retrofitted — predates this file)                                                                                        | Owner      |
+| 2026-08-12 | Warnings are always treated as errors (not CI-only); any suppression carries an inline comment explaining why | [opinions/ci.md](opinions/ci.md), [opinions/project-structure.md](opinions/project-structure.md), [templates/Directory.Build.props](templates/Directory.Build.props) | Owner      |
