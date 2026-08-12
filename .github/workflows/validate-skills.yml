@@ -1,0 +1,82 @@
+name: Validate skills and opinions
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install skills-ref (Agent Skills reference validator) and PyYAML
+        run: pip install skills-ref pyyaml
+
+      - name: Validate skills against the Agent Skills spec
+        run: |
+          set -u
+          status=0
+          found=0
+          for dir in skills/*/; do
+            found=1
+            if ! agentskills validate "$dir"; then
+              status=1
+            fi
+          done
+          if [ "$found" -eq 0 ]; then
+            echo "No skill directories found under skills/" >&2
+            status=1
+          fi
+          exit "$status"
+
+      - name: Verify opinions frontmatter
+        run: |
+          python3 - <<'EOF'
+          import pathlib
+          import sys
+
+          import yaml
+
+          REQUIRED = ["targets", "last-reviewed", "last-used", "sources"]
+
+          errors = []
+          files = sorted(pathlib.Path("opinions").glob("*.md"))
+          if not files:
+              errors.append("no markdown files found under opinions/")
+
+          for path in files:
+              text = path.read_text(encoding="utf-8")
+              if not text.startswith("---\n"):
+                  errors.append(f"{path}: missing frontmatter block")
+                  continue
+              end = text.find("\n---", 4)
+              if end == -1:
+                  errors.append(f"{path}: unterminated frontmatter block")
+                  continue
+              try:
+                  fm = yaml.safe_load(text[4:end])
+              except yaml.YAMLError as exc:
+                  errors.append(f"{path}: frontmatter is not valid YAML: {exc}")
+                  continue
+              if not isinstance(fm, dict):
+                  errors.append(f"{path}: frontmatter is not a YAML mapping")
+                  continue
+              for field in REQUIRED:
+                  if field not in fm or fm[field] in (None, "", []):
+                      errors.append(f"{path}: missing or empty frontmatter field '{field}'")
+
+          if errors:
+              print("Opinion frontmatter validation failed:")
+              for e in errors:
+                  print(f"  - {e}")
+              sys.exit(1)
+          print(f"All {len(files)} opinion files have valid frontmatter.")
+          EOF
