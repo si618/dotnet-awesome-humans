@@ -1,0 +1,17 @@
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- SLNX is the default solution format since the .NET 10 SDK (`dotnet new sln`). -->
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Example.Library/Example.Library.csproj" />
+    <Project Path="src/Example.Api/Example.Api.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Example.Library.Tests/Example.Library.Tests.csproj" />
+  </Folder>
+  <Folder Name="/build/">
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+    <File Path=".editorconfig" />
+  </Folder>
+</Solution>

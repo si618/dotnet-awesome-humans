@@ -1,0 +1,9 @@
+{
+  "solution": {
+    "path": "example.slnx",
+    "projects": [
+      "src/Example.Library/Example.Library.csproj",
+      "tests/Example.Library.Tests/Example.Library.Tests.csproj"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- A library project inherits everything from Directory.Build.props — the ideal csproj is nearly empty. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- TargetFramework, LangVersion, Nullable, analyzers: inherited. Add here only what is unique to this project. -->
+
+</Project>
