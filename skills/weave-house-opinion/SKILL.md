@@ -18,8 +18,8 @@ House opinions are the owner's preferences — first-class, but never disguised 
 2. **Find its home**: the matching `opinions/` file and, where the opinion changes scaffolding (an `.editorconfig` rule, a build property), the matching `templates/` file. A house opinion with no natural home yet gets a new opinion file, same rules as any other.
 3. **Weave it in, marked**:
    - In `opinions/`: write it in the house style (opinion first, rationale after) prefixed with **House:** in bold, and add `house` to the file's `sources:` frontmatter.
-   - In `templates/`: apply the change with a `house` note in the file's comment header.
-4. **Handle conflicts explicitly.** If the house opinion contradicts a sourced opinion, the house opinion wins; keep the sourced position as a single line — "the community default is X (source); we do Y because Z". Never silently delete the sourced view.
+   - In `templates/`: apply the change and add `house` to the header's `sources:` list (the pipe-delimited comment header audit-freshness reads), with an inline comment on the changed setting where the format allows.
+4. **Handle conflicts explicitly** per the canonical precedence rule in [HOUSE-OPINIONS.md — How this works](../../HOUSE-OPINIONS.md#how-this-works): house wins, the sourced position stays as the one-line cited note. Never silently delete the sourced view.
 5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md with the date and destination link.
 6. **Update frontmatter** (`last-reviewed`) on every file touched, then open a PR to the default branch (work on a branch; follow the host environment's branch-naming convention). Title it so the house origin is obvious, e.g. `docs: weave house opinion — <title>`.
 

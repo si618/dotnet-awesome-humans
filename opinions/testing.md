@@ -32,7 +32,7 @@ Tests are first-class code: same review bar, same conventions.
 
 ## Naming and structure
 
-- **House: name tests `UnitOfWork_Scenario_ExpectedBehaviour`** and structure bodies with explicit Arrange / Act / Assert comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
+- **House:** name tests `UnitOfWork_Scenario_ExpectedBehaviour` and structure bodies with explicit Arrange / Act / Assert comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
 
   ```csharp
   public class BasketTests

@@ -1,6 +1,6 @@
 # Awesome Humans
 
-The vetted sources behind every opinion in this repository. Content only enters the opinions if it traces back to a source listed here.
+The vetted sources behind every opinion in this repository. Content only enters the opinions if it traces back to a source listed here — or carries the reserved `house` id (see below).
 
 ## Admission criteria
 
@@ -20,7 +20,7 @@ Candidates that don't yet qualify are tracked under [Watch list](#watch-list) an
 
 Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
 
-**Reserved id: `house`.** The repository owner's own opinions carry the `house` source id — see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is repository ownership, not track record, so it is exempt from the admission criteria; in exchange, every house opinion must be visibly marked **House:** where it appears, and house opinions win conflicts with sourced ones (the sourced position is kept as a one-line note). The `house` id never appears in the roster tables below.
+**Reserved id: `house`.** The repository owner's own opinions carry the `house` source id — see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is repository ownership, not track record, so it is exempt from the admission criteria; in exchange, every house opinion must be visibly marked. The marking literal, conflict precedence, and contributor adoption are defined canonically in [HOUSE-OPINIONS.md — How this works](HOUSE-OPINIONS.md#how-this-works). The `house` id never appears in the roster tables below.
 
 ## Tier 1 — decade-class track record
 
@@ -86,3 +86,4 @@ Not yet quotable as primary sources for opinions; usable for discovery and cross
 | 2026-08-12 | Annotated `khalid` (kept Tier 1)                    | Re-vetted after harvest flag: blog quiet since 2025-04 but GitHub output active through 2026-08 (now at Duende) — dormancy exception applies. Note updated; re-check if writing hasn't resumed by next harvest                                                                                                                                                            |
 | 2026-08-12 | Corrected `scott-wlaschin` harvest flag             | Sweep missed his 2025-12 "Designing weaving software" two-parter — not dormant, low cadence. No roster change                                                                                                                                                                                                                                                             |
 | 2026-08-12 | Updated `steve-gordon` note                         | Re-vetted: ~25 posts 2024, quiet 2025, five posts Jan–Feb 2026; at Elastic. "Cadence has slowed" softened                                                                                                                                                                                                                                                                 |
+| 2026-08-12 | Reserved `house` id                                 | Ownership-based exemption from the admission criteria — the repository owner's own opinions, woven via `weave-house-opinion` and always visibly marked. First and only non-roster id (PR #7; enforcement wiring in the follow-up PR)                                                                                                                                      |

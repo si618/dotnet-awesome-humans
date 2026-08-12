@@ -24,6 +24,7 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 6. **Produce the report:**
    - Findings grouped by severity: **violation** (contradicts an opinion — cite the opinion file), **drift** (older versions), **gap** (missing scaffolding), **observation** (local choices worth a look).
    - Each finding: file/path in the target, what the opinion says, one-line suggested fix (ideally "copy `templates/<file>` and trim").
+   - When the violated opinion is `**House:**`-marked (see HOUSE-OPINIONS.md), say so — the target may reasonably follow the community default instead of this repository's local convention; grade those findings one level lower.
    - A short verdict paragraph a human can read standalone.
 7. **Only if asked to fix:** apply changes in the _target_ project on a working branch (never its default branch; follow the host environment's branch-naming convention), starting with gaps and drift — mechanical fixes first, opinionated rewrites only with explicit approval.
 
