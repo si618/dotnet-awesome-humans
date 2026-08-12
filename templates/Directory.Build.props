@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup Label="Quality gates">
-    <!-- House: always on, not just in CI — a warning is an error the moment it's introduced. Suppress with NoWarn/pragma only alongside a comment explaining why. -->
+    <!-- **House:** always on, not just in CI — a warning is an error the moment it's introduced. Suppress with NoWarn/pragma only alongside a comment explaining why. -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
