@@ -1,0 +1,15 @@
+<!-- dotnet-awesome-humans template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- F# is first-class: same inheritance from Directory.Build.props; file order is the F# design constraint. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- F# 10 parallel compilation (preview): uncomment when adopting.
+    <ParallelCompilation>true</ParallelCompilation> -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="Domain.fs" />
+    <Compile Include="Library.fs" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,16 @@
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- Test project on Microsoft.Testing.Platform (native in `dotnet test` since the .NET 10 SDK) with xUnit v3. -->
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <IsPackable>false</IsPackable>
+    <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3" />
+    <ProjectReference Include="../../src/Example.Library/Example.Library.csproj" />
+  </ItemGroup>
+
+</Project>
