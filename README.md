@@ -21,6 +21,7 @@ Modern .NET, end to end:
 - **C#** — always targeting the **latest released language version**, with idiomatic use of new features
 - **F#** — first-class, not an afterthought
 - **ASP.NET Core** — minimal APIs, hosting, auth, OpenAPI, performance
+- **UI frameworks** — Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
 - **Testing** — structure, naming, patterns
 - **Libraries** — an opinionated shortlist of what to reach for (and what to avoid)
 
@@ -57,6 +58,7 @@ AI agents collate and refine content from these sources using the repository's s
 │   ├── csharp.md
 │   ├── fsharp.md
 │   ├── aspnet-core.md
+│   ├── ui-frameworks.md
 │   ├── testing.md
 │   └── ...
 ├── templates/                ← copy-paste-ready example files
