@@ -54,20 +54,21 @@ AI agents collate and refine content from these sources using the repository's s
 ├── CLAUDE.md                 ← pointer to AGENTS.md
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
-│   ├── project-structure.md
+│   ├── aspnet-core.md
+│   ├── ci.md
 │   ├── csharp.md
 │   ├── fsharp.md
-│   ├── aspnet-core.md
-│   ├── ui-frameworks.md
+│   ├── project-structure.md
+│   ├── runtime-performance.md
 │   ├── testing.md
-│   └── ...
+│   └── ui-frameworks.md
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
 │   ├── Directory.Packages.props
-│   ├── global.json
-│   ├── example.slnx
 │   ├── example.slnf
+│   ├── example.slnx
+│   ├── global.json
 │   └── projects/             ← exemplar .csproj / .fsproj files
 └── skills/                   ← maintenance skills (see below)
 ```
