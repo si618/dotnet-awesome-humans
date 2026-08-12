@@ -46,6 +46,10 @@ Opinions must be earned. Every opinion traces back to a vetted **source** — th
 
 AI agents collate and refine content from these sources using the repository's skills — the humans provide the wisdom; the agents keep it current and consistent.
 
+### House opinions
+
+One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill — first-class, but always visibly marked **House:** so readers can tell community best practice from local convention. House opinions win conflicts with sourced ones; the community position stays as a note. Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
+
 ## Repository layout
 
 ```text
@@ -53,6 +57,7 @@ AI agents collate and refine content from these sources using the repository's s
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── CLAUDE.md                 ← pointer to AGENTS.md
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
+├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── aspnet-core.md
 │   ├── ci.md
@@ -86,6 +91,7 @@ Skills are designed for a cost-aware split: **lower-cost worker agents** fan out
 | `vet-source`              | Evaluate a candidate source against the track-record criteria and admit or decline         |
 | `audit-freshness`         | Report resources whose `last-reviewed` date has drifted past tolerance                     |
 | `verify-project`          | Check an external project against the template files and report deviations                 |
+| `weave-house-opinion`     | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
 
 ### Release watch automation
 
