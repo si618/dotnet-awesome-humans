@@ -19,6 +19,6 @@ Target F# 10 (ships with .NET 10). F# is first-class in this repository, not an 
 
 ## Source-redundancy note
 
-The independent F# bench is thin right now: F# for Fun and Profit published nothing in the 2025-11 → 2026-08 window (its back catalogue on domain modelling and functional design remains the canonical reference), and F# Weekly's window surfaced mostly ecosystem news. F# opinions therefore lean more heavily on official sources than the C# opinions do.
+The independent F# bench is thin right now: F# for Fun and Profit published only a two-part design series in the 2025-11 → 2026-08 window (December 2025; its back catalogue on domain modelling and functional design remains the canonical reference), and F# Weekly's window surfaced mostly ecosystem news. F# opinions therefore lean more heavily on official sources than the C# opinions do.
 
 <!-- TODO: full treatment — domain modelling with types (wlaschin back catalogue), project conventions for mixed C#/F# solutions, testing with Expecto vs xUnit -->
