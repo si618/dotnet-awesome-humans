@@ -1,0 +1,45 @@
+---
+name: refresh-dotnet-versions
+description: Detect new .NET, C#, and F# releases and update all opinions and reference files in this repository to target them. Use when a new .NET SDK/runtime, C# language version, or F# version has shipped, or when asked to check whether the repository targets the latest released versions.
+license: See repository LICENSE
+compatibility: Requires git and internet access
+metadata:
+  repo: dotnet-awesome-humans
+  change-flow: branch-pr
+---
+
+# Refresh .NET versions
+
+Bring every resource in this repository up to the **latest released** (GA, not preview) versions of .NET, C#, and F#.
+
+## Trigger
+
+The `dotnet-release-watch` GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls the official releases index daily and opens a **trigger PR** (label `dotnet-release`, branch `automation/dotnet-release-watch`) whenever the GA state changes. That PR only updates the snapshot at `.github/state/dotnet-releases.json` — running this skill against the PR's branch produces the actual update, and both merge together. The skill can also be run standalone; the snapshot doubles as a fast offline answer to "what GA versions does this repository currently know about?".
+
+## Orchestration
+
+Where the host supports subagents, delegate the web lookups (step 1's version checks, step 5's "What's new" reading) to **lower-cost subagents** in parallel — they return raw findings only. The orchestrating model acts as the **oracle**: it alone decides what changes and edits `opinions/` and `reference/`.
+
+## Steps
+
+1. **Determine the latest released versions.**
+   - .NET: check <https://dotnet.microsoft.com/download/dotnet> and the release announcement on the .NET Blog (<https://devblogs.microsoft.com/dotnet/>).
+   - C#: check <https://learn.microsoft.com/dotnet/csharp/whats-new/> for the latest released language version.
+   - F#: check <https://learn.microsoft.com/dotnet/fsharp/whats-new/>.
+   - GA releases only. Previews and RCs never become the target; they may be noted in a "coming next" aside.
+2. **Compare against the repository's current targets.** Grep the `targets:` frontmatter across `opinions/` and the version pins in `reference/` (`global.json` SDK version, `<TargetFramework>` in project files, `<LangVersion>` if pinned). If everything already matches, report "up to date" and stop.
+3. **Create a working branch** (never commit to the default branch): `git switch -c <user-prefix>/refresh-dotnet-<version>`. Respect any branch-naming convention in the host environment's instructions.
+4. **Update reference files** under `reference/`: `global.json`, TFMs in exemplar projects, and anything version-pinned. Prefer `latestFeature` roll-forward policies where the opinion says so.
+5. **Update each opinion file** under `opinions/`:
+   - Read the release's "What's new" from Tier 1 sources in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) (`dotnet-blog`, `ms-learn`) and per-feature deep-dives from Tier 2 (`andrew-lock`'s "Exploring .NET" series when available).
+   - Fold in new language/runtime features where they change an existing opinion (e.g. a new syntax supersedes an old idiom). New features that warrant a brand-new opinion get a stub with a `TODO` and a source link.
+   - Update `targets:` and `last-reviewed:` frontmatter on every file touched **or verified unchanged**.
+6. **Verify** code samples still compile against the new targets where a .NET SDK is available (`dotnet build` a scratch project); otherwise flag samples as unverified in the PR description.
+7. **Record the change** in `AWESOME-HUMANS.md`'s decision log only if source rosters changed; otherwise just summarize in the PR.
+8. **Open a PR** to the default branch describing: versions before/after, opinions changed, opinions verified-unchanged, and anything left as TODO. A human reviews before it becomes "the opinion".
+
+## Edge cases
+
+- A new major .NET version ships every November; C# ships with it. Mid-year, expect only servicing releases — usually a no-op for this skill.
+- If a feature is GA in the runtime but the guidance from vetted sources hasn't caught up, update the target version but keep the old idiom with a note, rather than inventing unsourced guidance.
+- STS vs LTS: target the **latest release** regardless of support track; note the support horizon in `opinions/project-structure.md`.

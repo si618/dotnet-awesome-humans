@@ -1,0 +1,74 @@
+# Watches the official .NET releases index for new GA releases (runtime, ASP.NET Core,
+# SDK — they ship together per channel) and opens a pull request when the known state
+# changes.
+#
+# The PR is a TRIGGER, not the update: it refreshes only .github/state/dotnet-releases.json.
+# Folding the release into opinions/ and reference/ is done by running the
+# skills/refresh-dotnet-versions skill against the PR's branch (manually or, later, by a
+# follow-on automation).
+#
+# Note: for the create-pull-request step to work, the repository setting
+# "Allow GitHub Actions to create and approve pull requests" must be enabled
+# (Settings → Actions → General → Workflow permissions).
+name: dotnet-release-watch
+
+on:
+  schedule:
+    - cron: "0 6 * * *" # daily; .NET GA releases land on Patch Tuesday and in November
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Snapshot GA release state
+        run: |
+          curl -fsSL --retry 3 \
+            https://raw.githubusercontent.com/dotnet/core/main/release-notes/releases-index.json \
+          | jq '{channels: [.["releases-index"][]
+              | select(.["support-phase"] == "active" or .["support-phase"] == "maintenance")
+              | {channel: .["channel-version"],
+                 "release-type": .["release-type"],
+                 "support-phase": .["support-phase"],
+                 "latest-release": .["latest-release"],
+                 "latest-release-date": .["latest-release-date"],
+                 "latest-runtime": .["latest-runtime"],
+                 "latest-sdk": .["latest-sdk"]}]}' \
+          > .github/state/dotnet-releases.json
+
+      - name: Summarize changes
+        id: diff
+        run: |
+          if git diff --quiet -- .github/state/dotnet-releases.json; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+            {
+              echo "summary<<EOF"
+              git diff -- .github/state/dotnet-releases.json | grep -E '^[+-] ' || true
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Open trigger PR
+        if: steps.diff.outputs.changed == 'true'
+        uses: peter-evans/create-pull-request@v7
+        with:
+          branch: automation/dotnet-release-watch
+          title: "chore: new .NET GA release detected"
+          commit-message: "chore: update .NET GA release snapshot"
+          labels: dotnet-release
+          body: |
+            The [.NET releases index](https://github.com/dotnet/core/blob/main/release-notes/releases-index.json) has changed since the last snapshot.
+
+            ```diff
+            ${{ steps.diff.outputs.summary }}
+            ```
+
+            **This PR is a trigger, not the update.** It only refreshes `.github/state/dotnet-releases.json`. To fold the release into the opinions and reference files, run the [`refresh-dotnet-versions`](../blob/main/skills/refresh-dotnet-versions/SKILL.md) skill against this branch, then merge both together.
