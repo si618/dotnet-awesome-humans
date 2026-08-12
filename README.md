@@ -48,7 +48,7 @@ AI agents collate and refine content from these sources using the repository's s
 
 ### House opinions
 
-One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill — first-class, but always visibly marked **House:** so readers can tell community best practice from local convention. House opinions win conflicts with sourced ones; the community position stays as a note. Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
+One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill — first-class, but always visibly marked so readers can tell community best practice from local convention (the marking literal and conflict-precedence rules are defined in HOUSE-OPINIONS.md). Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
 
 ## Repository layout
 

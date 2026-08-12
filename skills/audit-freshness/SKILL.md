@@ -14,13 +14,13 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 
 ## Tolerances
 
-| Check                                                | Tolerance                                                                                       |
-| ---------------------------------------------------- | ----------------------------------------------------------------------------------------------- |
-| `last-reviewed` on any `opinions/` file              | 180 days                                                                                        |
-| `last-reviewed` after a new major .NET release ships | 60 days from release                                                                            |
-| `targets:` vs latest released .NET/C#/F#             | zero — any lag is a finding                                                                     |
-| `sources:` ids                                       | must all exist in `AWESOME-HUMANS.md`                                                           |
-| `last-used`                                          | informational only — never a finding, but report never-used resources as candidates for pruning |
+| Check                                                | Tolerance                                                                                            |
+| ---------------------------------------------------- | ---------------------------------------------------------------------------------------------------- |
+| `last-reviewed` on any `opinions/` file              | 180 days                                                                                             |
+| `last-reviewed` after a new major .NET release ships | 60 days from release                                                                                 |
+| `targets:` vs latest released .NET/C#/F#             | zero — any lag is a finding                                                                          |
+| `sources:` ids                                       | must all exist in `AWESOME-HUMANS.md` roster tables, or be the reserved `house` id (never a finding) |
+| `last-used`                                          | informational only — never a finding, but report never-used resources as candidates for pruning      |
 
 ## Steps
 
@@ -36,5 +36,6 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 ## Edge cases
 
 - **Brand-new repository** (no opinions yet): report that the audit has nothing to check rather than passing vacuously.
+- **House content** (`house` in `sources:`, `**House:**` markings — see HOUSE-OPINIONS.md): the reserved id is never an unknown-source finding, and this skill must never suggest stripping it. A `house` id with no `**House:**`-marked content in the file (or vice versa) IS a finding — the marking and the id travel together.
 - **A resource that is intentionally version-agnostic** (e.g. naming conventions): may declare `targets: [any]`; version-drift checks skip it, review-age checks still apply.
 - **Clock skew / future dates** in frontmatter: report as malformed.

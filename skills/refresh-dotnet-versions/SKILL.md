@@ -34,6 +34,7 @@ Where the host supports worker agents, delegate the web lookups (step 1's versio
    - Read the release's "What's new" from Tier 1 sources in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) (`dotnet-blog`, `ms-learn`) and per-feature deep-dives from Tier 2 (`andrew-lock`'s "Exploring .NET" series when available).
    - Fold in new language/runtime features where they change an existing opinion (e.g. a new syntax supersedes an old idiom). New features that warrant a brand-new opinion get a stub with a `TODO` and a source link.
    - Update `targets:` and `last-reviewed:` frontmatter on every file touched **or verified unchanged**.
+   - **Never remove or dilute `**House:**`-marked content** (`house` source id — see HOUSE-OPINIONS.md). Version bumps may update the sourced context around a house opinion, and may mark it superseded-by-release where a new version genuinely obsoletes it — but the marking and the owner's intent stay.
 6. **Verify** code samples still compile against the new targets where a .NET SDK is available (`dotnet build` a scratch project); otherwise flag samples as unverified in the PR description.
 7. **Record the change** in `AWESOME-HUMANS.md`'s decision log only if source rosters changed; otherwise just summarize in the PR.
 8. **Open a PR** to the default branch describing: versions before/after, opinions changed, opinions verified-unchanged, and anything left as TODO. A human reviews before it becomes "the opinion".

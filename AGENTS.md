@@ -22,7 +22,7 @@ When generating or reviewing .NET code for another project:
 ## Maintaining this repo (maintainer mode)
 
 - All substantive content changes must trace back to sources listed in [AWESOME-HUMANS.md](AWESOME-HUMANS.md), with one exception: **house opinions** — the repository owner's own preferences, recorded via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill, carried under the reserved `house` source id and always visibly marked **House:**. Do not fold in guidance from other unvetted sources; instead, propose the source for admission via the `vet-source` skill.
-- House opinions win conflicts with sourced opinions (the sourced position stays as a one-line note), and harvest/refresh runs must never remove or dilute house-marked content. Contributor-proposed opinions arrive via the pull request template and only become house opinions once the owner accepts them.
+- House precedence, the `**House:**` marking literal, and contributor adoption are defined canonically in [HOUSE-OPINIONS.md — How this works](HOUSE-OPINIONS.md#how-this-works); follow that, not paraphrases.
 - Opinions target the **latest released** .NET / C# / F# versions. Previews may be mentioned in a clearly marked "coming next" note but never as the opinion itself.
 - Use the skills rather than ad-hoc edits for version bumps (`refresh-dotnet-versions`), content sweeps (`harvest-sources`), and staleness checks (`audit-freshness`).
 - Keep opinions **opinionated**: one recommendation, not a menu. Alternatives get at most one line explaining why they lost.
@@ -51,7 +51,7 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 Rules:
 
 - Update `last-used` whenever you consume a resource; update `last-reviewed` only after verifying content against its sources.
-- `sources` ids must exist in `AWESOME-HUMANS.md`.
+- `sources` ids must exist in `AWESOME-HUMANS.md` — either in the roster tables or as the reserved `house` id.
 - Dates are ISO 8601 (`YYYY-MM-DD`), always absolute, never relative.
 
 ## Writing style for opinions
