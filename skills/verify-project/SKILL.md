@@ -17,7 +17,7 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 1. **Resolve the target**, given either a local path or a repository URL:
    - **Local path** — read it in place; never write to it during the review.
    - **URL** — read it remotely through whatever repository browsing the host offers. Cloning is for _writing_, not reading: clone only when a fix is requested (step 8), or when the host cannot browse the tree well enough to sample files, in which case a shallow `git clone --depth 1` into a scratch location is a local read cache — never a write to the target.
-   - **Record the branch and commit sha reviewed.** A review without a sha cannot be reproduced, and step 8 depends on it.
+   - **Record what was read.** For a URL: the branch and commit sha — a review without a sha cannot be reproduced, and step 8 branches from it. For a local path: the sha when it is a git worktree, plus a note when that tree is dirty, since the findings then describe the working tree and not the commit; when it is not a git checkout at all, say so and let the file paths stand as the record.
 2. **Inventory the target**: solution files (`.slnx`/`.sln`/`.slnf`), project files, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `.editorconfig`, test projects, language mix (C#/F#).
 3. **Update `last-used`** on every opinion and template file consulted during this run (frontmatter, ISO 8601 date) — this is how the repository knows it is being used.
 4. **Compare structure and tooling** against `templates/`:
@@ -30,11 +30,11 @@ Compare a target .NET project against the opinions and `templates/` files in thi
    - Each finding: file/path in the target, what the opinion says, one-line suggested fix (ideally "copy `templates/<file>` and trim").
    - When the violated opinion is `**House:**`-marked (see HOUSE-OPINIONS.md), say so — the target may reasonably follow the community default instead of this repository's local convention; grade those findings one level lower.
    - A short verdict paragraph a human can read standalone.
-8. **Only if asked to fix:** apply changes in the _target_ project on a working branch (never its default branch; follow the host environment's branch-naming convention), starting with gaps and drift — mechanical fixes first, opinionated rewrites only with explicit approval. A URL target reviewed remotely is cloned at this point, and the branch starts from **the sha recorded in step 1** — if it must start from a default branch that has since moved, re-check the files behind each finding and say which ones changed. Fixes written against code that has moved are the one way this skill produces a confidently wrong diff.
+8. **Only if asked to fix:** apply changes in the _target_ project on a working branch (never its default branch; follow the host environment's branch-naming convention), starting with gaps and drift — mechanical fixes first, opinionated rewrites only with explicit approval. A URL target reviewed remotely is cloned at this point, and the branch starts from **the sha recorded in step 1** — clone without `--depth 1`, or `git fetch origin <full sha>` to deepen the shallow read cache (the abbreviated sha is rejected there), since a depth-1 clone holds no earlier commit to branch from. If the branch must start from a default branch that has since moved, re-check the files behind each finding and say which ones changed. Fixes written against code that has moved are the one way this skill produces a confidently wrong diff.
 
 ## Edge cases
 
-- **The URL is unreachable, private, or not a git repository:** say so and stop — never verify from README prose, a package listing, or memory of the project.
+- **The URL is unreachable, private with no credentials to read it, or not a git repository:** say so and stop — never verify from README prose, a package listing, or memory of the project.
 - **No push access to the target** (someone else's repository): make the branch in the clone and hand back a diff or patch. Never push to a repository the user does not control.
 - **The target pins an older .NET for a stated reason** (e.g. deployment constraint documented in its README): still report the drift, but mark it acknowledged rather than actionable.
 - **F#-only or mixed solutions:** verify against the F# opinions too — do not report C#-specific conventions as violations in F# projects.
