@@ -5,12 +5,12 @@ license: See repository LICENSE
 compatibility: Requires internet access for source reading; degrades to opinions-only offline
 metadata:
   repo: dotnet-awesome-humans
-  change-flow: report-only
+  change-flow: branch-pr
 ---
 
 # Research a topic
 
-Answer "what should I know / do about X?" using the trust boundary this repository maintains: its own opinions first, then the vetted roster. This skill reads and reports — repository changes happen only via the existing skills it may recommend at the end.
+Answer "what should I know / do about X?" using the trust boundary this repository maintains: its own opinions first, then the vetted roster. The only files this skill writes are its own brief and the `last-used` dates of the opinions it consulted, both on a research branch — changes to `opinions/` and `templates/` happen only via the existing skills it may recommend at the end.
 
 ## Orchestration
 
@@ -19,18 +19,19 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 ## Steps
 
 1. **Clarify intent in at most one question**, and only when the request genuinely forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately, no ceremony.
-2. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted (the one repository write this skill makes).
-3. **Sweep the roster in precedence order:**
+2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-type`. One branch per topic, created before the first write, so the brief and the `last-used` bumps land together and stay reviewable. Respect any branch-naming convention in the host environment's instructions; where the host mandates a prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
+3. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
+4. **Sweep the roster in precedence order:**
    - **Tier 1/2 sources** weighted by focus match (check the roster's Focus column) — these are quotable.
    - **Watch-list sources** for discovery and cross-checking — label them.
    - **Non-roster material is welcome in research** — recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the brief's closing section. Research is permissive; **promotion is the strict gate** (see Lifecycle).
-4. **Assemble the brief:**
+5. **Assemble the brief:**
    - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
    - Every claim cites its source id (and tier); dates on anything time-sensitive.
    - **Preview features are labeled per the freshness policy** — "in preview as of <date>, not yet an opinion" — and clearly separated from GA guidance.
    - Where sources disagree, say so and weigh them; don't average them into mush.
-5. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
-6. **Close the loop.** End the brief by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:
+6. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
+7. **Close the loop.** End the brief by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:
    - Topic has no opinion file / no coverage → offer an opinion stub via `harvest-sources`-style fold-in.
    - Existing aside or opinion is stale (feature GA'd, guidance superseded) → recommend `refresh-dotnet-versions` or `harvest-sources`.
    - A strong non-roster source carried the research → recommend `vet-source`.
@@ -40,6 +41,8 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 ## Persistence and lifecycle
 
 **Save the brief by default** to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) plus a `status:` field — skip saving only if the user says the question was throwaway. A saved brief records the state of a moment; the frontmatter dates are its honesty mechanism.
+
+The brief and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. The topic slug is shared by the branch and the file, so `research/union-type` the branch carries `research/union-type.md` the brief. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 
 Every saved brief must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
