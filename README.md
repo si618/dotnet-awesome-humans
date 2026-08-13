@@ -67,6 +67,7 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 │   ├── runtime-performance.md
 │   ├── testing.md
 │   └── ui-frameworks.md
+├── research/                 ← saved research-topic briefs (staging: promote or discard)
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props

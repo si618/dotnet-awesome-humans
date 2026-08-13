@@ -22,8 +22,8 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 2. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted (the one repository write this skill makes).
 3. **Sweep the roster in precedence order:**
    - **Tier 1/2 sources** weighted by focus match (check the roster's Focus column) — these are quotable.
-   - **Watch-list sources** for discovery and cross-checking only — never the sole support for a claim; label them.
-   - **Non-roster material only if the user explicitly asks** to go beyond the roster. Flag every such citation as **unvetted**, and record promising ones as `vet-source` candidates in the brief's closing section.
+   - **Watch-list sources** for discovery and cross-checking — label them.
+   - **Non-roster material is welcome in research** — recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the brief's closing section. Research is permissive; **promotion is the strict gate** (see Lifecycle).
 4. **Assemble the brief:**
    - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
    - Every claim cites its source id (and tier); dates on anything time-sensitive.
@@ -35,10 +35,18 @@ Where the host supports worker agents, fan the per-source reading out to **lower
    - Existing aside or opinion is stale (feature GA'd, guidance superseded) → recommend `refresh-dotnet-versions` or `harvest-sources`.
    - A strong non-roster source carried the research → recommend `vet-source`.
    - Repository already answers it fully → say so; that is the system working.
+   - A previously saved brief on this topic exists in `research/` → build on it, refresh its dates, and surface its promote-or-discard status.
 
-## Output and persistence
+## Persistence and lifecycle
 
-The brief is conversational by default — it lives in the session. If the user asks to keep it, save to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) so `audit-freshness` covers saved briefs like any other resource; note in the brief that a saved research document records the state of a moment, and its `last-reviewed` date is the honesty mechanism.
+**Save the brief by default** to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) plus a `status:` field — skip saving only if the user says the question was throwaway. A saved brief records the state of a moment; the frontmatter dates are its honesty mechanism.
+
+Every saved brief must eventually resolve — `research/` is a staging area, not a second opinions directory:
+
+- `status: open` — freshly saved; awaiting a promote-or-discard decision.
+- **Promote** (`status: promoted`): the brief's recommendation is woven into the matching `opinions/` file(s) under the normal rules — **only roster-sourced claims may promote**; an unvetted claim first needs its source admitted via `vet-source` or corroboration from a roster source. After weaving, delete the brief and leave the promotion recorded in the PR that weaves it.
+- **Discard**: delete the file — a brief that answered a moment's question owes nothing further. No tombstone needed; git history is the record.
+- `audit-freshness` covers `research/` like everything else: an `open` brief older than 90 days is reported as promote-or-discard triage, so briefs cannot silently accumulate as unratified pseudo-opinions.
 
 ## Edge cases
 
