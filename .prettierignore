@@ -1,0 +1,4 @@
+node_modules/
+# Local symlink to skills/ (see CLAUDE.md) — formatting it would rewrite every
+# skill twice and confuse git about which path changed.
+.claude/

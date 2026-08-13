@@ -101,7 +101,7 @@ A scheduled GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls t
 
 ## Using this repository
 
-- **As an agent instruction:** "Follow the conventions in <https://github.com/…/dotnet-awesome-humans> when writing .NET code."
+- **As an agent instruction:** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code."
 - **As scaffolding:** copy files from `templates/` into a new repository.
 - **As a human:** read `opinions/` — each file leads with the opinion so you can skim.
 

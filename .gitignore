@@ -8,3 +8,6 @@ artifacts/
 .idea/
 *.user
 .DS_Store
+
+# Markdown tooling (package.json) — devDependencies only, not shipped
+node_modules/

@@ -26,6 +26,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 | `research/` briefs with `status: open`                                                     | 90 days — then reported as promote-or-discard triage (see `research-topic`); `promoted` lingering on disk is itself a finding (promotion ends in deletion)                                           |
 | `sources:` ids                                                                             | must all exist in `AWESOME-HUMANS.md` roster tables, or be the reserved `house` id (never a finding). `research/` briefs only: unvetted source names are permitted when flagged as such in the brief |
 | `last-used`                                                                                | informational only — never a finding, but report never-used resources as candidates for pruning                                                                                                      |
+| Citation and roster URLs resolving                                                         | zero — a dead link is a content finding, not a formatting nit. Checked by the `Markdown` workflow (`lychee.toml`); read its most recent run rather than re-checking every URL by hand                |
 
 ## Steps
 

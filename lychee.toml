@@ -1,0 +1,32 @@
+# Link checking for this repository. Run: npx --yes lychee --config lychee.toml .
+#
+# The citations in opinions/ and the roster in AWESOME-HUMANS.md are the
+# substance of this repository, so a dead link is a content defect, not a
+# formatting nit. Microsoft Learn reorganises URLs regularly and blogs migrate;
+# audit-freshness treats a failure here as a staleness finding.
+
+# Follow relative links between opinion and template files as well as HTTP(S).
+include_verbatim = false
+
+# Be patient and gentle — this hits a few hundred third-party hosts.
+max_concurrency = 8
+timeout = 30
+retry_wait_time = 5
+max_retries = 3
+
+# Identify as a browser. Several documentation hosts return 403 to default
+# HTTP-client user agents, which would otherwise read as link rot.
+user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/si618/dotnet-awesome-humans)"
+
+# 429 is rate limiting, not a broken link. 403 is usually bot protection on
+# hosts that a human browser reaches fine — checked manually when it appears.
+accept = ["200", "203", "206", "403", "429"]
+
+exclude_path = ["node_modules", ".claude", "templates/projects/obj", "templates/projects/bin"]
+
+exclude = [
+  # Anchors into single-page-app docs that lychee cannot resolve without JS.
+  "^https://learn\\.microsoft\\.com/.*#",
+  # Example and illustrative URLs that are not meant to resolve.
+  "^https://example\\.",
+]

@@ -1,0 +1,15 @@
+{
+  "name": "dotnet-awesome-humans",
+  "private": true,
+  "description": "Markdown tooling for this repository. Not a published package — the repository ships opinions, templates, and skills, not JavaScript.",
+  "scripts": {
+    "format": "prettier --prose-wrap preserve --write \"**/*.md\"",
+    "format:check": "prettier --prose-wrap preserve --check \"**/*.md\"",
+    "lint": "markdownlint-cli2",
+    "check": "npm run format:check && npm run lint"
+  },
+  "devDependencies": {
+    "markdownlint-cli2": "0.23.2",
+    "prettier": "3.9.6"
+  }
+}

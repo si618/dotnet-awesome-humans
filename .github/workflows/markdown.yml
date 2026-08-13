@@ -1,0 +1,52 @@
+name: Markdown
+
+on:
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # Weekly, Mondays 06:00 UTC — the link check needs to run on a cadence, not
+    # only on PRs: links rot while the repository sits still.
+    - cron: "0 6 * * 1"
+
+permissions:
+  contents: read
+
+jobs:
+  format-and-lint:
+    # Formatting and structure are deterministic and offline — they gate PRs.
+    if: github.event_name != 'schedule'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # v4
+        with:
+          node-version: "22"
+          cache: npm
+
+      # ci install, not npm install: it honours package-lock.json exactly and
+      # fails if the lock and manifest disagree, so CI cannot float a version.
+      - run: npm ci
+
+      - name: Check formatting
+        run: npm run format:check
+
+      - name: Lint markdown
+        run: npm run lint
+
+  links:
+    # Split from the gate above: this one depends on a few hundred third-party
+    # hosts, so a failure often means "someone else's server is down", not
+    # "this PR is broken". Kept non-blocking and reported instead.
+    runs-on: ubuntu-latest
+    continue-on-error: true
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      - name: Check links
+        uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
+        with:
+          args: --config lychee.toml --no-progress .
+          fail: true
+          # Cache results so a weekly run does not re-hit every host from cold.
+          cache: true
