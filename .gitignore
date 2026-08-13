@@ -1,0 +1,10 @@
+# Build artifacts from smoke-testing the exemplar projects in templates/
+bin/
+obj/
+artifacts/
+
+# IDE and OS noise
+.vs/
+.idea/
+*.user
+.DS_Store

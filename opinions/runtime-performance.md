@@ -24,8 +24,6 @@ The .NET 10 JIT rewards idiomatic code. Optimize by measuring, not by folklore.
 
 ## `Span<T>` and `ArrayPool<T>`
 
-Verified compiling and running on SDK 10.0.302 as a file-based app.
-
 Before — one string allocation per field:
 
 ```csharp
