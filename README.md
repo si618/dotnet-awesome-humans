@@ -67,6 +67,7 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 │   ├── runtime-performance.md
 │   ├── testing.md
 │   └── ui-frameworks.md
+├── research/                 ← saved research-topic briefs (staging: promote or discard)
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
@@ -92,6 +93,7 @@ Skills are designed for a cost-aware split: **lower-cost worker agents** fan out
 | `audit-freshness`         | Report resources whose `last-reviewed` date has drifted past tolerance                     |
 | `verify-project`          | Check an external project against the template files and report deviations                 |
 | `weave-house-opinion`     | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
+| `research-topic`          | Research a .NET topic conversationally using the opinions and vetted sources — cited brief |
 
 ### Release watch automation
 
