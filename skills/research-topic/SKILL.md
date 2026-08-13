@@ -19,7 +19,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 ## Steps
 
 1. **Clarify intent in at most one question**, and only when the request genuinely forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately, no ceremony.
-2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-type`. One branch per topic, created before the first write, so the brief and the `last-used` bumps land together and stay reviewable. Respect any branch-naming convention in the host environment's instructions; where the host mandates a prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
+2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-types`. One branch per topic, created before the first write, so the brief and the `last-used` bumps land together and stay reviewable. The slug is the topic kebab-cased as the repository already names it — `union-types`, not `union-type` — so branch, brief, and opinions stay searchable by one term. Respect any branch-naming convention in the host environment's instructions; where the host mandates a prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
 3. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
 4. **Sweep the roster in precedence order:**
    - **Tier 1/2 sources** weighted by focus match (check the roster's Focus column) — these are quotable.
@@ -42,7 +42,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 **Save the brief by default** to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) plus a `status:` field — skip saving only if the user says the question was throwaway. A saved brief records the state of a moment; the frontmatter dates are its honesty mechanism.
 
-The brief and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. The topic slug is shared by the branch and the file, so `research/union-type` the branch carries `research/union-type.md` the brief. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
+The brief and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the brief. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 
 Every saved brief must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
