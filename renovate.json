@@ -1,0 +1,33 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    ":semanticCommitTypeAll(chore)",
+    "helpers:pinGitHubActionDigests"
+  ],
+  "timezone": "Australia/Adelaide",
+  "schedule": ["before 9am on monday"],
+  "prConcurrentLimit": 3,
+  "labels": ["dependencies"],
+  "packageRules": [
+    {
+      "description": "Markdown tooling moves together — prettier and markdownlint gate the same checks, so review them in one PR.",
+      "matchManagers": ["npm"],
+      "matchDepTypes": ["devDependencies"],
+      "groupName": "markdown tooling"
+    },
+    {
+      "description": "Action digest bumps are mechanical and the workflows re-run on the PR, so they need no staged rollout.",
+      "matchManagers": ["github-actions"],
+      "groupName": "github actions"
+    }
+  ],
+  "nuget": {
+    "enabled": false,
+    "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing here builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while making the header lie, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one."
+  },
+  "vulnerabilityAlerts": {
+    "enabled": true,
+    "schedule": ["at any time"]
+  }
+}
