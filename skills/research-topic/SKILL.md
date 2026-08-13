@@ -28,7 +28,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 5. **Assemble the brief:**
    - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
    - Every claim cites its source id (and tier); dates on anything time-sensitive.
-   - **Preview features are labeled per the freshness policy** — "in preview as of <date>, not yet an opinion" — and clearly separated from GA guidance.
+   - **Preview features are labeled per the freshness policy** — "in preview as of `<date>`, not yet an opinion" — and clearly separated from GA guidance.
    - Where sources disagree, say so and weigh them; don't average them into mush.
 6. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
 7. **Close the loop.** End the brief by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:

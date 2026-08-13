@@ -16,7 +16,7 @@ Two qualifying rules:
 - **Independence caps tier.** A source that meets the Tier 1 longevity bar but carries a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) is admitted one tier lower, with the concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance (e.g. `stephen-toub`, `khalid`) keeps full tier.
 - **Dormancy blocks admission, with one exception.** A candidate whose publishing has stopped for over a year is watch-listed, not admitted — unless their output demonstrably continues on other channels (talks, repositories, official docs), in which case the track record follows the human and the dormant channel is noted. The same rule drives re-evaluation of admitted sources (see `vet-source`).
 
-Candidates that don't yet qualify are tracked under [Watch list](#watch-list) and re-evaluated by the `vet-source` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
+Candidates that don't yet qualify are tracked under [Watch list](#watch-list--strong-today-track-record-still-forming) and re-evaluated by the `vet-source` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
 
 Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
 
