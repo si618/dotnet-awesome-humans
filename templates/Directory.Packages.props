@@ -1,6 +1,6 @@
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn, dotnet-blog, meziantou -->
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-14 | sources: ms-learn, dotnet-blog, meziantou -->
 <!-- Central Package Management: every PackageReference in the repo takes its version from here. -->
-<!-- Versions verified against nuget.org (latest stable) on 2026-08-12 — refresh via the refresh-dotnet-versions skill. -->
+<!-- Versions verified against nuget.org (latest stable) on 2026-08-14 — refresh via the refresh-dotnet-versions skill. -->
 <Project>
 
   <PropertyGroup>
@@ -14,9 +14,15 @@
     <PackageVersion Include="Asp.Versioning.Mvc.ApiExplorer" Version="10.2.1" />
   </ItemGroup>
 
+  <ItemGroup Label="Analyzers">
+    <PackageVersion Include="Meziantou.Analyzer" Version="3.0.151" />
+  </ItemGroup>
+
+  <!-- No Microsoft.Testing.Platform entry: xunit.v3 carries its own compatible
+       version, and pinning MTP separately overrides it via transitive pinning and
+       fails at runtime with a TypeLoadException (opinions/testing.md). -->
   <ItemGroup Label="Testing">
     <PackageVersion Include="xunit.v3" Version="3.2.2" />
-    <PackageVersion Include="Microsoft.Testing.Platform" Version="2.3.3" />
     <PackageVersion Include="Verify.XunitV3" Version="31.28.0" />
   </ItemGroup>
 

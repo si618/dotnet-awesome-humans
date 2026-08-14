@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-12 | sources: ms-learn, dotnet-blog, house -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-14 | sources: ms-learn, dotnet-blog, house -->
 <!-- Copy to the repository root. Every project inherits these; override per-project only with a recorded reason. -->
 <Project>
 
@@ -6,6 +6,8 @@
     <TargetFramework>net10.0</TargetFramework>
     <LangVersion>latest</LangVersion>
     <Nullable>enable</Nullable>
+    <!-- Promotes nullable warnings to errors so annotations are load-bearing, not advisory (opinions/csharp.md) -->
+    <WarningsAsErrors>nullable</WarningsAsErrors>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
@@ -24,6 +26,13 @@
     <!-- Doc file feeds IDE tooltips and OpenAPI XML comments; CS1591 exempted so undocumented internals don't fail the build -->
     <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
+
+  <ItemGroup Label="Analyzers">
+    <!-- The one third-party analyzer this repository recommends: correctness rules the
+         SDK set misses (culture-sensitive strings, CancellationToken forwarding, async
+         pitfalls) at a low false-positive rate. Version pinned in Directory.Packages.props. -->
+    <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
+  </ItemGroup>
 
   <PropertyGroup Label="Deterministic builds">
     <Deterministic>true</Deterministic>
