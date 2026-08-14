@@ -1,10 +1,17 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-14 | sources: ms-learn -->
 <!-- Test project on Microsoft.Testing.Platform (native in `dotnet test` since the .NET 10 SDK) with xUnit v3. -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <IsPackable>false</IsPackable>
+    <!-- Required: xunit.v3 test projects build to a self-contained executable under
+         Microsoft.Testing.Platform, and the build errors out without this. -->
+    <OutputType>Exe</OutputType>
     <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
+    <!-- CA1707 (no underscores in member names) contradicts the house test-naming
+         convention UnitOfWork_Scenario_ExpectedBehaviour (opinions/testing.md). The
+         convention wins in test projects; CA1707 still applies to shipping code. -->
+    <NoWarn>$(NoWarn);CA1707</NoWarn>
     <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 

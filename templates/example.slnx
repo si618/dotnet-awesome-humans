@@ -1,9 +1,9 @@
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | sources: ms-learn -->
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-14 | sources: ms-learn -->
 <!-- SLNX is the default solution format since the .NET 10 SDK (`dotnet new sln`). -->
 <Solution>
   <Folder Name="/src/">
     <Project Path="src/Example.Library/Example.Library.csproj" />
-    <Project Path="src/Example.Api/Example.Api.csproj" />
+    <Project Path="src/Example.Library.FSharp/Example.Library.FSharp.fsproj" />
   </Folder>
   <Folder Name="/tests/">
     <Project Path="tests/Example.Library.Tests/Example.Library.Tests.csproj" />
