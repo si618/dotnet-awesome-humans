@@ -64,6 +64,6 @@ Rules:
 
 ## Conventions in this repo
 
-- Markdown follows GFM and markdownlint defaults (no emphasis-as-heading, MD036).
-- Format markdown with `npx prettier --prose-wrap preserve --write <file>`.
+- Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc` (defaults, minus three rules that fight the prose style — reasons recorded there).
+- Run `npm run format` to format and `npm run check` to verify formatting and lint together. Both use the versions pinned in `package.json`; do not invoke `npx prettier`/`npx markdownlint-cli2` directly, which resolves whatever is latest.
 - One topic per file under `opinions/`; keep files under ~300 lines — split rather than sprawl.

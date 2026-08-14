@@ -8,3 +8,13 @@ artifacts/
 .idea/
 *.user
 .DS_Store
+
+# Markdown tooling (package.json) — devDependencies only, not shipped
+node_modules/
+
+# Local harness skill discovery — a symlink to skills/ for agents that only
+# look under .claude/skills. See CLAUDE.md; the repository itself is agnostic.
+.claude/
+
+# lychee link-check result cache
+.lycheecache

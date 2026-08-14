@@ -1,0 +1,25 @@
+{
+  // Markdown linting for this repository. Run: npx markdownlint-cli2 "**/*.md"
+  // Formatting is prettier's job (--prose-wrap preserve); this file only turns
+  // off the rules that conflict with that or misfire on our content.
+  "config": {
+    "default": true,
+
+    // Prose is one sentence per line, unwrapped — prettier preserves it and the
+    // diffs stay readable. A hard column limit would fight that on every edit.
+    "MD013": false,
+
+    // Misfires on headings that legitimately end in "#": "# C#", "## Testing F#".
+    // markdownlint reads the trailing # as closed-atx syntax. No way to satisfy
+    // it without renaming the languages.
+    "MD020": false,
+
+    // .github/PULL_REQUEST_TEMPLATE.md opens at "##" by design — it is a fragment
+    // rendered inside GitHub's PR form, not a standalone document.
+    "MD041": false
+  },
+  "globs": ["**/*.md"],
+  // .claude/skills is a local symlink to skills/ (see CLAUDE.md) — linting it
+  // reports every finding twice.
+  "ignores": ["node_modules", ".claude"]
+}

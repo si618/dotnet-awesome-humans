@@ -1,0 +1,42 @@
+# Link checking for this repository.
+#
+# lychee is a Rust binary, not an npm package — `npx lychee` installs an
+# unrelated 2013 database ORM of the same name. Run it locally with Docker:
+#
+#   docker run --rm -v "$PWD":/input:ro -w /input lycheeverse/lychee:latest \
+#     --config lychee.toml --no-progress .
+#
+# or install it natively with `cargo install lychee`.
+#
+# The citations in opinions/ and the roster in AWESOME-HUMANS.md are the
+# substance of this repository, so a dead link is a content defect, not a
+# formatting nit. Microsoft Learn reorganises URLs regularly and blogs migrate;
+# audit-freshness treats a failure here as a staleness finding.
+
+# Be patient and gentle — this hits a few hundred third-party hosts.
+max_concurrency = 8
+timeout = 30
+retry_wait_time = 5
+max_retries = 3
+
+# Identify as a browser. Several documentation hosts return 403 to default
+# HTTP-client user agents, which would otherwise read as link rot.
+user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/si618/dotnet-awesome-humans)"
+
+# 429 is rate limiting, not a broken link. 403 is usually bot protection on
+# hosts that a human browser reaches fine — checked manually when it appears.
+accept = ["200", "203", "206", "403", "429"]
+
+# obj/ and bin/ are build artefacts from smoke-testing the templates. .claude is
+# a symlink to skills/, so leaving it in reports every finding twice.
+# package-lock.json needs no entry: lychee extracts no URLs from it (verified by
+# passing the file explicitly — zero registry links found).
+exclude_path = [
+  "node_modules",
+  ".claude",
+  "templates/projects/obj",
+  "templates/projects/bin",
+]
+
+# Example URLs that are illustrative and not meant to resolve.
+exclude = ["^https://example\\."]
