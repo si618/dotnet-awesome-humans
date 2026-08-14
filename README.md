@@ -2,7 +2,7 @@
 
 Opinionated best practices for modern .NET software development — written for humans, applied by AI agents.
 
-The name is the thesis: everything here distils the published guidance of **awesome humans** — the people and publications with a proven, decade-class track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+The name is the thesis: everything here distils the published guidance of **awesome humans** — the people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 This repository is a **living reference**. It exists to answer one question with confidence: _"what does good look like in .NET right now?"_ — for both AI agents and humans.
 
@@ -42,7 +42,7 @@ sources: [dotnet-blog, andrew-lock]
 
 ## Awesome humans
 
-Opinions must be earned. Every opinion traces back to a vetted **source** — the work of an awesome human, whether an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — with a proven, decade-class track record. The roster and the admission criteria for joining the club live in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions must be earned. Every opinion traces back to a vetted **source** — the work of an awesome human, whether an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — with a proven track record: six years of sustained publishing for Tier 1, three for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full admission criteria live in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 AI agents collate and refine content from these sources using the repository's skills — the humans provide the wisdom; the agents keep it current and consistent.
 
@@ -59,9 +59,11 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
+│   ├── architecture.md
 │   ├── aspnet-core.md
 │   ├── ci.md
 │   ├── csharp.md
+│   ├── data-access.md
 │   ├── fsharp.md
 │   ├── project-structure.md
 │   ├── runtime-performance.md
