@@ -35,18 +35,25 @@ jobs:
         run: npm run lint
 
   links:
-    # Split from the gate above: this one depends on a few hundred third-party
-    # hosts, so a failure often means "someone else's server is down", not
-    # "this PR is broken". Kept non-blocking and reported instead.
     runs-on: ubuntu-latest
-    continue-on-error: true
+    # Non-blocking on PRs only: a third-party host being down is not a defect in
+    # the PR. On the weekly run it must be allowed to fail, or link rot — the
+    # entire reason for the cron — would be reported as a green run, and
+    # audit-freshness reads this workflow's result as its link-health signal.
+    continue-on-error: ${{ github.event_name == 'pull_request' }}
     steps:
       - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+
+      # Restore lychee's result cache so a run does not re-hit every host cold.
+      # The action has no cache input of its own — this is the supported way.
+      - uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
+        with:
+          path: .lycheecache
+          key: lychee-${{ github.run_id }}
+          restore-keys: lychee-
 
       - name: Check links
         uses: lycheeverse/lychee-action@e7477775783ea5526144ba13e8db5eec57747ce8 # v2
         with:
-          args: --config lychee.toml --no-progress .
+          args: --config lychee.toml --no-progress --cache --max-cache-age 1d .
           fail: true
-          # Cache results so a weekly run does not re-hit every host from cold.
-          cache: true
