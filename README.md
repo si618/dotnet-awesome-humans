@@ -54,7 +54,7 @@ AI agents collate and refine content from these sources using the repository's s
 
 ### House opinions
 
-One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the `weave-house-opinion` skill — first-class, but always visibly marked so readers can tell community best practice from local convention (the marking literal and conflict-precedence rules are defined in HOUSE-OPINIONS.md). Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
+One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill — first-class, but always visibly marked so readers can tell community best practice from local convention (the marking literal and conflict-precedence rules are defined in HOUSE-OPINIONS.md). Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
 
 ## Repository layout
 
@@ -90,19 +90,19 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 
 ## Maintenance via skills
 
-The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification) — LLM- and tool-agnostic, so any compliant agent can run them. Each skill is a directory under `skills/` with a `SKILL.md`.
+The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification) — LLM- and tool-agnostic, so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md`.
 
 Skills are designed for a cost-aware split: **lower-cost worker agents** fan out to do the web searches and source sweeps, while the strongest available model acts as the **editor** — the orchestrator that synthesizes findings and is the only one that updates the actual opinions and templates.
 
-| Skill                     | Purpose                                                                                    |
-| ------------------------- | ------------------------------------------------------------------------------------------ |
-| `refresh-dotnet-versions` | Detect new .NET / C# / F# releases and update all opinions and templates to target them    |
-| `harvest-sources`         | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions |
-| `vet-source`              | Evaluate a candidate source against the track-record criteria and admit or decline         |
-| `audit-freshness`         | Report resources whose `last-reviewed` date has drifted past tolerance                     |
-| `verify-project`          | Check an external project against the template files and report deviations                 |
-| `weave-house-opinion`     | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
-| `research-topic`          | Research a .NET topic conversationally using the opinions and vetted sources — cited brief |
+| Skill                                                                | Purpose                                                                                    |
+| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them    |
+| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions |
+| [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline         |
+| [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                     |
+| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                 |
+| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
+| [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited brief |
 
 ### Release watch automation
 
@@ -111,8 +111,8 @@ A scheduled GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls t
 ## Using this repository
 
 - **As an agent instruction:** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code."
-- **As scaffolding:** copy files from `templates/` into a new repository.
-- **As a human:** read `opinions/` — each file leads with the opinion so you can skim.
+- **As scaffolding:** copy files from [`templates/`](templates) into a new repository.
+- **As a human:** read [`opinions/`](opinions) — each file leads with the opinion so you can skim.
 
 ## License
 
