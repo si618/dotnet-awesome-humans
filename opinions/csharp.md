@@ -1,8 +1,9 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-12
-last-used: 2026-08-14
-sources: [ms-learn, dotnet-blog, jetbrains-dotnet, andrew-lock, meziantou]
+last-reviewed: 2026-08-18
+last-used: 2026-08-18
+sources:
+  [ms-learn, dotnet-blog, jetbrains-dotnet, andrew-lock, meziantou, jon-skeet]
 ---
 
 # C#
@@ -149,6 +150,30 @@ The one cost: the target type must be explicit (`List<int> ids = [...]`, not `va
 ```
 
 The built-in analyzers ship with the SDK and track it; `latest-recommended` keeps rules current across SDK updates without opting into the noisy `all` bucket. `EnforceCodeStyleInBuild` makes `.editorconfig` style rules (IDExxxx) build-time diagnostics instead of IDE-only suggestions, so CI and editors agree. Meziantou.Analyzer adds the correctness rules the SDK set misses (culture-sensitive string operations, `CancellationToken` forwarding, async pitfalls) with a low false-positive rate; StyleCop lost on signal-to-noise — it polices formatting the SDK analyzers and `dotnet format` already cover. Fix or explicitly suppress with justification; never blanket-lower severity. ([Code analysis overview — Microsoft Learn](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
+
+### Records
+
+**Keep records to the data they are constructed from — no derived state, no collection members.** A record's generated members only behave the way the syntax suggests when every property is a constructor parameter held as-is. Two traps follow from that, both worth an analyzer or a code-review reflex:
+
+- **A property initialized from a constructor parameter goes stale under `with`.** `with` does not re-run the constructor: it lowers to roughly `var copy = original.<Clone>$(); copy.Value = 3;`, and the copy constructor duplicates every field _before_ the property assignments run — so anything computed at construction keeps its old value while the parameter it was computed from changes. ([Skeet — Unexpected inconsistency in records](https://codeblog.jonskeet.uk/2025/07/19/unexpected-inconsistency-in-records/), [Skeet — Records and the `with` operator, redux](https://codeblog.jonskeet.uk/2025/07/29/records-and-the-with-operator-redux/))
+
+  ```csharp
+  // Wrong — Even is computed once, at construction
+  public sealed record Number(int Value)
+  {
+      public bool Even { get; } = (Value & 1) == 0;
+  }
+
+  var n3 = new Number(2) with { Value = 3 };  // Number { Value = 3, Even = True }
+
+  // Right — derive on read, so `with` cannot desynchronize it
+  public sealed record Number(int Value)
+  {
+      public bool Even => (Value & 1) == 0;
+  }
+  ```
+
+- **A collection member breaks value equality.** Generated `Equals` compares each member with `EqualityComparer<T>.Default`, and the immutable collections do not override `Equals`/`GetHashCode` — so `ImmutableList<T>` and friends compare by reference, and two records with identical contents are unequal. Hold a collection in a record only where reference equality is genuinely what you want (shared instances within one object graph); otherwise expose the collection outside the record, or accept that equality is identity and document it. ([Skeet — Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Smaller opinions
 

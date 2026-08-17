@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-12
-last-used: 2026-08-14
+last-reviewed: 2026-08-18
+last-used: 2026-08-18
 sources: [ms-learn, meziantou, andrew-lock, house]
 ---
 
@@ -62,6 +62,9 @@ Tests are first-class code: same review bar, same conventions.
 ## Output and scale
 
 - **Use snapshot testing for complex serialized output** (generated code, API payloads, rendered documents) instead of asserting field-by-field. ([Meziantou — Snapshot testing](https://www.meziantou.net/snapshot-testing-in-dotnet-with-meziantou-framework-snapshottesting.htm))
+
+  Snapshot libraries locate the `.verified` files from the test's own source path, which deterministic builds rewrite to `/_/…` — so a project with `ContinuousIntegrationBuild`/`DeterministicSourcePaths` on cannot read or write its snapshots. Restore the mapping at startup rather than turning determinism off: an MSBuild target emitting a `[ModuleInitializer]` that registers `SourceRoot`'s `MappedPath` against the real directory keeps both properties. ([Meziantou — Reproducible builds and snapshot testing](https://www.meziantou.net/reproducible-builds-and-snapshot-testing-handling-file-paths-in-dotnet.htm))
+
 - **Shard slow CI test suites deterministically across parallel jobs — but measure first**: sharding pays off for CPU-bound suites far more than IO-bound ones. ([Meziantou — Test sharding](https://www.meziantou.net/split-dotnet-test-projects-into-shards-with-meziantou-shardedtest.htm))
 
 ## Coverage

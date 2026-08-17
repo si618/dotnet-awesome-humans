@@ -1,8 +1,16 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-12
-last-used: 2026-08-14
-sources: [stephen-toub, dotnet-blog, ms-learn, steve-gordon, jetbrains-dotnet]
+last-reviewed: 2026-08-18
+last-used: 2026-08-18
+sources:
+  [
+    stephen-toub,
+    dotnet-blog,
+    ms-learn,
+    steve-gordon,
+    jetbrains-dotnet,
+    jon-skeet,
+  ]
 ---
 
 # Runtime & performance
@@ -15,6 +23,12 @@ The .NET 10 JIT rewards idiomatic code. Optimize by measuring, not by folklore.
 - **Profile before optimizing; benchmark the inner loop after.** Use a profiler (dotTrace, PerfView) to find the real bottleneck, then BenchmarkDotNet to iterate on it. Benchmark allocation numbers and profiler numbers legitimately differ (GC padding/alignment) — trust benchmarks for inner-loop deltas and profilers for locating allocation sources. ([Gordon — The Grand Mystery of the Missing 18 Bytes](https://www.stevejgordon.co.uk/the-grand-mystery-of-the-missing-18-bytes), [JetBrains — profiling methodology](https://blog.jetbrains.com/dotnet/2026/06/25/performance-profiling-agent-skill-in-rider/))
 - **Use `Span<T>` for parsing/formatting hot paths and `ArrayPool<T>` for transient large buffers** — see [the worked example](#spant-and-arraypoolt) below. ([Gordon — low-allocation serialization, part 2](https://www.stevejgordon.co.uk/encrypting-properties-with-system-text-json-and-a-typeinforesolver-modifier-part-2))
 - **Read Toub's annual "Performance Improvements in .NET X" post at each GA** — it is the canonical record of what the runtime now does for free, and therefore of which manual optimizations to delete.
+
+## Immutable collections
+
+**Pick the immutable collection by how the collection is built, not by the word "immutable".** `ImmutableList<T>` and `ImmutableDictionary<K,V>` pay for incremental change — their tree structure exists so `Add` can return a new collection sharing most of the old one, and every read walks that tree. Most application state isn't built that way: it's assembled once at startup or per refresh, then read constantly and replaced wholesale. For that shape use `ImmutableArray<T>` and `FrozenDictionary<K,V>`, which trade construction cost for flat, fast reads. Skeet measured a validation pass over election data drop from 5.5ms to 0.826ms on the switch, "due to it performing lots of read accesses". ([Skeet — Changing Immutable Collections](https://codeblog.jonskeet.uk/2025/12/31/changing-immutable-collections/))
+
+Keep the `Immutable*` builders only where the incremental-change semantics are the point (an accumulating snapshot handed to concurrent readers between edits). One migration cost to expect: `ImmutableArray<T>` is a struct, so `default` is a valid-but-unusable value where `ImmutableList<T>` would simply have been `null` — a nullable `ImmutableArray<T>?` field needs unwrapping via `.Value` or an `is` pattern before use.
 
 ## Async
 
