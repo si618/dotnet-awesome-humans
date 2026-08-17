@@ -68,3 +68,4 @@ Rules:
 - Markdown follows GFM and markdownlint, configured in `.markdownlint-cli2.jsonc` (defaults, minus three rules that fight the prose style — reasons recorded there).
 - Run `npm run format` to format and `npm run check` to verify formatting and lint together. Both use the versions pinned in `package.json`; do not invoke `npx prettier`/`npx markdownlint-cli2` directly, which resolves whatever is latest.
 - One topic per file under `opinions/`; keep files under ~300 lines — split rather than sprawl.
+- Links are checked by the `Markdown` workflow (`lychee.toml`) and **block pull requests** — a dead citation is a content defect. If a failure is a third-party host being down rather than link rot, re-run the job once it recovers; do not merge past a red link check.
