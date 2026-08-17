@@ -11,7 +11,16 @@ Tests are first-class code: same review bar, same conventions.
 
 ## Framework and platform
 
-- **Use xUnit v3 on Microsoft.Testing.Platform (MTP) for new test projects.** xunit.v3 ships a native MTP runner, so each test project builds to a self-contained executable — `dotnet test` in the .NET 10 SDK runs it natively, and `dotnet run` on the project executes the suite directly, replacing VSTest's slower process model. MSTest and NUnit also run on MTP but xUnit's constructor-per-test isolation model and ecosystem weight make it the default; TUnit is promising but too young for a track record. ([Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro), [What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
+- **Use xUnit v3 on Microsoft.Testing.Platform (MTP) for new test projects, and opt into the MTP runner in `global.json`.** xunit.v3 ships a native MTP runner, so each test project builds to a self-contained executable that `dotnet run` executes directly, replacing VSTest's slower process model. `dotnet test` reaches it only through the runner opt-in below — without it the SDK still routes through VSTest, which xunit.v3 4.0.0 (MTP v2) refuses on .NET 10 with `Testing with VSTest target is no longer supported`. On xunit.v3 3.x the same misconfiguration is worse than an error: `dotnet test` runs **zero** tests and exits 0.
+
+  ```json
+  {
+    "sdk": { "version": "10.0.400", "rollForward": "latestFeature" },
+    "test": { "runner": "Microsoft.Testing.Platform" }
+  }
+  ```
+
+  Do not reach for `<TestingPlatformDotnetTestSupport>` instead — that property is the VSTest bridge, and it is what triggers the error above under MTP v2. MSTest and NUnit also run on MTP but xUnit's constructor-per-test isolation model and ecosystem weight make it the default; TUnit is promising but too young for a track record. ([Microsoft.Testing.Platform overview](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-intro), [What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
 
   ```xml
   <Project Sdk="Microsoft.NET.Sdk">
@@ -23,12 +32,12 @@ Tests are first-class code: same review bar, same conventions.
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="xunit.v3" Version="3.0.0" />
+      <PackageReference Include="xunit.v3" Version="4.0.0" />
     </ItemGroup>
   </Project>
   ```
 
-  No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP.
+  No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP. Do not pin `Microsoft.Testing.Platform` yourself either: xunit.v3 4.0.0 dropped MTP v1 and brings its own v2, and a separate pin overrides it (via transitive pinning under CPM) into a runtime `TypeLoadException`.
 
 ## Naming and structure
 
