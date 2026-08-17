@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-14
+last-reviewed: 2026-08-18
 last-used: 2026-08-12
 sources:
   [
@@ -28,7 +28,7 @@ Blazor for web UI, .NET MAUI for mobile + desktop, Avalonia for cross-platform d
 - **Unit-test components with bUnit; reserve Playwright for end-to-end.** There is no official Microsoft component-testing framework — Microsoft Learn points at bUnit, which renders components in-process with no browser. Assert with `MarkupMatches` (semantic HTML comparison — insignificant whitespace and attribute order don't fail the test), never raw string equality on markup. Behaviour that depends on real JS interop or browser DOM manipulation is E2E territory: test it with Playwright, not by faking `IJSRuntime` into meaninglessness. ([Test components in ASP.NET Core Blazor](https://learn.microsoft.com/aspnet/core/blazor/test))
 - **Use bUnit 2.x with xUnit v3** to match this repository's testing stack ([opinions/testing.md](testing.md)); in 2.x the test class inherits `BunitContext` and renders with `Render<T>()`.
 
-  <!-- Verified: compiles and passes on net10.0 / bunit 2.9.0 / xunit.v3 3.2.2 (2026-08-12) -->
+  <!-- Verified: compiles and passes on net10.0 / bunit 2.9.0 / xunit.v3 4.0.0 (2026-08-18) -->
 
   ```csharp
   public class CounterTests : BunitContext
