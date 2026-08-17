@@ -20,7 +20,7 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
 
 1. **Identify the candidate** (URL, author, focus area) and check the roster: already listed? Then this is a re-evaluation (promotion/demotion), not an admission.
 2. **Establish the track record.** Gather evidence for each criterion:
-   - **Longevity** — earliest verifiable publication (archives, post history, Wayback Machine). Tier 1 needs 6+ years; Tier 2 needs 3+ years of sustained output.
+   - **Longevity** — earliest verifiable publication (archives, post history, Wayback Machine). Tier 1 needs 5+ years of sustained output; Tier 2 covers 2–5 years. Under two years is the watch list regardless of quality.
    - **Depth** — sample 3–5 representative posts. Original insight (internals, measurements, worked reasoning) or paraphrased release notes?
    - **Accuracy** — any history of corrections issued, or of claims later shown wrong and left standing?
    - **Independence of signal** — does the content stand on merit, or on marketing reach / algorithm-chasing? Vendor blogs and personality-driven channels need extra scrutiny here.

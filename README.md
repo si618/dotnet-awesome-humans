@@ -42,7 +42,7 @@ sources: [dotnet-blog, andrew-lock]
 
 ## Awesome humans
 
-Opinions must be earned. Every opinion traces back to a vetted **source** — the work of an awesome human, whether an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — with a proven track record: six years of sustained publishing for Tier 1, three for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full admission criteria live in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions must be earned. Every opinion traces back to a vetted **source** — the work of an awesome human, whether an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — with a proven track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full admission criteria live in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 AI agents collate and refine content from these sources using the repository's skills — the humans provide the wisdom; the agents keep it current and consistent.
 
