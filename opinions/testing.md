@@ -23,12 +23,12 @@ Tests are first-class code: same review bar, same conventions.
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="xunit.v3" Version="3.0.0" />
+      <PackageReference Include="xunit.v3" Version="4.0.0" />
     </ItemGroup>
   </Project>
   ```
 
-  No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP.
+  No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP. Do not pin `Microsoft.Testing.Platform` yourself either: xunit.v3 4.0.0 dropped MTP v1 and brings its own v2, and a separate pin overrides it (via transitive pinning under CPM) into a runtime `TypeLoadException`.
 
 ## Naming and structure
 
