@@ -14,16 +14,22 @@ This repository is a **living reference**. It exists to answer one question with
 
 ## Scope
 
-Modern .NET, end to end:
+Modern .NET, end to end — one bullet per file in [`opinions/`](opinions):
 
-- **Runtime & BCL** — performance idioms, `Span<T>`/memory, async, GC awareness
-- **SDK & tooling** — project files, solution formats, central package management, analyzers, source generators
-- **C#** — always targeting the **latest released language version**, with idiomatic use of new features
-- **F#** — first-class, not an afterthought
-- **ASP.NET Core** — minimal APIs, hosting, auth, OpenAPI, performance
-- **UI frameworks** — Blazor/WebAssembly, .NET MAUI (mobile + desktop), and cross-platform desktop (Avalonia)
-- **Testing** — structure, naming, patterns
-- **Libraries** — an opinionated shortlist of what to reach for (and what to avoid)
+- **[Runtime & BCL](opinions/runtime-performance.md)** — performance idioms, `Span<T>`/memory, async, GC awareness
+- **[Project structure & SDK](opinions/project-structure.md)** — project files, solution formats, central package management, analyzers, source generators
+- **[C#](opinions/csharp.md)** — always targeting the **latest released language version**, with idiomatic use of new features
+- **[F#](opinions/fsharp.md)** — first-class, not an afterthought
+- **[Application architecture](opinions/architecture.md)** — modular monolith, vertical slices, and when layering earns its keep
+- **[ASP.NET Core](opinions/aspnet-core.md)** — minimal APIs, hosting, auth, OpenAPI, performance
+- **[Data access](opinions/data-access.md)** — EF Core defaults, set-based work, when to drop to SQL
+- **[Logging & tracing](opinions/logging.md)** — structured logging, source-generated log messages, OpenTelemetry over OTLP
+- **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI (mobile + desktop), and cross-platform desktop (Avalonia)
+- **[Testing](opinions/testing.md)** — structure, naming, patterns
+- **[CI & automation](opinions/ci.md)** — pinned, reproducible builds and supply-chain hygiene
+- **Libraries** — an opinionated shortlist of what to reach for (and what to avoid), spread across the files above
+
+Adding an opinion file means adding its bullet here and its entry in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
 
 ## Freshness policy
 
@@ -65,6 +71,7 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 │   ├── csharp.md
 │   ├── data-access.md
 │   ├── fsharp.md
+│   ├── logging.md
 │   ├── project-structure.md
 │   ├── runtime-performance.md
 │   ├── testing.md

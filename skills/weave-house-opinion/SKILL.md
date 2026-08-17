@@ -15,7 +15,7 @@ House opinions are the owner's preferences — first-class, but never disguised 
 ## Steps
 
 1. **Take the entry** from the HOUSE-OPINIONS.md inbox (or from the owner's request directly — in that case, add it to the inbox first so the audit trail starts there).
-2. **Find its home**: the matching `opinions/` file and, where the opinion changes scaffolding (an `.editorconfig` rule, a build property), the matching `templates/` file. A house opinion with no natural home yet gets a new opinion file, same rules as any other.
+2. **Find its home**: the matching `opinions/` file and, where the opinion changes scaffolding (an `.editorconfig` rule, a build property), the matching `templates/` file. A house opinion with no natural home yet gets a new opinion file, same rules as any other — including indexing it in `README.md` (a linked Scope bullet and a Repository layout entry), which CI enforces.
 3. **Weave it in, marked**:
    - In `opinions/`: write it in the house style (opinion first, rationale after) prefixed with **House:** in bold, and add `house` to the file's `sources:` frontmatter.
    - In `templates/`: apply the change and add `house` to the header's `sources:` list (the pipe-delimited comment header audit-freshness reads), with an inline comment on the changed setting where the format allows.
