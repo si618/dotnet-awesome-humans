@@ -2,6 +2,8 @@ name: Validate skills and opinions
 
 on:
   pull_request:
+  push:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -79,4 +81,107 @@ jobs:
                   print(f"  - {e}")
               sys.exit(1)
           print(f"All {len(files)} opinion files have valid frontmatter.")
+          EOF
+
+      - name: Verify opinion sources against the roster
+        run: |
+          python3 - <<'EOF'
+          import pathlib
+          import re
+          import sys
+
+          import yaml
+
+          ROSTER = pathlib.Path("AWESOME-HUMANS.md")
+          DISCOVERY_MARKER = "**Discovery-only.**"
+          RESERVED = {"house"}
+
+          SECTIONS = {
+              "citable": ("## Tier 1", "## Tier 2"),
+              "watch": ("## Watch list",),
+          }
+
+
+          def parse_roster(text):
+              """Map source id -> (bucket, notes). Buckets: citable, watch."""
+              rows = {}
+              bucket = None
+              for line in text.splitlines():
+                  if line.startswith("## "):
+                      bucket = None
+                      for name, prefixes in SECTIONS.items():
+                          if any(line.startswith(p) for p in prefixes):
+                              bucket = name
+                      continue
+                  if bucket is None or not line.startswith("|"):
+                      continue
+                  cells = [c.strip() for c in line.strip().strip("|").split("|")]
+                  if len(cells) < 5:
+                      continue
+                  m = re.fullmatch(r"`([a-z0-9-]+)`", cells[0])
+                  if not m:  # header or separator row
+                      continue
+                  rows[m.group(1)] = (bucket, cells[-1])
+              return rows
+
+
+          def frontmatter(path):
+              text = path.read_text(encoding="utf-8")
+              if not text.startswith("---\n"):
+                  return None
+              end = text.find("\n---", 4)
+              if end == -1:
+                  return None
+              fm = yaml.safe_load(text[4:end])
+              return fm if isinstance(fm, dict) else None
+
+
+          errors = []
+
+          if not ROSTER.exists():
+              print(f"{ROSTER} not found")
+              sys.exit(1)
+
+          roster = parse_roster(ROSTER.read_text(encoding="utf-8"))
+          if not roster:
+              errors.append(f"{ROSTER}: no source rows parsed — roster tables may have changed shape")
+
+          discovery = {sid for sid, (_, notes) in roster.items() if DISCOVERY_MARKER in notes}
+
+          for path in sorted(pathlib.Path("opinions").glob("*.md")):
+              fm = frontmatter(path)
+              if fm is None:
+                  continue  # shape is already covered by the frontmatter step
+              sources = fm.get("sources") or []
+              if not isinstance(sources, list):
+                  errors.append(f"{path}: 'sources' must be a list")
+                  continue
+              for sid in sources:
+                  if sid in RESERVED:
+                      continue
+                  if sid not in roster:
+                      errors.append(f"{path}: source '{sid}' is not on the roster in {ROSTER}")
+                      continue
+                  bucket, _ = roster[sid]
+                  if bucket == "watch":
+                      errors.append(
+                          f"{path}: source '{sid}' is on the watch list and may not feed opinions "
+                          f"— corroborate with a Tier 1/2 source or admit it via vet-source"
+                      )
+                  elif sid in discovery:
+                      errors.append(
+                          f"{path}: source '{sid}' is marked discovery-only and never appears in 'sources:' "
+                          f"— cite the primary source it led you to"
+                      )
+
+          if errors:
+              print("Opinion source validation failed:")
+              for e in errors:
+                  print(f"  - {e}")
+              sys.exit(1)
+
+          print(
+              f"All opinion sources resolve to the roster "
+              f"({len(roster)} sources, {len(discovery)} discovery-only)."
+          )
           EOF
