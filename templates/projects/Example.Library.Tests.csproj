@@ -1,5 +1,7 @@
 <!-- dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-18 | sources: ms-learn -->
-<!-- Test project on Microsoft.Testing.Platform (native in `dotnet test` since the .NET 10 SDK) with xUnit v3. -->
+<!-- Test project on Microsoft.Testing.Platform with xUnit v3. `dotnet test` runs it via the
+     runner opt-in in global.json; no TestingPlatformDotnetTestSupport, which is the VSTest
+     bridge that MTP v2 (xunit.v3 4.0.0) rejects on the .NET 10 SDK. -->
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
@@ -12,7 +14,6 @@
          convention UnitOfWork_Scenario_ExpectedBehaviour (opinions/testing.md). The
          convention wins in test projects; CA1707 still applies to shipping code. -->
     <NoWarn>$(NoWarn);CA1707</NoWarn>
-    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
   </PropertyGroup>
 
   <ItemGroup>
