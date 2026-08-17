@@ -23,7 +23,7 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
 3. **Sweep each source** for posts in the window. Aggregator sources (`fsharp-weekly`, `csharp-digest`) are leads to primary posts — follow the links; never cite the aggregator itself in `sources:`.
 4. **Triage each notable post** into one of:
    - **Changes an existing opinion** — the guidance supersedes or refines something in `opinions/`. Queue an edit.
-   - **Suggests a new opinion** — a recurring theme with no home yet. Create a stub opinion with frontmatter, the source link, and a `TODO`.
+   - **Suggests a new opinion** — a recurring theme with no home yet. Create a stub opinion with frontmatter, the source link, and a `TODO`, then index it in `README.md` (a linked Scope bullet and a Repository layout entry) in the same commit — CI fails the PR otherwise.
    - **Noise** — release chatter, product marketing, one-off tips that don't generalize. Skip.
 5. **Apply the edits on a working branch** (never the default branch; follow the host environment's branch-naming convention):
    - Keep opinions opinionated — one recommendation. If a new post contradicts the current opinion, prefer the stronger-sourced or better-evidenced position and note the supersession in one line.

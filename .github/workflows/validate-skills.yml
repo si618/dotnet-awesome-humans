@@ -185,3 +185,72 @@ jobs:
               f"({len(roster)} sources, {len(discovery)} discovery-only)."
           )
           EOF
+
+      - name: Verify README indexes every opinion and skill
+        run: |
+          python3 - <<'EOF'
+          import pathlib
+          import re
+          import sys
+
+          README = pathlib.Path("README.md")
+
+
+          def section(text, heading):
+              """Body of a level-2 section, up to the next level-2 heading."""
+              m = re.search(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
+              if not m:
+                  return None
+              rest = text[m.end():]
+              nxt = re.search(r"^## ", rest, re.MULTILINE)
+              return rest[: nxt.start()] if nxt else rest
+
+
+          if not README.exists():
+              print("README.md not found")
+              sys.exit(1)
+
+          readme = README.read_text(encoding="utf-8")
+          errors = []
+
+          scope = section(readme, "Scope")
+          layout = section(readme, "Repository layout")
+          skills_table = section(readme, "Maintenance via skills")
+
+          for name, body in (
+              ("Scope", scope),
+              ("Repository layout", layout),
+              ("Maintenance via skills", skills_table),
+          ):
+              if body is None:
+                  errors.append(f"README.md: '## {name}' section not found — the index checks below cannot run")
+
+          opinions = sorted(pathlib.Path("opinions").glob("*.md"))
+          if not opinions:
+              errors.append("no markdown files found under opinions/")
+
+          for path in opinions:
+              if scope is not None and f"({path.as_posix()})" not in scope:
+                  errors.append(
+                      f"README.md: Scope has no bullet linking to {path} "
+                      f"— add one when adding an opinion"
+                  )
+              if layout is not None and path.name not in layout:
+                  errors.append(f"README.md: Repository layout tree does not list {path.name}")
+
+          skills = sorted(p for p in pathlib.Path("skills").glob("*") if p.is_dir())
+          if not skills:
+              errors.append("no skill directories found under skills/")
+
+          for path in skills:
+              if skills_table is not None and f"`{path.name}`" not in skills_table:
+                  errors.append(f"README.md: 'Maintenance via skills' table has no row for `{path.name}`")
+
+          if errors:
+              print("README index validation failed:")
+              for e in errors:
+                  print(f"  - {e}")
+              sys.exit(1)
+
+          print(f"README indexes all {len(opinions)} opinion files and {len(skills)} skills.")
+          EOF
