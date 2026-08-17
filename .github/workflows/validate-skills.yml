@@ -195,6 +195,11 @@ jobs:
 
           README = pathlib.Path("README.md")
 
+          # Links to opinion files: inline `](opinions/x.md)`, with an optional #anchor
+          # and optional "title", plus reference-style `[label]: opinions/x.md`.
+          INLINE_LINK = re.compile(r"]\(\s*(opinions/[\w.-]+\.md)(?:#[^)\s]*)?(?:\s+\"[^\"]*\")?\s*\)")
+          REF_LINK = re.compile(r"^\s*\[[^\]]+]:\s*(opinions/[\w.-]+\.md)", re.MULTILINE)
+
 
           def section(text, heading):
               """Body of a level-2 section, up to the next level-2 heading."""
@@ -204,6 +209,41 @@ jobs:
               rest = text[m.end():]
               nxt = re.search(r"^## ", rest, re.MULTILINE)
               return rest[: nxt.start()] if nxt else rest
+
+
+          def linked_opinions(scope):
+              """Opinion paths the Scope section links to, in any Markdown link style."""
+              return {*INLINE_LINK.findall(scope), *REF_LINK.findall(scope)}
+
+
+          def tree_opinions(layout):
+              """Files listed under the `opinions/` node of the repository layout tree."""
+              listed = set()
+              inside = False
+              for line in layout.splitlines():
+                  if re.match(r"^[├└]── opinions/", line):
+                      inside = True
+                      continue
+                  if inside:
+                      if re.match(r"^[├└]── ", line) or line.startswith("```"):
+                          break
+                      m = re.search(r"([\w.-]+\.md)", line)
+                      if m:
+                          listed.add(m.group(1))
+              return listed
+
+
+          def table_ids(body):
+              """First-cell `code` ids from the Markdown table rows in a section."""
+              ids = set()
+              for line in body.splitlines():
+                  if not line.startswith("|"):
+                      continue
+                  first = line.strip().strip("|").split("|")[0].strip()
+                  m = re.fullmatch(r"`([\w.-]+)`", first)
+                  if m:
+                      ids.add(m.group(1))
+              return ids
 
 
           if not README.exists():
@@ -228,23 +268,37 @@ jobs:
           opinions = sorted(pathlib.Path("opinions").glob("*.md"))
           if not opinions:
               errors.append("no markdown files found under opinions/")
+          names = {p.name for p in opinions}
 
-          for path in opinions:
-              if scope is not None and f"({path.as_posix()})" not in scope:
-                  errors.append(
-                      f"README.md: Scope has no bullet linking to {path} "
-                      f"— add one when adding an opinion"
-                  )
-              if layout is not None and path.name not in layout:
-                  errors.append(f"README.md: Repository layout tree does not list {path.name}")
+          if scope is not None:
+              linked = linked_opinions(scope)
+              for path in opinions:
+                  if path.as_posix() not in linked:
+                      errors.append(f"README.md: Scope has no bullet linking to {path} — add one when adding an opinion")
+              for stale in sorted(linked - {p.as_posix() for p in opinions}):
+                  errors.append(f"README.md: Scope links to {stale}, which no longer exists — drop or repoint the bullet")
 
-          skills = sorted(p for p in pathlib.Path("skills").glob("*") if p.is_dir())
+          if layout is not None:
+              listed = tree_opinions(layout)
+              if not listed:
+                  errors.append("README.md: Repository layout tree has no `opinions/` node — the tree check cannot run")
+              for name in sorted(names - listed):
+                  errors.append(f"README.md: Repository layout tree does not list opinions/{name}")
+              for stale in sorted(listed - names):
+                  errors.append(f"README.md: Repository layout tree lists opinions/{stale}, which no longer exists")
+
+          skills = {p.name for p in pathlib.Path("skills").glob("*") if p.is_dir()}
           if not skills:
               errors.append("no skill directories found under skills/")
 
-          for path in skills:
-              if skills_table is not None and f"`{path.name}`" not in skills_table:
-                  errors.append(f"README.md: 'Maintenance via skills' table has no row for `{path.name}`")
+          if skills_table is not None:
+              rows = table_ids(skills_table)
+              if not rows:
+                  errors.append("README.md: no skill rows parsed from the 'Maintenance via skills' table")
+              for name in sorted(skills - rows):
+                  errors.append(f"README.md: 'Maintenance via skills' table has no row for `{name}`")
+              for stale in sorted(rows - skills):
+                  errors.append(f"README.md: 'Maintenance via skills' table has a row for `{stale}`, which is not a skill directory")
 
           if errors:
               print("README index validation failed:")
@@ -252,5 +306,5 @@ jobs:
                   print(f"  - {e}")
               sys.exit(1)
 
-          print(f"README indexes all {len(opinions)} opinion files and {len(skills)} skills.")
+          print(f"README indexes all {len(opinions)} opinion files and {len(skills)} skills, with no stale entries.")
           EOF
