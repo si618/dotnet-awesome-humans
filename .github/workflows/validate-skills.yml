@@ -233,6 +233,11 @@ jobs:
               return listed
 
 
+          # A first cell is a bare id — `vet-source` — or a linked one:
+          # [`vet-source`](skills/vet-source/SKILL.md).
+          TABLE_ID = re.compile(r"(?:\[\s*)?`([\w.-]+)`(?:\s*]\([^)]*\))?")
+
+
           def table_ids(body):
               """First-cell `code` ids from the Markdown table rows in a section."""
               ids = set()
@@ -240,7 +245,7 @@ jobs:
                   if not line.startswith("|"):
                       continue
                   first = line.strip().strip("|").split("|")[0].strip()
-                  m = re.fullmatch(r"`([\w.-]+)`", first)
+                  m = TABLE_ID.fullmatch(first)
                   if m:
                       ids.add(m.group(1))
               return ids
