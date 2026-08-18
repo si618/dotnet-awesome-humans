@@ -9,18 +9,34 @@ on:
 permissions:
   contents: read
 
+# Set explicitly rather than inherited: the GitHub runner image puts NOLOGO in
+# /etc/environment but only exports the telemetry opt-out while installing the SDK,
+# so a job gets the quiet banner and the phone-home. Declaring both here also means
+# a self-hosted runner behaves the same as a GitHub-hosted one.
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
 jobs:
   validate:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      # Python only for skills-ref: the Agent Skills specification's own reference
+      # validator, published only to PyPI.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
         with:
           python-version: "3.14"
 
-      - name: Install skills-ref (Agent Skills reference validator) and PyYAML
-        run: pip install skills-ref pyyaml
+      - name: Install skills-ref
+        run: pip install -r .github/requirements.txt
+
+      # global.json decides the SDK, per opinions/ci.md — CI must not float a version
+      # the repository did not choose.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
 
       - name: Validate skills against the Agent Skills spec
         run: |
@@ -40,276 +56,10 @@ jobs:
           exit "$status"
 
       - name: Verify opinions frontmatter
-        run: |
-          python3 - <<'EOF'
-          import pathlib
-          import sys
-
-          import yaml
-
-          REQUIRED = ["targets", "last-reviewed", "last-used", "sources"]
-
-          errors = []
-          files = sorted(pathlib.Path("opinions").glob("*.md"))
-          if not files:
-              errors.append("no markdown files found under opinions/")
-
-          for path in files:
-              text = path.read_text(encoding="utf-8")
-              if not text.startswith("---\n"):
-                  errors.append(f"{path}: missing frontmatter block")
-                  continue
-              end = text.find("\n---", 4)
-              if end == -1:
-                  errors.append(f"{path}: unterminated frontmatter block")
-                  continue
-              try:
-                  fm = yaml.safe_load(text[4:end])
-              except yaml.YAMLError as exc:
-                  errors.append(f"{path}: frontmatter is not valid YAML: {exc}")
-                  continue
-              if not isinstance(fm, dict):
-                  errors.append(f"{path}: frontmatter is not a YAML mapping")
-                  continue
-              for field in REQUIRED:
-                  if field not in fm or fm[field] in (None, "", []):
-                      errors.append(f"{path}: missing or empty frontmatter field '{field}'")
-
-          if errors:
-              print("Opinion frontmatter validation failed:")
-              for e in errors:
-                  print(f"  - {e}")
-              sys.exit(1)
-          print(f"All {len(files)} opinion files have valid frontmatter.")
-          EOF
+        run: dotnet run scripts/validate-opinion-frontmatter.cs
 
       - name: Verify opinion sources against the roster
-        run: |
-          python3 - <<'EOF'
-          import pathlib
-          import re
-          import sys
-
-          import yaml
-
-          ROSTER = pathlib.Path("AWESOME-HUMANS.md")
-          DISCOVERY_MARKER = "**Discovery-only.**"
-          RESERVED = {"house"}
-
-          SECTIONS = {
-              "citable": ("## Tier 1", "## Tier 2"),
-              "watch": ("## Watch list",),
-          }
-
-
-          def parse_roster(text):
-              """Map source id -> (bucket, notes). Buckets: citable, watch."""
-              rows = {}
-              bucket = None
-              for line in text.splitlines():
-                  if line.startswith("## "):
-                      bucket = None
-                      for name, prefixes in SECTIONS.items():
-                          if any(line.startswith(p) for p in prefixes):
-                              bucket = name
-                      continue
-                  if bucket is None or not line.startswith("|"):
-                      continue
-                  cells = [c.strip() for c in line.strip().strip("|").split("|")]
-                  if len(cells) < 5:
-                      continue
-                  m = re.fullmatch(r"`([a-z0-9-]+)`", cells[0])
-                  if not m:  # header or separator row
-                      continue
-                  rows[m.group(1)] = (bucket, cells[-1])
-              return rows
-
-
-          def frontmatter(path):
-              text = path.read_text(encoding="utf-8")
-              if not text.startswith("---\n"):
-                  return None
-              end = text.find("\n---", 4)
-              if end == -1:
-                  return None
-              fm = yaml.safe_load(text[4:end])
-              return fm if isinstance(fm, dict) else None
-
-
-          errors = []
-
-          if not ROSTER.exists():
-              print(f"{ROSTER} not found")
-              sys.exit(1)
-
-          roster = parse_roster(ROSTER.read_text(encoding="utf-8"))
-          if not roster:
-              errors.append(f"{ROSTER}: no source rows parsed — roster tables may have changed shape")
-
-          discovery = {sid for sid, (_, notes) in roster.items() if DISCOVERY_MARKER in notes}
-
-          for path in sorted(pathlib.Path("opinions").glob("*.md")):
-              fm = frontmatter(path)
-              if fm is None:
-                  continue  # shape is already covered by the frontmatter step
-              sources = fm.get("sources") or []
-              if not isinstance(sources, list):
-                  errors.append(f"{path}: 'sources' must be a list")
-                  continue
-              for sid in sources:
-                  if sid in RESERVED:
-                      continue
-                  if sid not in roster:
-                      errors.append(f"{path}: source '{sid}' is not on the roster in {ROSTER}")
-                      continue
-                  bucket, _ = roster[sid]
-                  if bucket == "watch":
-                      errors.append(
-                          f"{path}: source '{sid}' is on the watch list and may not feed opinions "
-                          f"— corroborate with a Tier 1/2 source or admit it via vet-source"
-                      )
-                  elif sid in discovery:
-                      errors.append(
-                          f"{path}: source '{sid}' is marked discovery-only and never appears in 'sources:' "
-                          f"— cite the primary source it led you to"
-                      )
-
-          if errors:
-              print("Opinion source validation failed:")
-              for e in errors:
-                  print(f"  - {e}")
-              sys.exit(1)
-
-          print(
-              f"All opinion sources resolve to the roster "
-              f"({len(roster)} sources, {len(discovery)} discovery-only)."
-          )
-          EOF
+        run: dotnet run scripts/validate-opinion-sources.cs
 
       - name: Verify README indexes every opinion and skill
-        run: |
-          python3 - <<'EOF'
-          import pathlib
-          import re
-          import sys
-
-          README = pathlib.Path("README.md")
-
-          # Links to opinion files: inline `](opinions/x.md)`, with an optional #anchor
-          # and optional "title", plus reference-style `[label]: opinions/x.md`.
-          INLINE_LINK = re.compile(r"]\(\s*(opinions/[\w.-]+\.md)(?:#[^)\s]*)?(?:\s+\"[^\"]*\")?\s*\)")
-          REF_LINK = re.compile(r"^\s*\[[^\]]+]:\s*(opinions/[\w.-]+\.md)", re.MULTILINE)
-
-
-          def section(text, heading):
-              """Body of a level-2 section, up to the next level-2 heading."""
-              m = re.search(rf"^## {re.escape(heading)}\s*$", text, re.MULTILINE)
-              if not m:
-                  return None
-              rest = text[m.end():]
-              nxt = re.search(r"^## ", rest, re.MULTILINE)
-              return rest[: nxt.start()] if nxt else rest
-
-
-          def linked_opinions(scope):
-              """Opinion paths the Scope section links to, in any Markdown link style."""
-              return {*INLINE_LINK.findall(scope), *REF_LINK.findall(scope)}
-
-
-          def tree_opinions(layout):
-              """Files listed under the `opinions/` node of the repository layout tree."""
-              listed = set()
-              inside = False
-              for line in layout.splitlines():
-                  if re.match(r"^[├└]── opinions/", line):
-                      inside = True
-                      continue
-                  if inside:
-                      if re.match(r"^[├└]── ", line) or line.startswith("```"):
-                          break
-                      m = re.search(r"([\w.-]+\.md)", line)
-                      if m:
-                          listed.add(m.group(1))
-              return listed
-
-
-          # A first cell is a bare id — `vet-source` — or a linked one:
-          # [`vet-source`](skills/vet-source/SKILL.md).
-          TABLE_ID = re.compile(r"(?:\[\s*)?`([\w.-]+)`(?:\s*]\([^)]*\))?")
-
-
-          def table_ids(body):
-              """First-cell `code` ids from the Markdown table rows in a section."""
-              ids = set()
-              for line in body.splitlines():
-                  if not line.startswith("|"):
-                      continue
-                  first = line.strip().strip("|").split("|")[0].strip()
-                  m = TABLE_ID.fullmatch(first)
-                  if m:
-                      ids.add(m.group(1))
-              return ids
-
-
-          if not README.exists():
-              print("README.md not found")
-              sys.exit(1)
-
-          readme = README.read_text(encoding="utf-8")
-          errors = []
-
-          scope = section(readme, "Scope")
-          layout = section(readme, "Repository layout")
-          skills_table = section(readme, "Maintenance via skills")
-
-          for name, body in (
-              ("Scope", scope),
-              ("Repository layout", layout),
-              ("Maintenance via skills", skills_table),
-          ):
-              if body is None:
-                  errors.append(f"README.md: '## {name}' section not found — the index checks below cannot run")
-
-          opinions = sorted(pathlib.Path("opinions").glob("*.md"))
-          if not opinions:
-              errors.append("no markdown files found under opinions/")
-          names = {p.name for p in opinions}
-
-          if scope is not None:
-              linked = linked_opinions(scope)
-              for path in opinions:
-                  if path.as_posix() not in linked:
-                      errors.append(f"README.md: Scope has no bullet linking to {path} — add one when adding an opinion")
-              for stale in sorted(linked - {p.as_posix() for p in opinions}):
-                  errors.append(f"README.md: Scope links to {stale}, which no longer exists — drop or repoint the bullet")
-
-          if layout is not None:
-              listed = tree_opinions(layout)
-              if not listed:
-                  errors.append("README.md: Repository layout tree has no `opinions/` node — the tree check cannot run")
-              for name in sorted(names - listed):
-                  errors.append(f"README.md: Repository layout tree does not list opinions/{name}")
-              for stale in sorted(listed - names):
-                  errors.append(f"README.md: Repository layout tree lists opinions/{stale}, which no longer exists")
-
-          skills = {p.name for p in pathlib.Path("skills").glob("*") if p.is_dir()}
-          if not skills:
-              errors.append("no skill directories found under skills/")
-
-          if skills_table is not None:
-              rows = table_ids(skills_table)
-              if not rows:
-                  errors.append("README.md: no skill rows parsed from the 'Maintenance via skills' table")
-              for name in sorted(skills - rows):
-                  errors.append(f"README.md: 'Maintenance via skills' table has no row for `{name}`")
-              for stale in sorted(rows - skills):
-                  errors.append(f"README.md: 'Maintenance via skills' table has a row for `{stale}`, which is not a skill directory")
-
-          if errors:
-              print("README index validation failed:")
-              for e in errors:
-                  print(f"  - {e}")
-              sys.exit(1)
-
-          print(f"README indexes all {len(opinions)} opinion files and {len(skills)} skills, with no stale entries.")
-          EOF
+        run: dotnet run scripts/validate-readme-index.cs

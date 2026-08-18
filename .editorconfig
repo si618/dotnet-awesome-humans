@@ -37,6 +37,12 @@ indent_size = 2
 [*.{props,targets,csproj,fsproj,slnx,slnf,config}]
 indent_size = 2
 
+# C#: the repository now contains some of its own, under scripts/ — the CI checks.
+# Only the layout lives here; the house C#/F# style is templates/.editorconfig, which
+# the scripts follow. Duplicating those rules into this file would let the two drift.
+[*.cs]
+indent_size = 4
+
 # Verbatim third-party text — the Apache 2.0 licence is reproduced exactly as
 # published, indentation included. Never reformat it.
 [LICENSE]
