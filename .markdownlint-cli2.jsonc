@@ -16,10 +16,10 @@
 
     // .github/PULL_REQUEST_TEMPLATE.md opens at "##" by design — it is a fragment
     // rendered inside GitHub's PR form, not a standalone document.
-    "MD041": false
+    "MD041": false,
   },
   "globs": ["**/*.md"],
   // .claude/skills is a local symlink to skills/ (see CLAUDE.md) — linting it
   // reports every finding twice.
-  "ignores": ["node_modules", ".claude"]
+  "ignores": ["node_modules", ".claude"],
 }
