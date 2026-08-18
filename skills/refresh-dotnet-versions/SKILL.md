@@ -14,7 +14,7 @@ Bring every resource in this repository up to the **latest released** (GA, not p
 
 ## Trigger
 
-The `dotnet-release-watch` GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls the official releases index daily and opens a **trigger PR** (label `dotnet-release`, branch `automation/dotnet-release-watch`) whenever the GA state changes. That PR only updates the snapshot at `.github/state/dotnet-releases.json` — running this skill against the PR's branch produces the actual update, and both merge together. The skill can also be run standalone; the snapshot doubles as a fast offline answer to "what GA versions does this repository currently know about?".
+The .NET release watch GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls the official releases index daily and opens a **trigger PR** (label `dotnet-release`, branch `automation/dotnet-release-watch`) whenever the GA state changes. That PR only updates the snapshot at `.github/state/dotnet-releases.json` — running this skill against the PR's branch produces the actual update, and both merge together. The skill can also be run standalone; the snapshot doubles as a fast offline answer to "what GA versions does this repository currently know about?".
 
 ## Orchestration
 
