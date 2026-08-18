@@ -20,11 +20,17 @@
       "description": "Action digest bumps are mechanical and the workflows re-run on the PR, so they need no staged rollout.",
       "matchManagers": ["github-actions"],
       "groupName": "github actions"
+    },
+    {
+      "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while making the header lie, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one. Scoped to templates/ rather than disabling nuget outright, because the root global.json IS a real dependency now — it is the SDK the scripts/ checks run on, and a bot bump there is exactly the mechanical change Renovate should make.",
+      "matchManagers": ["nuget"],
+      "matchFileNames": ["templates/**"],
+      "enabled": false
     }
   ],
   "nuget": {
-    "enabled": false,
-    "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing here builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while making the header lie, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one."
+    "description": "The scripts/ checks are .NET 10 file-based apps that declare their packages with #:package. Renovate understands the directive but does not scan .cs by default, so YamlDotNet would sit unbumped without this. Patterns are added to the manager defaults, not substituted for them, and scoping to scripts/ keeps the exemplar and generated .cs files under templates/ out of it.",
+    "managerFilePatterns": ["/^scripts/.*\\.cs$/"]
   },
   "vulnerabilityAlerts": {
     "enabled": true,

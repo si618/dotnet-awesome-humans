@@ -77,6 +77,12 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 │   ├── testing.md
 │   └── ui-frameworks.md
 ├── research/                 ← saved research-topic briefs (staging: promote or discard)
+├── scripts/                  ← this repository's own CI checks, as .NET file-based apps
+│   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
+│   ├── Opinions.cs           ← shared helper, pulled in with #:include
+│   ├── validate-opinion-frontmatter.cs
+│   ├── validate-opinion-sources.cs
+│   └── validate-readme-index.cs
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
@@ -107,6 +113,26 @@ Skills are designed for a cost-aware split: **lower-cost worker agents** fan out
 ### Release watch automation
 
 A scheduled GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls the official [.NET releases index](https://github.com/dotnet/core/blob/main/release-notes/releases-index.json) daily and compares it against the checked-in snapshot at `.github/state/dotnet-releases.json`. When a new GA release lands (runtime, ASP.NET Core, SDK), it opens a pull request updating the snapshot. That PR is the **trigger** for running `refresh-dotnet-versions` — it does not itself update any opinions or template files.
+
+## Repository scripts
+
+The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as **.NET 10 file-based apps** — no project file and no build step, with dependencies declared inline via `#:package` and the pieces they share pulled in with `#:include`.
+
+| Script                                                                       | Checks                                                                                         |
+| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`validate-opinion-frontmatter.cs`](scripts/validate-opinion-frontmatter.cs) | Every file under `opinions/` carries `targets`, `last-reviewed`, `last-used` and `sources`     |
+| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs)         | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)               | This README indexes every opinion and skill, in both directions                                |
+
+Run them from the repository root, exactly as CI does:
+
+```sh
+dotnet run scripts/validate-opinion-frontmatter.cs
+```
+
+Two helpers are shared rather than copied: [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, and [`Frontmatter.cs`](scripts/Frontmatter.cs) parses their frontmatter. Neither runs on its own — they declare no top-level statements, and compile into whichever script `#:include`s them.
+
+The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). The one check still on Python is the Agent Skills spec validator, published only to PyPI.
 
 ## Using this repository
 
