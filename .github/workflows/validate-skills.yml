@@ -23,6 +23,29 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      # An entry-point script is documented as runnable both ways — `dotnet run
+      # scripts/x.cs` and `./scripts/x.cs` via its shebang. CI only ever uses the
+      # first, so a lost executable bit stays invisible until someone tries the
+      # second; that is exactly how #33 shipped a broken one. Assert the two agree
+      # in both directions: a shebang means an executable entry point, and a
+      # helper (no shebang, #:include'd) means no bit.
+      - name: Verify script permissions match their shebangs
+        run: |
+          set -u
+          status=0
+          for file in scripts/*.cs; do
+            if head -n 1 "$file" | grep -q '^#!'; then
+              if [ ! -x "$file" ]; then
+                echo "$file has a shebang but is not executable — chmod +x it" >&2
+                status=1
+              fi
+            elif [ -x "$file" ]; then
+              echo "$file is executable but has no shebang — chmod -x it" >&2
+              status=1
+            fi
+          done
+          exit "$status"
+
       # Python only for skills-ref: the Agent Skills specification's own reference
       # validator, published only to PyPI.
       - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
