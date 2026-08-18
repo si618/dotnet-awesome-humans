@@ -1,41 +1,39 @@
 # dotnet-awesome-humans
 
-Opinionated best practices for modern .NET software development — written for humans, applied by AI agents.
+Opinionated best practices for modern .NET — written for humans, applied by AI agents.
 
-The name is the thesis: everything here distils the published guidance of **awesome humans** — the people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Aims to answer the question _"what does good look like in .NET right now?"_ and to keep answering it as .NET moves.
 
-This repository is a **living reference**. It exists to answer one question with confidence: _"what does good look like in .NET right now?"_ — for both AI agents and humans.
+Three ways to use it:
 
-## Purpose
-
-1. **A reference for AI agents.** Point a coding agent at this repository to define "good" — conventions, project layout, language usage, and library choices it should follow when generating or reviewing .NET code.
-2. **Scaffolding and verification.** Copy-paste-ready template files that encode the opinions, so new projects start right and existing projects can be verified against them.
-3. **A concise guide for humans.** Each opinion is written to be skimmable — the opinion first, the rationale second, the sources last, with actual code examples wherever an opinion is easier shown than told.
+- **Point an agent at it.** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code." The opinions cover conventions, project layout, language usage, and library choices.
+- **Scaffold from it.** Copy files out of [`templates/`](templates), or run [`verify-project`](skills/verify-project/SKILL.md) against a codebase you already have.
+- **Read it.** Every opinion starts with the recommendation, then the rationale, then the sources, with code examples where it makes sense.
 
 ## Scope
 
-Modern .NET, end to end — one bullet per file in [`opinions/`](opinions):
+The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one topic per file:
 
 - **[Runtime & BCL](opinions/runtime-performance.md)** — performance idioms, `Span<T>`/memory, async, GC awareness
 - **[Project structure & SDK](opinions/project-structure.md)** — project files, solution formats, central package management, analyzers, source generators
-- **[C#](opinions/csharp.md)** — always targeting the **latest released language version**, with idiomatic use of new features
-- **[F#](opinions/fsharp.md)** — first-class, not an afterthought
+- **[C#](opinions/csharp.md)** — the latest released language version, and idiomatic use of what it added
+- **[F#](opinions/fsharp.md)** — domain modelling, mixed C#/F# solutions, testing
 - **[Application architecture](opinions/architecture.md)** — modular monolith, vertical slices, and when layering earns its keep
 - **[ASP.NET Core](opinions/aspnet-core.md)** — minimal APIs, hosting, auth, OpenAPI, performance
 - **[Data access](opinions/data-access.md)** — EF Core defaults, set-based work, when to drop to SQL
 - **[Logging & tracing](opinions/logging.md)** — structured logging, source-generated log messages, OpenTelemetry over OTLP
-- **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI (mobile + desktop), and cross-platform desktop (Avalonia)
-- **[Testing](opinions/testing.md)** — structure, naming, patterns
+- **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
+- **[Testing](opinions/testing.md)** — framework choice, naming and structure, integration tests, coverage
 - **[CI & automation](opinions/ci.md)** — pinned, reproducible builds and supply-chain hygiene
-- **Libraries** — an opinionated shortlist of what to reach for (and what to avoid), spread across the files above
+- **Libraries** — what to reach for and what to avoid, spread across the files above
 
-Adding an opinion file means adding its bullet here and its entry in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
+A new opinion file must appear both here and in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
 
 ## Freshness policy
 
-Opinions here always target the **latest release** versions of .NET, C#, and F# — not previews, not old LTS-for-comfort. When a new version ships, the repository is updated via the [skills](#maintenance-via-skills) below.
+Opinions target the latest released versions of .NET, C#, and F# — GA only, never an older LTS for comfort, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
-Every resource in this repository carries metadata recording when it was last reviewed and last used as a reference, so staleness is visible, not silent:
+Every resource carries metadata recording when it was last reviewed and last used as a reference, so staleness is visible rather than silent:
 
 ```yaml
 ---
@@ -48,13 +46,11 @@ sources: [dotnet-blog, andrew-lock]
 
 ## Awesome humans
 
-Opinions must be earned. Every opinion traces back to a vetted **source** — the work of an awesome human, whether an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — with a proven track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full admission criteria live in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
-
-AI agents collate and refine content from these sources using the repository's skills — the humans provide the wisdom; the agents keep it current and consistent.
+Opinions have to be earned. Each one traces back to a vetted source — an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — admitted on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 ### House opinions
 
-One human outranks the roster: the **repository owner**. Their own preferences are woven into the opinions and templates via [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill — first-class, but always visibly marked so readers can tell community best practice from local convention (the marking literal and conflict-precedence rules are defined in HOUSE-OPINIONS.md). Other contributors can propose opinions (sourced or experience-based) through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
+One human outranks the roster: the repository owner. Their preferences enter through [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md) and the [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md) skill, and are always marked in place, so a reader can tell community best practice from local convention. HOUSE-OPINIONS.md defines the marking literal and what wins when the two conflict. Other contributors propose opinions, sourced or experience-based, through the [pull request template](.github/PULL_REQUEST_TEMPLATE.md).
 
 ## Repository layout
 
@@ -96,9 +92,9 @@ One human outranks the roster: the **repository owner**. Their own preferences a
 
 ## Maintenance via skills
 
-The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification) — LLM- and tool-agnostic, so any compliant agent can run them. Each skill is a directory under [`skills/`](skills) with a `SKILL.md`.
+The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each is a directory under [`skills/`](skills) with a `SKILL.md`.
 
-Skills are designed for a cost-aware split: **lower-cost worker agents** fan out to do the web searches and source sweeps, while the strongest available model acts as the **editor** — the orchestrator that synthesizes findings and is the only one that updates the actual opinions and templates.
+They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor — the only one that writes to the opinions and templates.
 
 | Skill                                                                | Purpose                                                                                    |
 | -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
@@ -112,11 +108,11 @@ Skills are designed for a cost-aware split: **lower-cost worker agents** fan out
 
 ### Release watch automation
 
-A scheduled GitHub Action (`.github/workflows/dotnet-release-watch.yml`) polls the official [.NET releases index](https://github.com/dotnet/core/blob/main/release-notes/releases-index.json) daily and compares it against the checked-in snapshot at `.github/state/dotnet-releases.json`. When a new GA release lands (runtime, ASP.NET Core, SDK), it opens a pull request updating the snapshot. That PR is the **trigger** for running `refresh-dotnet-versions` — it does not itself update any opinions or template files.
+A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.github/workflows/dotnet-release-watch.yml)) polls the official [.NET releases index](https://github.com/dotnet/core/blob/main/release-notes/releases-index.json) daily against the checked-in snapshot at [`.github/state/dotnet-releases.json`](.github/state/dotnet-releases.json). A new GA release opens a pull request updating that snapshot. The PR is a trigger for running [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md); it changes no opinion or template itself.
 
 ## Repository scripts
 
-The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as **.NET 10 file-based apps** — no project file and no build step, with dependencies declared inline via `#:package` and the pieces they share pulled in with `#:include`.
+The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
 | Script                                                                       | Checks                                                                                         |
 | ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
@@ -130,15 +126,9 @@ Run them from the repository root, exactly as CI does:
 dotnet run scripts/validate-opinion-frontmatter.cs
 ```
 
-Two helpers are shared rather than copied: [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, and [`Frontmatter.cs`](scripts/Frontmatter.cs) parses their frontmatter. Neither runs on its own — they declare no top-level statements, and compile into whichever script `#:include`s them.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files and [`Frontmatter.cs`](scripts/Frontmatter.cs) parses their frontmatter. Neither runs alone: they declare no top-level statements, and compile into whichever script `#:include`s them.
 
-The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). The one check still on Python is the Agent Skills spec validator, published only to PyPI.
-
-## Using this repository
-
-- **As an agent instruction:** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code."
-- **As scaffolding:** copy files from [`templates/`](templates) into a new repository.
-- **As a human:** read [`opinions/`](opinions) — each file leads with the opinion so you can skim.
+The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). One check is still Python — the Agent Skills spec validator, published only to PyPI.
 
 ## License
 
