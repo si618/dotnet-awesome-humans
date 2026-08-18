@@ -153,15 +153,26 @@ return 0;
 // The body of a level-2 section, up to the next level-2 heading.
 static string? Section(string text, string heading)
 {
-    Match match = Regex.Match(text, $@"^## {Regex.Escape(heading)}\s*$", RegexOptions.Multiline);
-    if (!match.Success)
+    // Every level-2 heading in one pass: the one whose text matches starts the
+    // section, and the heading after it ends it. Matching headings generically
+    // keeps the pattern constant, so it can be source-generated — interpolating
+    // the wanted heading into the pattern could not (SYSLIB1045).
+    MatchCollection headings = Patterns.SectionHeading().Matches(text);
+
+    for (int index = 0; index < headings.Count; index++)
     {
-        return null;
+        if (!headings[index].Groups[1].Value.Trim().Equals(heading, StringComparison.Ordinal))
+        {
+            continue;
+        }
+
+        int start = headings[index].Index + headings[index].Length;
+        return index + 1 < headings.Count
+            ? text[start..headings[index + 1].Index]
+            : text[start..];
     }
 
-    string rest = text[(match.Index + match.Length)..];
-    Match next = Regex.Match(rest, "^## ", RegexOptions.Multiline);
-    return next.Success ? rest[..next.Index] : rest;
+    return null;
 }
 
 // Files listed under the `opinions/` node of the repository layout tree.
@@ -223,6 +234,10 @@ static HashSet<string> TableIds(string body)
 
 internal static partial class Patterns
 {
+    // A level-2 heading line; group 1 is the heading text.
+    [GeneratedRegex(@"^## (.*)$", RegexOptions.Multiline)]
+    internal static partial Regex SectionHeading();
+
     // Inline link to an opinion file, with an optional #anchor and optional "title".
     [GeneratedRegex(@"]\(\s*(opinions/[\w.-]+\.md)(?:#[^)\s]*)?(?:\s+""[^""]*"")?\s*\)")]
     internal static partial Regex InlineOpinionLink();
