@@ -29,7 +29,7 @@ This is **editor-only work — do not fan it out**. The wide, shallow sweeping a
 6. **Follow through into `templates/`** wherever the opinion changes scaffolding — a build property, an `.editorconfig` rule, a package pin. An opinion naming a setting its nominated template omits is a finding `audit-freshness` will raise, so land both halves together. Add the source ids to the template's pipe-delimited comment header too.
 7. **Fix what the brief noticed in passing.** Briefs routinely spot collateral damage — a stale example, a path that now collides, a rule enforced with no opinion behind it. Fix it in the same PR; noticing it was the point.
 8. **Update frontmatter** on every file touched: add the promoted source ids to `sources:`, and bump `last-reviewed` — but only honestly (see Rules).
-9. **Delete the brief**, then commit on a branch (`promote/<topic-slug>`) and open a PR to the default branch, titled `docs: promote <topic>`.
+9. **Delete the brief** — the brief only; `research/.gitkeep` keeps the directory tracked once the last one goes. Then commit on a branch (`promote/<topic-slug>`) and open a PR to the default branch, titled `docs: promote <topic>`.
 
 ## Rules
 
