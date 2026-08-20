@@ -72,7 +72,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── runtime-performance.md
 │   ├── testing.md
 │   └── ui-frameworks.md
-├── research/                 ← saved research-topic briefs (staging: promote or discard)
+├── research/                 ← saved research topics (staging: promote or discard)
 ├── scripts/                  ← this repository's own CI checks, as .NET file-based apps
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
@@ -96,15 +96,16 @@ The repository maintains itself through agent skills following the [Agent Skills
 
 They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor — the only one that writes to the opinions and templates.
 
-| Skill                                                                | Purpose                                                                                    |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them    |
-| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions |
-| [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline         |
-| [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                     |
-| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                 |
-| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
-| [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited brief |
+| Skill                                                                | Purpose                                                                                        |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
+| [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them        |
+| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions     |
+| [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline             |
+| [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                         |
+| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                     |
+| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House      |
+| [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited and saved |
+| [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic — weave it into the opinions and templates, or discard it       |
 
 ### Release watch automation
 
