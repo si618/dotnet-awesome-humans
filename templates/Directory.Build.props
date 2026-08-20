@@ -1,6 +1,13 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-14 | sources: ms-learn, dotnet-blog, house -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-20 | sources: ms-learn, dotnet-blog, house -->
 <!-- Copy to the repository root. Every project inherits these; override per-project only with a recorded reason. -->
 <Project>
+
+  <PropertyGroup Label="Output layout">
+    <!-- One artifacts/<type>/<project>/<pivot> root for all build output. Must be set here or on the
+         command line — MSBuild reads it before project evaluation, so a .csproj setting fails with
+         NETSDK1199 (opinions/project-structure.md). -->
+    <UseArtifactsOutput>true</UseArtifactsOutput>
+  </PropertyGroup>
 
   <PropertyGroup Label="Targets and language">
     <TargetFramework>net10.0</TargetFramework>
@@ -21,6 +28,8 @@
 
   <PropertyGroup Label="Packaging hygiene">
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
+    <!-- CPM above pins the dependency graph; flip this to true and add locked-mode restore in CI
+         if you also want packages.lock.json guarding against feed drift (opinions/ci.md). -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Doc file feeds IDE tooltips and OpenAPI XML comments; CS1591 exempted so undocumented internals don't fail the build -->
