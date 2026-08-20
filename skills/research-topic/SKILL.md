@@ -44,6 +44,8 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 The brief and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the brief. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 
+**Commit and title the PR `research: <topic>`, not `docs: research <topic>`.** A brief is its own kind of change — staged, dated, and destined to be promoted or discarded — and giving it a distinct type makes that visible in `git log` and lets one command list every brief the repository has ever taken on. Filing them under `docs` buries them among opinion edits, which are the opposite thing: settled, not staged. Use the topic as the subject, matching the slug in the branch and filename, so `research/union-types` carries `research: union types`. Promotion is not research and keeps the type of whatever it changes — weaving a brief into an opinion is a `docs:` commit.
+
 Every saved brief must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
 - `status: open` — freshly saved; awaiting a promote-or-discard decision.
