@@ -105,6 +105,7 @@ foreach ((string path, IDictionary? fields, string? readError) in resources)
             errors.Add($"{path}: '{field}' is '{text}', not an ISO 8601 date (YYYY-MM-DD)");
         }
     }
+
 }
 
 if (errors.Count > 0)

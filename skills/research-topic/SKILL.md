@@ -40,7 +40,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 ## Persistence and lifecycle
 
-**Save the research topic by default** to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) plus a `status:` field — skip saving only if the user says the question was throwaway. A saved research topic records the state of a moment; the frontmatter dates are its honesty mechanism.
+**Save the research topic by default** to `research/<topic-slug>.md` with the standard frontmatter (`targets`, `last-reviewed`, `last-used`, `sources`) — skip saving only if the user says the question was throwaway. A saved research topic records the state of a moment; the frontmatter dates are its honesty mechanism.
 
 The research topic and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. Merging that PR is a lifecycle step, not the end of it: the merge puts the research on record and in front of reviewers, and only then does `resolve-research` pick it up, on its own branch and PR. Research and resolution are two PRs by design — never fold the promote-or-discard decision into the still-open research PR. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the file. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 
@@ -48,10 +48,10 @@ The research topic and its `last-used` bumps are committed on the `research/<top
 
 Every saved research topic must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
-- `status: open` — freshly saved; awaiting a promote-or-discard decision. It is the only resting value: both resolutions end with the file deleted, so anything on disk is by definition unresolved.
+- **Open is the only state there is**, so nothing records it: both resolutions end with the file deleted, which makes a topic on disk unresolved by definition. A `status:` field could only ever read `open`, so the file's existence carries it instead.
 - **Promote**: the recommendation is woven into the matching `opinions/` file(s) and the file deleted — `resolve-research` owns the roster gate and the mechanics.
 - **Discard**: delete the file — research that answered a moment's question owes nothing further. No tombstone needed; git history is the record. `resolve-research` owns this too; the two outcomes are one decision.
-- `audit-freshness` covers `research/` like everything else: an `open` research topic past the tolerance `audit-freshness` applies is reported as promote-or-discard triage, so they cannot silently accumulate as unratified pseudo-opinions.
+- `audit-freshness` covers `research/` like everything else: a research topic past the tolerance `audit-freshness` applies is reported as promote-or-discard triage, so they cannot silently accumulate as unratified pseudo-opinions.
 
 ## Edge cases
 

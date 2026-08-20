@@ -51,7 +51,7 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 ---
 ```
 
-(A `research/` topic carries a fifth field, `status`, which [resolve-research](skills/resolve-research/SKILL.md) owns.)
+(A `research/` topic carries these four and nothing more. It needs no status field: promoting or discarding one ends in deletion, so a topic on disk is unresolved by definition and a status could only ever read `open`. See [resolve-research](skills/resolve-research/SKILL.md).)
 
 **`templates/` carry a first-line comment header** — an XML or INI file cannot open with a `---` block and stay valid for the tools that read it, so the same fields ride in a comment instead, pipe-separated after a fixed marker:
 
@@ -65,7 +65,7 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 
 Rules:
 
-- Update `last-used` whenever you consume a resource — an opinion you read to decide something, a template you diffed a project against. This is how the repository knows what is earning its place; a resource nothing ever stamps is a pruning candidate.
+- Update `last-used` whenever you consume a resource — an opinion you read to decide something, a template you diffed a project against. It does two jobs: it orders staleness triage (of ten drifted `last-reviewed` dates, review the ones being read first), and it marks candidates for pruning. Know its one limitation: only reads that happen _in this repository_ stamp anything, so a human copying a template or reading an opinion on the web leaves no trace, and the field always undercounts. That is why `audit-freshness` treats it as informational and never a finding — it is a weak signal used gently, in every direction it points.
 - Update `last-reviewed` only after verifying content against its sources.
 - `sources` ids must exist in `AWESOME-HUMANS.md` — either in the roster tables or as the reserved `house` id.
 - Dates are ISO 8601 (`YYYY-MM-DD`), always absolute, never relative.
