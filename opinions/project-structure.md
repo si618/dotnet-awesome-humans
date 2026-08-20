@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14, fsharp-10]
-last-reviewed: 2026-08-12
+last-reviewed: 2026-08-20
 last-used: 2026-08-20
 sources: [ms-learn, dotnet-blog, gerald-versluis, house]
 ---
@@ -23,6 +23,7 @@ One solution format, central package management, versions pinned at the root. Th
 ## Repository layout
 
 - **`src/` for shipping code, `tests/` for test projects, `docs/` for long-form documentation, build configuration at the root.** One project per directory, directory named after the assembly, and the solution mirrors the disk layout with `/src/`, `/tests/`, and `/build/` solution folders — [templates/example.slnx](../templates/example.slnx) encodes exactly this shape.
+- **Enable the artifacts output layout: `<UseArtifactsOutput>true</UseArtifactsOutput>` in the root `Directory.Build.props`.** All build output from all projects lands under one `artifacts/<type>/<project>/<pivot>` root (`bin`, `obj`, `publish`, `package`) instead of a `bin/`+`obj/` pair per project directory — a layout tools and CI steps can rely on, where the per-project layout "can change drastically via relatively simple MSBuild changes". GA since .NET 8 but still opt-in on the .NET 10 SDK, so adopting it is a deliberate choice; [templates/Directory.Build.props](../templates/Directory.Build.props) makes it. Two things to know when adopting: MSBuild reads the property before project evaluation, so it works only from `Directory.Build.props` or the command line — setting it in a project file fails the build with `NETSDK1199`, and per-project opt-out is unsupported; and the pivot is the lowercase configuration alone for a single-TFM project (`artifacts/bin/App/release`, no TFM segment), so every hardcoded `bin/<Config>/<tfm>` path — Dockerfiles, CI copy steps, scripts — must change in the same commit. `dotnet new gitignore` already ignores `artifacts/`. ([Artifacts output layout — Microsoft Learn](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output), [Announcing .NET 8 Preview 3](https://devblogs.microsoft.com/dotnet/announcing-dotnet-8-preview-3/))
 - **Root files are the contract.** `global.json`, `Directory.Build.props`, `Directory.Packages.props`, and `.editorconfig` live at the repository root so every project inherits them with zero per-project ceremony; surface them in the solution's `/build/` folder so they get reviewed, not forgotten.
 - **Test projects sit beside, never inside, the code under test:** `tests/Example.Library.Tests` mirrors `src/Example.Library` and is named `<Project>.Tests`. This keeps packing, coverage filters, and `.slnf` filters trivial (see [opinions/testing.md](testing.md) for what goes in them).
 - **Inside a project, group by feature, not by pattern** — see [architecture.md](architecture.md) for how modules and vertical slices sit under this layout.

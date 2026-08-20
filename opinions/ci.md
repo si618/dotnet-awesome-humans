@@ -1,6 +1,6 @@
 ---
 targets: [net10.0]
-last-reviewed: 2026-08-18
+last-reviewed: 2026-08-20
 last-used: 2026-08-20
 sources: [meziantou, ms-learn, house]
 ---
@@ -23,7 +23,7 @@ Supply-chain hygiene is not optional in the agentic era.
 - **Restore** with `--locked-mode` so a lock-file drift fails the build rather than floating a version.
 - **Build** once, in `Release`, with `-warnaserror` — keep the switch even though the template sets `TreatWarningsAsErrors`: the property covers compiler and analyzer diagnostics, while the switch also promotes MSBuild engine warnings (e.g. MSB3277 assembly-version conflicts) that the property leaves as warnings. **House:** `TreatWarningsAsErrors` is set unconditionally in [templates/Directory.Build.props](../templates/Directory.Build.props), so those warnings fail the build on every workstation, not only in CI — this file previously recommended CI-only enforcement to keep local iteration fluid, and the house rule supersedes it, because a build that is only red in CI is a warning that already reached a PR. Enforce style the same way: analyzers in the build, `dotnet format --verify-no-changes` as a step. ([Meziantou — Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou — The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
 - **Test** via `dotnet test` on Microsoft.Testing.Platform — which requires the `test.runner` opt-in in `global.json` (see [testing](testing.md)); without it the SDK routes through VSTest, and on .NET 10 that fails before the build, so `--no-build` cannot rescue it. Publish TRX and coverage as build artifacts so failures are diagnosable without a rerun. ([What's new in .NET 10 — SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
-- **Publish/pack** with `--no-build` and upload the output as the single artifact that later stages (deploy, release) consume — never rebuild for deployment.
+- **Publish/pack** with `--no-build` and upload the output as the single artifact that later stages (deploy, release) consume — never rebuild for deployment. No `--output` flag: with the artifacts layout from [templates/Directory.Build.props](../templates/Directory.Build.props), publish output already lands at `artifacts/publish/<Project>/release`, a path CI can rely on (see [project-structure.md](project-structure.md)). ([Artifacts output layout — Microsoft Learn](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output))
 
 ```yaml
 jobs:
@@ -37,11 +37,11 @@ jobs:
       - run: dotnet restore --locked-mode
       - run: dotnet build --no-restore --configuration Release -warnaserror
       - run: dotnet test --no-build --configuration Release
-      - run: dotnet publish --no-build --configuration Release --output ./artifacts
+      - run: dotnet publish --no-build --configuration Release
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
           name: app
-          path: ./artifacts
+          path: artifacts/publish
 ```
 
 (SHAs shown are illustrative of the _pinning shape_ — resolve the current release SHA when copying.)
