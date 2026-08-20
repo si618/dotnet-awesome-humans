@@ -23,7 +23,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 | `sdk.version` in `global.json` and `templates/global.json` vs latest GA SDK feature band   | one feature band (e.g. pinned `10.0.400` against a released `10.0.500` is a finding)                                                                                                                              |
 | `<PackageVersion>` pins in `templates/Directory.Packages.props` vs nuget.org latest stable | one minor version, or any major — patch-only drift is informational                                                                                                                                               |
 | `Versions verified against nuget.org … on <date>` comment in `Directory.Packages.props`    | 90 days — the pins move faster than the prose, so they get a tighter leash                                                                                                                                        |
-| `research/` briefs with `status: open`                                                     | 90 days — then reported as promote-or-discard triage (see `research-topic`); `promoted` lingering on disk is itself a finding (promotion ends in deletion)                                                        |
+| `research/` briefs with `status: open`                                                     | 90 days — then reported as promote-or-discard triage, resolved with `promote-research`; a brief left on disk after promotion is itself a finding (promotion ends in deletion)                                     |
 | `sources:` ids                                                                             | must all exist in `AWESOME-HUMANS.md` roster tables, or be the reserved `house` id (never a finding). `research/` briefs only: unvetted source names are permitted when flagged as such in the brief              |
 | `last-used`                                                                                | informational only — never a finding, but report never-used resources as candidates for pruning                                                                                                                   |
 | `templates/` still implement what `opinions/` mandate                                      | zero — an opinion naming a property, package, or setting that its nominated template omits is a finding. `templates/` is what people copy, so a divergence ships the advice without the substance                 |
@@ -39,7 +39,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 5. **Produce the report**, ordered most-stale first:
    - Per resource: path, findings, days over tolerance, and which skill fixes it.
    - Summary counts: fresh / stale / malformed, plus the oldest `last-reviewed` in the repository.
-6. **Recommend next actions** — typically "run `refresh-dotnet-versions`" or "run `harvest-sources`" — but do not run them unless asked.
+6. **Recommend next actions** — typically "run `refresh-dotnet-versions`", "run `harvest-sources`", or "run `promote-research`" for an open brief past tolerance — but do not run them unless asked.
 
 ## Edge cases
 

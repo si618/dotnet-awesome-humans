@@ -32,10 +32,10 @@ Where the host supports worker agents, fan the per-source reading out to **lower
    - Where sources disagree, say so and weigh them; don't average them into mush.
 6. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
 7. **Close the loop.** End the brief by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:
-   - Topic has no opinion file / no coverage → offer an opinion stub via `harvest-sources`-style fold-in.
+   - Topic has no opinion file / no coverage → recommend `promote-research`, which decides between folding into an existing file and opening a new one.
    - Existing aside or opinion is stale (feature GA'd, guidance superseded) → recommend `refresh-dotnet-versions` or `harvest-sources`.
    - A strong non-roster source carried the research → recommend `vet-source`.
-   - Repository already answers it fully → say so; that is the system working.
+   - Repository already answers it fully → say so; that is the system working, and the brief can be discarded via `promote-research`.
    - A previously saved brief on this topic exists in `research/` → build on it, refresh its dates, and surface its promote-or-discard status.
 
 ## Persistence and lifecycle
@@ -48,9 +48,9 @@ The brief and its `last-used` bumps are committed on the `research/<topic-slug>`
 
 Every saved brief must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
-- `status: open` — freshly saved; awaiting a promote-or-discard decision.
-- **Promote** (`status: promoted`): the brief's recommendation is woven into the matching `opinions/` file(s) under the normal rules — **only roster-sourced claims may promote**; an unvetted claim first needs its source admitted via `vet-source` or corroboration from a roster source. After weaving, delete the brief and leave the promotion recorded in the PR that weaves it.
-- **Discard**: delete the file — a brief that answered a moment's question owes nothing further. No tombstone needed; git history is the record.
+- `status: open` — freshly saved; awaiting a promote-or-discard decision. It is the only resting value: both resolutions end with the file deleted, so a brief on disk is by definition unresolved.
+- **Promote**: the brief's recommendation is woven into the matching `opinions/` file(s) under the normal rules — **only roster-sourced claims may promote**; an unvetted claim first needs its source admitted via `vet-source` or corroboration from a roster source. After weaving, the brief is deleted and the promotion is recorded in the PR that weaves it. `promote-research` owns this.
+- **Discard**: delete the file — a brief that answered a moment's question owes nothing further. No tombstone needed; git history is the record. `promote-research` owns this too; the two outcomes are one decision.
 - `audit-freshness` covers `research/` like everything else: an `open` brief older than 90 days is reported as promote-or-discard triage, so briefs cannot silently accumulate as unratified pseudo-opinions.
 
 ## Edge cases

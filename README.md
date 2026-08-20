@@ -105,6 +105,7 @@ They are built for a cost-aware split: cheaper worker agents fan out across the 
 | [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                 |
 | [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House  |
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited brief |
+| [`promote-research`](skills/promote-research/SKILL.md)               | Resolve a saved brief — weave it into the opinions and templates, or discard it            |
 
 ### Release watch automation
 
