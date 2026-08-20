@@ -1,6 +1,6 @@
 ---
 name: resolve-research
-description: Resolve a saved research topic in research/ — weave its recommendation into the opinion and template files, or discard it — and delete it either way. Use when a research topic is ready to become the opinion, when audit-freshness reports one open past tolerance, or when deciding that it has served its purpose and owes nothing further.
+description: Resolve a saved research topic in research/ — weave its recommendation into the opinion and template files, or discard it — deleting the file once fully resolved. Use when a research topic is ready to become the opinion, when audit-freshness reports one open past tolerance, or when deciding that it has served its purpose and owes nothing further.
 license: See repository LICENSE
 compatibility: Requires git; internet access only needed to re-verify a stale research topic's claims
 metadata:
@@ -10,7 +10,7 @@ metadata:
 
 # Resolve a research topic
 
-`research/` is a staging area, and this skill is what drains it. A research topic written by `research-topic` is evidence gathered at a moment; promotion is the decision to make it the repository's position, and discard is the equally valid decision that it was only ever an answer to a question. Both end with the file gone.
+`research/` is a staging area, and this skill is what drains it. A research topic written by `research-topic` is evidence gathered at a moment; promotion is the decision to make it the repository's position, and discard is the equally valid decision that it was only ever an answer to a question. Both end with the file gone — the one exception is a partial promotion, which keeps the blocked remainder on disk (see Edge cases).
 
 ## Orchestration
 
@@ -41,7 +41,7 @@ This is **editor-only work — do not fan it out**. The wide, shallow sweeping a
 
 ## Edge cases
 
-- **It is stale** (past the 90-day tolerance `audit-freshness` applies, or a major .NET release has shipped since): re-verify the load-bearing claims against their sources before promoting, and check whether `refresh-dotnet-versions` should run first. Research that has aged past a release boundary is an input again, not a finished decision.
+- **It is stale** (past the tolerance `audit-freshness` applies, or a major .NET release has shipped since): re-verify the load-bearing claims against their sources before promoting, and check whether `refresh-dotnet-versions` should run first. Research that has aged past a release boundary is an input again, not a finished decision.
 - **Only part of it can promote.** Promote the roster-sourced part and rewrite the rest down to the blocked remainder, leaving it `status: open` with a note saying what promoted and what it is waiting on. Do not hold a sound recommendation hostage to one unvetted paragraph, and do not delete the blocked part silently.
 - **Everything in it is unvetted**: it cannot promote. Run `vet-source` on the strongest candidate and revisit, or discard.
 - **It covers a preview feature**: it cannot become an opinion — the freshness policy allows only a clearly marked "coming next" aside. Promote that aside if it is worth having, otherwise leave it open until GA.

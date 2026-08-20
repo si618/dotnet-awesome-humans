@@ -44,14 +44,14 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 The research topic and its `last-used` bumps are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the file. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 
-**Commit and title the PR `research: <topic>`, not `docs: research <topic>`.** A research topic is its own kind of change — staged, dated, and destined to be promoted or discarded — and giving it a distinct type makes that visible in `git log` and lets one command list every research topic the repository has ever taken on. Filing them under `docs` buries them among opinion edits, which are the opposite thing: settled, not staged. Use the topic as the subject, matching the slug in the branch and filename, so `research/union-types` carries `research: union types`. Promotion is not research and keeps the type of whatever it changes — weaving a research topic into an opinion is a `docs:` commit.
+**Commit and title the PR `research: <topic>`, not `docs: research <topic>`.** A research topic is its own kind of change — staged, dated, and destined to be promoted or discarded — and giving it a distinct type makes that visible in `git log` and lets one command list every research topic the repository has ever taken on. Filing them under `docs` buries them among opinion edits, which are the opposite thing: settled, not staged. Use the topic as the subject, matching the slug in the branch and filename, so `research/union-types` carries `research: union types`. Resolution commits are typed by `resolve-research`, not by this rule.
 
 Every saved research topic must eventually resolve — `research/` is a staging area, not a second opinions directory:
 
 - `status: open` — freshly saved; awaiting a promote-or-discard decision. It is the only resting value: both resolutions end with the file deleted, so anything on disk is by definition unresolved.
-- **Promote**: the recommendation is woven into the matching `opinions/` file(s) under the normal rules — **only roster-sourced claims may promote**; an unvetted claim first needs its source admitted via `vet-source` or corroboration from a roster source. After weaving, the file is deleted and the promotion is recorded in the PR that weaves it. `resolve-research` owns this.
+- **Promote**: the recommendation is woven into the matching `opinions/` file(s) and the file deleted — `resolve-research` owns the roster gate and the mechanics.
 - **Discard**: delete the file — research that answered a moment's question owes nothing further. No tombstone needed; git history is the record. `resolve-research` owns this too; the two outcomes are one decision.
-- `audit-freshness` covers `research/` like everything else: an `open` research topic older than 90 days is reported as promote-or-discard triage, so they cannot silently accumulate as unratified pseudo-opinions.
+- `audit-freshness` covers `research/` like everything else: an `open` research topic past the tolerance `audit-freshness` applies is reported as promote-or-discard triage, so they cannot silently accumulate as unratified pseudo-opinions.
 
 ## Edge cases
 
