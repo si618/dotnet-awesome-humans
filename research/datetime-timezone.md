@@ -147,6 +147,8 @@ That is a real gap rather than a niche one, on three counts:
 2. **`testing.md` is silent on `FakeTimeProvider`,** despite being detailed about xUnit v3, MTP, and snapshot testing. Deterministic time is the single most common source of flaky tests, and the in-box answer is one package.
 3. **`data-access.md`'s own TODO** lists the query-side opinions still missing; date/time column mapping (`DateOnly` ↔ `date`, provider differences on `datetimeoffset`) belongs on that list.
 
+> **Overlap resolved 2026-08-20.** The globalisation brief promoted into [`opinions/globalisation.md`](../opinions/globalisation.md) and took the shared host/client material with it: container `tzdata` and ICU, Blazor WebAssembly globalisation data, and `InvariantGlobalization` as a decision separate from AOT. It also carries a one-line floor on storage (UTC instants, IANA zone ids) pointing back here. When this brief promotes, cross-link those rather than restating them, and keep `opinions/datetime.md` to type choice, `TimeProvider`, persistence, and testing.
+
 ### Recommended next step
 
 Open an opinion stub at `opinions/datetime.md` covering the four rules at the top of this brief, and cross-link:

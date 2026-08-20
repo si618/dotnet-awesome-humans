@@ -1,4 +1,4 @@
-# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-12 | sources: ms-learn, meziantou
+# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-20 | sources: ms-learn, meziantou
 # Copy to the repository root. Trim rules you disagree with — but disagree deliberately.
 
 root = true
@@ -39,6 +39,10 @@ csharp_using_directive_placement = outside_namespace:warning
 
 # C# 14: prefer field-backed properties over hand-written backing fields
 dotnet_diagnostic.IDE0032.severity = warning
+
+# The one globalization rule AnalysisLevel=latest-recommended leaves silent: string.Equals
+# without a StringComparison. CA1304/1305/1309/1310/1311 already warn (opinions/globalisation.md).
+dotnet_diagnostic.CA1307.severity = warning
 
 # --- Nullability and correctness ---
 dotnet_style_require_accessibility_modifiers = always:warning
