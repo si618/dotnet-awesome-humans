@@ -1,0 +1,85 @@
+// Shared by the checks that read the one-line headers on templates/ files — pulled in
+// with `#:include CommentHeader.cs`. Not a file-based app itself: it declares no top-level
+// statements, and the YamlDotNet reference it compiles beside is declared by the script
+// including it.
+//
+// Templates cannot carry YAML frontmatter: they are XML, INI and JSON files that have to
+// stay valid for the tools that read them, and a `---` block would break every one. The
+// same metadata rides in a comment on the first line instead, and this parses it:
+//
+//     <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | … -->
+//     # dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …
+
+using System.Collections;
+
+internal static class CommentHeader
+{
+    /// <summary>The literal every template header opens with, inside its comment marker.</summary>
+    internal const string Marker = "dotnet-awesome-humans template";
+
+    /// <summary>
+    /// Parses a template file's first-line comment header. Returns the fields, or null with
+    /// <paramref name="error"/> set to the reason — deliberately the same shape as
+    /// <see cref="Frontmatter.Read"/>, so one required-field check covers both syntaxes and
+    /// the two report identical wording. The returned mapping is keyed ordinally.
+    /// </summary>
+    internal static IDictionary? Read(string path, out string? error)
+    {
+        string text = File.ReadAllText(path).ReplaceLineEndings("\n");
+
+        int newline = text.IndexOf('\n');
+        string line = (newline == -1 ? text : text[..newline]).Trim();
+
+        // XML comment first: an .editorconfig header opens with '#', and nothing else does.
+        string body;
+        if (line.StartsWith("<!--", StringComparison.Ordinal) && line.EndsWith("-->", StringComparison.Ordinal))
+        {
+            body = line[4..^3];
+        }
+        else if (line.StartsWith('#'))
+        {
+            body = line[1..];
+        }
+        else
+        {
+            error = "first line carries no comment header";
+            return null;
+        }
+
+        body = body.Trim();
+
+        if (!body.StartsWith(Marker, StringComparison.Ordinal))
+        {
+            error = $"header does not open with '{Marker}'";
+            return null;
+        }
+
+        Dictionary<string, string> fields = new(StringComparer.Ordinal);
+
+        string[] segments = body[Marker.Length..]
+            .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        foreach (string segment in segments)
+        {
+            // Split on the first colon only: `targets: net10.0, csharp-14` is one field
+            // whose value happens to be a list.
+            int colon = segment.IndexOf(':');
+            if (colon == -1)
+            {
+                error = $"header segment '{segment}' is not 'key: value'";
+                return null;
+            }
+
+            string key = segment[..colon].Trim();
+
+            if (!fields.TryAdd(key, segment[(colon + 1)..].Trim()))
+            {
+                error = $"header repeats the field '{key}'";
+                return null;
+            }
+        }
+
+        error = null;
+        return fields;
+    }
+}

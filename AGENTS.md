@@ -38,7 +38,9 @@ Maintenance skills involve wide, shallow work (sweeping sources, fetching pages,
 
 ## Metadata
 
-Every file under `opinions/` (and documented template files where a comment header is possible) carries YAML frontmatter:
+Three kinds of resource carry the same four fields — `targets`, `last-reviewed`, `last-used`, `sources` — in the two syntaxes their file formats allow.
+
+**`opinions/` and `research/` carry YAML frontmatter:**
 
 ```yaml
 ---
@@ -49,11 +51,28 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 ---
 ```
 
+(A `research/` topic carries a fifth field, `status`, which [resolve-research](skills/resolve-research/SKILL.md) owns.)
+
+**`templates/` carry a first-line comment header** — an XML or INI file cannot open with a `---` block and stay valid for the tools that read it, so the same fields ride in a comment instead, pipe-separated after a fixed marker:
+
+```xml
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
+```
+
+```ini
+# dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
+```
+
 Rules:
 
-- Update `last-used` whenever you consume a resource; update `last-reviewed` only after verifying content against its sources.
+- Update `last-used` whenever you consume a resource — an opinion you read to decide something, a template you diffed a project against. This is how the repository knows what is earning its place; a resource nothing ever stamps is a pruning candidate.
+- Update `last-reviewed` only after verifying content against its sources.
 - `sources` ids must exist in `AWESOME-HUMANS.md` — either in the roster tables or as the reserved `house` id.
 - Dates are ISO 8601 (`YYYY-MM-DD`), always absolute, never relative.
+- Two template files carry no header and are exempt: `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead.
+- `skills/` are the exception on purpose: their frontmatter is defined by the [Agent Skills specification](https://agentskills.io/specification), they are procedures rather than reference material, and nothing consumes a date on them — `git log` answers when a skill last changed.
+
+All of this is enforced by `dotnet run scripts/validate-metadata.cs` in CI, in both syntaxes, so a missing field or a relative date fails the pull request rather than drifting silently.
 
 ## Writing style for opinions
 

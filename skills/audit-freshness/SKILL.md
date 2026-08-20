@@ -45,7 +45,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 
 - **Brand-new repository** (no opinions yet): report that the audit has nothing to check rather than passing vacuously.
 - **House content** (`house` in `sources:`, `**House:**` markings — see HOUSE-OPINIONS.md): the reserved id is never an unknown-source finding, and this skill must never suggest stripping it. A `house` id with no `**House:**`-marked content in the file (or vice versa) IS a finding — the marking and the id travel together.
-- **Files that cannot carry a comment header** (both `global.json` files, `.slnx`/`.slnf`, JSON generally): they have no `last-reviewed`, so absence of frontmatter is not a malformed-frontmatter finding for them. Audit the pinned value itself against the latest release instead.
+- **Files that cannot carry a comment header** (both `global.json` files, `.slnf` filters, JSON generally): they have no `last-reviewed`, so absence of frontmatter is not a malformed-frontmatter finding for them. Audit the pinned value itself against the latest release instead. `.slnx` is XML and does carry one, so it is not exempt — `scripts/validate-metadata.cs` enforces exactly this exemption list in CI.
 - **A package pin deliberately held back** (a known-bad release, or a major whose migration is tracked elsewhere): still report the drift, but as informational once the reason is recorded as a comment beside the pin. Silent staleness and deliberate staleness must look different in the report.
 - **A resource that is intentionally version-agnostic** (e.g. naming conventions): may declare `targets: [any]`; version-drift checks skip it, review-age checks still apply.
 - **Clock skew / future dates** in frontmatter: report as malformed.
