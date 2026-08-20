@@ -18,7 +18,7 @@ This is **editor-only work — do not fan it out**. The wide, shallow sweeping a
 
 ## Steps
 
-1. **Read it whole**, at `research/<topic-slug>.md`. Its closing "what this reveals about the repository" section is the promotion plan — it already names the target files and usually the specific sections. Treat that as the proposal to verify, not as instructions to execute unread.
+1. **Read it whole**, at `research/<topic-slug>.md` on the default branch — the research PR has already merged, so the topic is on record and was reviewable; if it is still open, merge it first rather than resolving on top of it. Resolution is its own branch and PR, never a continuation of the research branch. Its closing "what this reveals about the repository" section is the promotion plan — it already names the target files and usually the specific sections. Treat that as the proposal to verify, not as instructions to execute unread.
 2. **Decide promote or discard.** Ask only if the research topic does not already settle it. **Discard is a first-class outcome**, not a failure: one whose finding was "the repository already answers this" has done its job by confirming the system works.
 3. **Gate every load-bearing claim on the roster.** Walk the citations:
    - **Tier 1/2 roster ids** — promotable, and their ids go into the target's `sources:` frontmatter.
