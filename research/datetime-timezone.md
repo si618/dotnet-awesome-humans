@@ -1,7 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-20
-last-used: 2026-08-20
 sources: [jon-skeet, ms-learn, meziantou, andrew-lock, steve-gordon]
 ---
 

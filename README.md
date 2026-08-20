@@ -34,7 +34,7 @@ A new opinion file must appear both here and in [Repository layout](#repository-
 
 Opinions target the latest released versions of .NET, C#, and F# — GA only, never an older LTS for comfort, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
-Every resource carries metadata recording when it was last reviewed and last used as a reference, so staleness is visible rather than silent:
+Every resource carries metadata recording when it was last reviewed, and — for the `opinions/` and `templates/` files that get consulted rather than resolved — when it was last used as a reference, so staleness is visible rather than silent:
 
 ```yaml
 ---
@@ -118,11 +118,11 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
-| Script                                                               | Checks                                                                                                                                            |
-| -------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed`, `last-used` and `sources`, with ISO 8601 dates |
-| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                    |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                   |
+| Script                                                               | Checks                                                                                                                                                                       |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` — plus `last-used` outside `research/` — with ISO 8601 dates |
+| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                                               |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                                              |
 
 Run them from the repository root, exactly as CI does:
 
