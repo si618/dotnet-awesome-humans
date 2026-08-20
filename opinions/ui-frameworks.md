@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-20
+last-reviewed: 2026-08-18
 last-used: 2026-08-20
 sources:
   [
@@ -22,7 +22,7 @@ Blazor for web UI, .NET MAUI for mobile + desktop, Avalonia for cross-platform d
 - **Choose render mode per page, not per app:** static SSR for content/SEO, Interactive Server for low-latency internal apps, Interactive WebAssembly for offline/client-heavy work, Interactive Auto when startup time matters but you want client-side steady state. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 - **Use `[PersistentState]` for state that must survive prerendering and circuit loss** instead of ad-hoc session storage. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 - **Use `NavigationManager.NotFound()` for missing resources** so Blazor returns real 404 semantics. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
-- **A WebAssembly app only carries its own culture data** — set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` and `loadAllSatelliteResources: true` if the user can switch culture at runtime, and drop the superseded `<BlazorEnableTimeZoneSupport>`. ([globalisation.md](globalisation.md))
+- **A WebAssembly app loads only a subset of globalization data, covering its own culture** — set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` if the user can switch culture at runtime, and drop the superseded `<BlazorEnableTimeZoneSupport>`. ([globalisation.md](globalisation.md))
 
 ### Component testing
 
