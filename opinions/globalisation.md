@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-20
-last-used: 2026-08-20
+last-reviewed: 2026-08-21
+last-used: 2026-08-21
 sources:
   [
     ms-learn,
@@ -29,7 +29,7 @@ The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, cultur
 | A human reading a screen                                         | `CurrentCulture` (the default)             | `CurrentCulture`, for sorting a displayed list |
 | A machine — JSON, logs, URLs, file names, config, DB round-trips | `CultureInfo.InvariantCulture`, explicitly | `StringComparison.Ordinal`                     |
 
-**Never use `StringComparison.InvariantCulture` or `InvariantCultureIgnoreCase`.** They look like the machine-facing answer and are not: only the culture _data_ is invariant, while the collation still tracks whichever ICU (or NLS) version the host carries, so the same comparison can return different answers on two machines. `InvariantCulture` is right for formatting and parsing and wrong for comparison — the two halves of the type are not the same promise. ([Barré — StringComparison.InvariantCulture is not always invariant](https://www.meziantou.net/stringcomparison-invariantculture-is-not-always-invariant.htm), [Globalization and ICU](https://learn.microsoft.com/dotnet/core/extensions/globalization-icu))
+**Never use `StringComparison.InvariantCulture` or `InvariantCultureIgnoreCase`.** They look like the machine-facing answer and are not: only the culture _data_ is invariant, while the collation still tracks whichever ICU (or NLS) version the host carries, so the same comparison can return different answers on two machines. `InvariantCulture` is right for formatting and parsing and wrong for comparison — the two halves of the type are not the same promise. ([Meziantou — StringComparison.InvariantCulture is not always invariant](https://www.meziantou.net/stringcomparison-invariantculture-is-not-always-invariant.htm), [Globalization and ICU](https://learn.microsoft.com/dotnet/core/extensions/globalization-icu))
 
 ```csharp
 // Wrong — the host's collation decides, and hosts disagree
@@ -106,11 +106,11 @@ Designer-generated strongly-typed resource classes are the compile-time-safe alt
 
 ### Containers: chiseled and Alpine images drop this data
 
-**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) steers container builds to `noble-chiseled` or `alpine` for size, and the size-optimised images — Alpine, Ubuntu chiseled, Azure Linux distroless — are precisely the ones that "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Every one of them has an `-extra` counterpart (`10.0-alpine3.24-extra`, `10.0-noble-chiseled-extra`) that adds ICU, tzdata, and `stdc++` back. ([.NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images))
+**If the app formats dates, sorts text, or resolves a time zone, use the `-extra` image tag.** [project-structure.md](project-structure.md) steers container builds to `noble-chiseled` or `alpine` for size, and the size-optimised images — Alpine, Ubuntu chiseled, Azure Linux distroless — are precisely the ones that "don't include globalization dependencies such as ICU or tzdata … only work with apps that are configured for globalization invariant mode". Every one of them has an `-extra` counterpart (`10.0-alpine-extra`, `10.0-noble-chiseled-extra`) that adds ICU, tzdata, and `stdc++` back. ([.NET container images](https://learn.microsoft.com/dotnet/core/docker/container-images))
 
-The two missing pieces fail differently, and the quiet one is the dangerous one:
+The two missing pieces fail differently, and so does the ICU one depending on what the app asks for:
 
-- **No ICU — and the image has already decided for you.** The base images set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` as an image environment variable, so the app does not fail to start: it starts in invariant mode and silently formats and compares as invariant, whatever `CurrentCulture` says. Because the setting lives in the environment rather than the project file, `<InvariantGlobalization>false</InvariantGlobalization>` does not undo it — installing `icu-libs` and `icu-data-full` by hand means clearing the variable too. Taking `-extra` is the version that works, because those images simply omit the variable.
+- **No ICU — and the image has already decided for you.** The base images set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` as an image environment variable, so the app runs in invariant mode however it was built. An app that names a culture throws `CultureNotFoundException` at startup — `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above dies before serving a request. An app that only leans on `CurrentCulture` fails quietly instead, formatting and comparing as invariant. Because the setting lives in the environment rather than the project file, `<InvariantGlobalization>false</InvariantGlobalization>` does not undo it — installing `icu-libs` and `icu-data-full` by hand means clearing the variable too. Taking `-extra` is the version that works, because those images simply omit the variable.
 - **No tzdata — a loud failure.** `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`, which is unaffected by invariant mode and so survives as a real exception. `RUN apk add --no-cache tzdata` fixes that one alone. ([Gordon — TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
 ### Localisation makes dates look right, not be right
