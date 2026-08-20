@@ -127,7 +127,7 @@ Everything above assumes the process can resolve a zone id. In a container that 
 
   This is also the cleanest reason to inject `TimeProvider` everywhere rather than call `DateTimeOffset.Now`: swapping the scoped registration makes the whole render tree user-local for free.
 
-- **Blazor WebAssembly:** the runtime uses invariant globalization by default, so culture-aware date formatting silently degrades. Set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` when you need it, and weigh the payload cost ([Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0), `ms-learn`, Tier 1). `ms-learn` also advises against `@bind:culture` on date and number field types — the built-in current-culture rendering is the supported path.
+- **Blazor WebAssembly:** the runtime loads only a subset of globalization data covering the app's own culture (**corrected 2026-08-20** — an earlier draft of this brief said "invariant globalization by default", which the docs contradict; see [`opinions/globalisation.md`](../opinions/globalisation.md)). Set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` when you need it, and weigh the payload cost ([Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0), `ms-learn`, Tier 1). `ms-learn` also advises against `@bind:culture` on date and number field types — the built-in current-culture rendering is the supported path.
 - **Send offsets, not naked local strings.** `DateTimeOffset` over `System.Text.Json` serializes ISO 8601 with the offset; `DateOnly`/`TimeOnly` round-trip as `"2026-08-19"` / `"17:00:00.0000000"`. A wire format that omits the offset pushes the ambiguity onto the client.
 - **Never format for a user with the invariant culture, and never parse user input with the current one.** The pairing is the reverse of the intuition: display uses the user's culture, storage and interchange use `"O"` / invariant.
 
@@ -146,6 +146,8 @@ That is a real gap rather than a niche one, on three counts:
 1. **We ship enforcement we don't document.** `Meziantou.Analyzer` in `templates/Directory.Build.props` plus `TreatWarningsAsErrors` means `MA0188` already fails builds for custom clock abstractions in every project that copies our template. Shipping a rule without the opinion behind it is the wrong way round.
 2. **`testing.md` is silent on `FakeTimeProvider`,** despite being detailed about xUnit v3, MTP, and snapshot testing. Deterministic time is the single most common source of flaky tests, and the in-box answer is one package.
 3. **`data-access.md`'s own TODO** lists the query-side opinions still missing; date/time column mapping (`DateOnly` ↔ `date`, provider differences on `datetimeoffset`) belongs on that list.
+
+> **Overlap resolved 2026-08-20.** The globalisation brief promoted into [`opinions/globalisation.md`](../opinions/globalisation.md) and took the shared host/client material with it: container `tzdata` and ICU, Blazor WebAssembly globalisation data, and `InvariantGlobalization` as a decision separate from AOT. It also carries a one-line floor on storage (UTC instants, IANA zone ids) pointing back here. When this brief promotes, cross-link those rather than restating them, and keep `opinions/datetime.md` to type choice, `TimeProvider`, persistence, and testing.
 
 ### Recommended next step
 

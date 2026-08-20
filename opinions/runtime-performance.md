@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-18
-last-used: 2026-08-19
+last-used: 2026-08-20
 sources:
   [
     stephen-toub,
@@ -103,3 +103,5 @@ Never use a rented buffer after returning it, and never assume `Rent` gives exac
 ## Native AOT
 
 **Use Native AOT for short-lived and size-sensitive workloads — CLI tools, serverless functions, sidecars; keep the JIT for long-running services.** AOT wins startup (milliseconds, no JIT warmup) and disk/memory footprint; the JIT wins steady-state throughput via tiered compilation and dynamic PGO, and tolerates reflection-heavy libraries that AOT's trimming breaks. Going AOT means the whole dependency graph must be trim/AOT-safe (source-generated JSON, no runtime codegen) — audit `IsAotCompatible` warnings before committing. .NET 10 file-based apps make the CLI-tool case trivial: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn — Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn — File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps))
+
+**Decide invariant globalization separately from AOT.** `dotnet new webapiaot` sets `<InvariantGlobalization>true</InvariantGlobalization>` next to `<PublishAot>true</PublishAot>`, so the property tends to enter a codebase attached to a decision that has nothing to do with it — and it changes what every `ToString` and `Compare` in the app does. Keep it only if you meant it (see [globalisation.md](globalisation.md)).

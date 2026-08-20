@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-12
-last-used: 2026-08-19
+last-used: 2026-08-20
 sources: [dotnet-blog, aspnet-blog, ms-learn, meziantou, andrew-lock]
 ---
 
@@ -121,6 +121,10 @@ This is a per-node fairness and abuse-control tool, not DDoS protection — that
 ### CSRF defence in depth
 
 **Layer CSRF defence with Fetch Metadata headers (`Sec-Fetch-Site` and friends)** alongside token-based antiforgery; .NET 11 will automate this. ([Lock — Understanding the Fetch Metadata headers](https://andrewlock.net/understanding-the-fetch-metadata-http-headers-sec-fetch-site-and-friends/))
+
+### Localisation
+
+**Register `AddLocalization` and run `UseRequestLocalization` early, driving culture from a cookie rather than `Accept-Language`** — the browser header reflects the user's OS, not a choice they made. Provider order, the `SupportedCultures`/`SupportedUICultures` split, and resource-key policy are in [globalisation.md](globalisation.md).
 
 ## Coming next (preview — not yet the opinion)
 

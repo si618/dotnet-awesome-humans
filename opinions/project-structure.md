@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-20
 last-used: 2026-08-20
-sources: [ms-learn, dotnet-blog, gerald-versluis, house]
+sources: [ms-learn, dotnet-blog, gerald-versluis, steve-gordon, house]
 ---
 
 # Project structure & SDK
@@ -50,4 +50,5 @@ One solution format, central package management, versions pinned at the root. Th
   ```
 
 - **Know that .NET 10 base images are Ubuntu, not Debian.** The version-only tags (`mcr.microsoft.com/dotnet/aspnet:10.0`) now resolve to Ubuntu 24.04 "Noble", and Microsoft ships no Debian images for .NET 10 — there is no tag to opt back into. If image size matters, prefer the chiseled variants via `ContainerFamily` (e.g. `noble-chiseled`) or Alpine (`alpine`) over anything hand-rolled. ([Default .NET container tags now use Ubuntu](https://learn.microsoft.com/dotnet/core/compatibility/containers/10.0/default-images-use-ubuntu))
+- **Take the `-extra` tag if the app is not invariant.** The chiseled and Alpine variants recommended above ship neither ICU nor `tzdata`, and they set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` in the image — so a culture-aware app does not crash, it silently formats and compares as invariant, and a project-file `<InvariantGlobalization>false</InvariantGlobalization>` will not override an environment variable. `noble-chiseled-extra` and `alpine3.24-extra` restore both. ([globalisation.md](globalisation.md))
 - **Keep the rootless default.** Linux images run as the non-root `app` user (since .NET 8) and `ContainerPort` is inferred from `ASPNETCORE_HTTP_PORTS`; don't set `ContainerUser` to `root` or re-expose privileged ports to make a broken volume mount work — fix the mount. ([Containerize a .NET app reference](https://learn.microsoft.com/dotnet/core/containers/publish-configuration))

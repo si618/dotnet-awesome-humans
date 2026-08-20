@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-18
-last-used: 2026-08-19
+last-used: 2026-08-20
 sources:
   [ms-learn, dotnet-blog, jetbrains-dotnet, andrew-lock, meziantou, jon-skeet]
 ---
@@ -179,6 +179,7 @@ The built-in analyzers ship with the SDK and track it; `latest-recommended` keep
 
 - **Prefer `Span<T>`/`ReadOnlySpan<T>` parameters in new APIs** — C# 14's implicit span conversions make them as ergonomic as arrays, without the allocation. Note the .NET 10 breaking change: span overloads now win overload resolution in more cases. ([What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use `nameof(List<>)` on unbound generics** rather than hard-coded strings in diagnostics and exceptions. ([What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14))
+- **Use `StringComparison.Ordinal` for every machine-facing comparison and `CultureInfo.InvariantCulture` for every machine-facing format or parse** — and never `StringComparison.InvariantCulture`, whose collation is not actually invariant. ([globalisation.md](globalisation.md))
 - **Clone records with `with` expressions — never declare an instance `Clone()` method**, which conflicts with the compiler-generated cloning; wrap `with` in an extension method if a named method is wanted. ([Meziantou — Adding a Clone method to a C# record](https://www.meziantou.net/adding-a-clone-method-to-a-csharp-record.htm))
 
 ## Coming next (preview — not yet the opinion)
