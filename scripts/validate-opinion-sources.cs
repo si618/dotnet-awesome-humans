@@ -114,7 +114,7 @@ foreach (string name in Opinions.Names())
     string path = Opinions.PathOf(name);
 
     // A file with no frontmatter, or unreadable frontmatter, is reported in detail by
-    // validate-opinion-frontmatter.cs — this check stays quiet about it.
+    // validate-metadata.cs — this check stays quiet about it.
     if (Frontmatter.Read(deserializer, path, out _) is not IDictionary frontmatter)
     {
         continue;

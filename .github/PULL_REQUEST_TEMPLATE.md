@@ -19,7 +19,7 @@
 
 - [ ] Opinion-first style: recommendation in the first sentence, rationale after, sources last (see [AGENTS.md](../AGENTS.md))
 - [ ] Code examples compile against the declared `targets:` (state the SDK you built with)
-- [ ] Frontmatter complete on every file touched — all four CI-validated fields: `targets`, `last-reviewed`, `last-used`, `sources`
+- [ ] Frontmatter complete on every `opinions/`, `research/`, or `templates/` file touched — the CI-validated fields: `targets`, `last-reviewed`, `sources`, plus `last-used` outside `research/` (exemptions — the two JSON templates, and `skills/` whose frontmatter the Agent Skills spec defines — in [AGENTS.md](../AGENTS.md))
 - [ ] New, renamed, or removed `opinions/` file indexed in [README.md](../README.md) — a linked **Scope** bullet and a **Repository layout** entry, with no stale ones left behind (CI-validated)
 - [ ] `npm run check` passes — Markdown and JSON/YAML formatting plus markdownlint, at the versions pinned in `package.json`
 - [ ] No preview-version features stated as opinions (previews go in "Coming next" asides)

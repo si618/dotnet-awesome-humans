@@ -17,7 +17,7 @@ When generating or reviewing .NET code for another project:
 1. Read the relevant file(s) under `opinions/` — each leads with the opinion, then rationale, then sources.
 2. Use `templates/` files as the canonical starting point for `.editorconfig`, `Directory.Build.props`, `Directory.Packages.props`, `global.json`, `.slnx`, `.slnf`, and project files. Prefer copying them verbatim and trimming, over authoring from scratch.
 3. Always target the versions declared in the frontmatter of the opinion files (`targets:`) — never silently downgrade to an older TFM or language version.
-4. When you use a resource as a reference, update its `last-used` frontmatter date (see [Metadata](#metadata)).
+4. When you use an `opinions/` or `templates/` file as a reference, update its `last-used` date (see [Metadata](#metadata)). `research/` topics do not carry one.
 
 ## Maintaining this repo (maintainer mode)
 
@@ -38,7 +38,9 @@ Maintenance skills involve wide, shallow work (sweeping sources, fetching pages,
 
 ## Metadata
 
-Every file under `opinions/` (and documented template files where a comment header is possible) carries YAML frontmatter:
+Three kinds of resource carry this metadata, in the two syntaxes their file formats allow. `opinions/` and `templates/` carry four fields — `targets`, `last-reviewed`, `last-used`, `sources`. `research/` carries three: no `last-used`.
+
+**`opinions/` and `research/` carry YAML frontmatter:**
 
 ```yaml
 ---
@@ -49,11 +51,33 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 ---
 ```
 
+(A `research/` topic omits `last-used`, and carries no status field either:
+
+- **No `last-used`** — the only way to consult a topic is to build on it, which re-verifies it, so the two dates would always move together. `last-reviewed` already says everything the pair would.
+- **No status** — promoting or discarding one ends in deletion, so a topic on disk is unresolved by definition and a status could only ever read `open`.
+
+See [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skills/resolve-research/SKILL.md).)
+
+**`templates/` carry a first-line comment header** — an XML or INI file cannot open with a `---` block and stay valid for the tools that read it, so the same fields ride in a comment instead, pipe-separated after a fixed marker:
+
+```xml
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
+```
+
+```ini
+# dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
+```
+
 Rules:
 
-- Update `last-used` whenever you consume a resource; update `last-reviewed` only after verifying content against its sources.
+- Update `last-used` whenever you consume an opinion or a template — an opinion you read to decide something, a template you diffed a project against. It does two jobs: it orders staleness triage (of ten drifted `last-reviewed` dates, review the ones being read first), and it marks candidates for pruning. Know its one limitation: only reads that happen _in this repository_ stamp anything, so a human copying a template or reading an opinion on the web leaves no trace, and the field always undercounts. That is why `audit-freshness` treats it as informational and never a finding — it is a weak signal used gently, in every direction it points.
+- Update `last-reviewed` only after verifying content against its sources.
 - `sources` ids must exist in `AWESOME-HUMANS.md` — either in the roster tables or as the reserved `house` id.
 - Dates are ISO 8601 (`YYYY-MM-DD`), always absolute, never relative.
+- Two template files carry no header and are exempt: `templates/global.json` and `templates/example.slnf`, because JSON has no comment syntax. What they pin is audited against the latest releases instead.
+- `skills/` are the exception on purpose: their frontmatter is defined by the [Agent Skills specification](https://agentskills.io/specification), they are procedures rather than reference material, and nothing consumes a date on them — `git log` answers when a skill last changed.
+
+All of this is enforced by `dotnet run scripts/validate-metadata.cs` in CI, in both syntaxes, so a missing field or a relative date fails the pull request rather than drifting silently.
 
 ## Writing style for opinions
 

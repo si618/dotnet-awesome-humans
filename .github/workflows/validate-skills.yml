@@ -78,8 +78,8 @@ jobs:
           fi
           exit "$status"
 
-      - name: Verify opinions frontmatter
-        run: dotnet run scripts/validate-opinion-frontmatter.cs
+      - name: Verify resource metadata
+        run: dotnet run scripts/validate-metadata.cs
 
       - name: Verify opinion sources against the roster
         run: dotnet run scripts/validate-opinion-sources.cs

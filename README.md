@@ -34,7 +34,7 @@ A new opinion file must appear both here and in [Repository layout](#repository-
 
 Opinions target the latest released versions of .NET, C#, and F# — GA only, never an older LTS for comfort, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
-Every resource carries metadata recording when it was last reviewed and last used as a reference, so staleness is visible rather than silent:
+Every resource carries metadata recording when it was last reviewed, and — for the `opinions/` and `templates/` files that get consulted rather than resolved — when it was last used as a reference, so staleness is visible rather than silent:
 
 ```yaml
 ---
@@ -76,9 +76,10 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   └── ui-frameworks.md
 ├── research/                 ← saved research topics (staging: promote or discard)
 ├── scripts/                  ← this repository's own CI checks, as .NET file-based apps
+│   ├── CommentHeader.cs      ← shared helper, pulled in with #:include
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
-│   ├── validate-opinion-frontmatter.cs
+│   ├── validate-metadata.cs
 │   ├── validate-opinion-sources.cs
 │   └── validate-readme-index.cs
 ├── templates/                ← copy-paste-ready example files
@@ -117,19 +118,19 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
-| Script                                                                       | Checks                                                                                         |
-| ---------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [`validate-opinion-frontmatter.cs`](scripts/validate-opinion-frontmatter.cs) | Every file under `opinions/` carries `targets`, `last-reviewed`, `last-used` and `sources`     |
-| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs)         | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)               | This README indexes every opinion and skill, in both directions                                |
+| Script                                                               | Checks                                                                                                                                                                       |
+| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` — plus `last-used` outside `research/` — with ISO 8601 dates |
+| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                                               |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                                              |
 
 Run them from the repository root, exactly as CI does:
 
 ```sh
-dotnet run scripts/validate-opinion-frontmatter.cs
+dotnet run scripts/validate-metadata.cs
 ```
 
-[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files and [`Frontmatter.cs`](scripts/Frontmatter.cs) parses their frontmatter. Neither runs alone: they declare no top-level statements, and compile into whichever script `#:include`s them.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) parses the first-line comment header that carries the same fields on `templates/` files, which cannot open with a `---` block and stay valid. None runs alone: they declare no top-level statements, and compile into whichever script `#:include`s them.
 
 The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). One check is still Python — the Agent Skills spec validator, published only to PyPI.
 

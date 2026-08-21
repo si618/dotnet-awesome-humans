@@ -1,9 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-20
-last-used: 2026-08-20
 sources: [jon-skeet, ms-learn, meziantou, andrew-lock, steve-gordon]
-status: open
 ---
 
 # Date, time, and time zones across UI, persistence, services, and hosts
