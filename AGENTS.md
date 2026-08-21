@@ -59,7 +59,7 @@ sources: [dotnet-blog, andrew-lock] # ids from AWESOME-HUMANS.md
 
 See [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skills/resolve-research/SKILL.md).)
 
-**`templates/` carry a first-line comment header** — an XML or INI file cannot open with a `---` block and stay valid for the tools that read it, so the same fields ride in a comment instead, pipe-separated after a fixed marker:
+**`templates/` carry a first-line comment header** — an XML, INI or source file cannot open with a `---` block and stay valid for the tools that read it, so the same fields ride in a comment instead, pipe-separated after a fixed marker:
 
 ```xml
 <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
@@ -67,6 +67,10 @@ See [research-topic](skills/research-topic/SKILL.md) and [resolve-research](skil
 
 ```ini
 # dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn
+```
+
+```fsharp
+// dotnet-awesome-humans template | targets: net10.0, fsharp-10 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: scott-wlaschin
 ```
 
 Rules:
