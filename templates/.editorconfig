@@ -1,4 +1,4 @@
-# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-20 | last-used: 2026-08-20 | sources: ms-learn, meziantou
+# dotnet-awesome-humans template | targets: net10.0, csharp-14 | last-reviewed: 2026-08-21 | last-used: 2026-08-20 | sources: ms-learn, meziantou
 # Copy to the repository root. Trim rules you disagree with — but disagree deliberately.
 
 root = true
@@ -43,6 +43,10 @@ dotnet_diagnostic.IDE0032.severity = warning
 # The one globalization rule AnalysisLevel=latest-recommended leaves silent: string.Equals
 # without a StringComparison. CA1304/1305/1309/1310/1311 already warn (opinions/globalisation.md).
 dotnet_diagnostic.CA1307.severity = warning
+
+# The one Meziantou.Analyzer TimeProvider rule that ships disabled: prefer overloads taking a
+# TimeProvider. MA0166/MA0188 already warn by default (opinions/datetime.md).
+dotnet_diagnostic.MA0167.severity = warning
 
 # --- Nullability and correctness ---
 dotnet_style_require_accessibility_modifiers = always:warning

@@ -21,6 +21,7 @@ The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one
 - **[Application architecture](opinions/architecture.md)** — modular monolith, vertical slices, and when layering earns its keep
 - **[ASP.NET Core](opinions/aspnet-core.md)** — minimal APIs, hosting, auth, OpenAPI, performance
 - **[Data access](opinions/data-access.md)** — EF Core defaults, set-based work, when to drop to SQL
+- **[Dates, times & time zones](opinions/datetime.md)** — type choice, UTC vs local storage, `TimeProvider`, testing time
 - **[Globalisation & localisation](opinions/globalisation.md)** — culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
 - **[Logging & tracing](opinions/logging.md)** — structured logging, source-generated log messages, OpenTelemetry over OTLP
 - **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
@@ -91,6 +92,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── ci.md
 │   ├── csharp.md
 │   ├── data-access.md
+│   ├── datetime.md
 │   ├── fsharp.md
 │   ├── globalisation.md
 │   ├── logging.md

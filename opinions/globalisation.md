@@ -115,7 +115,7 @@ The two missing pieces fail differently, and so does the ICU one depending on wh
 
 ### Localisation makes dates look right, not be right
 
-**Store instants as UTC, store a user's IANA time-zone id rather than a fixed offset, and convert at the edge.** A local date and time can legitimately occur twice or not at all, and no amount of culture-correct formatting fixes a value that was ambiguous before it was formatted — which is the argument behind Noda Time's separate `Instant`, `LocalDateTime`, and `ZonedDateTime` types. ([Skeet — More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
+**Store instants as UTC, store a user's IANA time-zone id rather than a fixed offset, and convert at the edge** — the full storage and type-choice stance, including when a future local event should _not_ collapse to UTC, is in [datetime.md](datetime.md). A local date and time can legitimately occur twice or not at all, and no amount of culture-correct formatting fixes a value that was ambiguous before it was formatted — which is the argument behind Noda Time's separate `Instant`, `LocalDateTime`, and `ZonedDateTime` types. ([Skeet — More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
 `TimeZoneInfo.TryConvertIanaIdToWindowsId` bridges the two id families, but only outside invariant and NLS modes — so the storage decision above and the two configuration decisions above are the same decision.
 

@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-18
+last-reviewed: 2026-08-21
 last-used: 2026-08-20
 sources: [ms-learn, meziantou, andrew-lock, house]
 ---
@@ -67,6 +67,10 @@ Tests are first-class code: same review bar, same conventions.
 
 - **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or endpoint handlers.** It boots the real app in-memory (routing, model binding, filters, DI, middleware all live) via `Microsoft.AspNetCore.Mvc.Testing`, so a handful of factory-based tests catch the wiring bugs that controller unit tests structurally cannot. Unit-test the domain logic the endpoints call, not the endpoints themselves. ([Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Andrew Lock — Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
 - **Override services for tests through `WithWebHostBuilder`/`ConfigureTestServices`, never through production code branches** — the app under test must be the app you ship, with only its edges (database, outbound HTTP) swapped. ([Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests))
+
+## Deterministic time
+
+- **Test time-dependent code through an injected `TimeProvider` with `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`), never with `Thread.Sleep` or the real clock.** Set the start instant, drive it with `Advance(TimeSpan)`, and timers created from it fire as time moves — stepping in small increments where callback interleaving matters, since one large `Advance` fires everything at the boundary. For date-sensitive logic, exercise the awkward instants deliberately: a DST spring-forward gap, a fall-back overlap, a leap day, and a year boundary that splits calendar year from ISO week year. The full date/time stance, including the analyzer rules that already ban hand-rolled clock abstractions in this repository's templates, is in [datetime.md](datetime.md). ([Lock — Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
 
 ## Output and scale
 
