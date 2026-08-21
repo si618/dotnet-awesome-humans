@@ -25,10 +25,10 @@ internal static class CommentHeader
     /// </summary>
     internal static IDictionary? Read(string path, out string? error)
     {
-        string text = File.ReadAllText(path).ReplaceLineEndings("\n");
-
-        int newline = text.IndexOf('\n');
-        string line = (newline == -1 ? text : text[..newline]).Trim();
+        // Only the first line matters, so read only that. StreamReader.ReadLine ends a line
+        // on \n, \r, or \r\n, so a CRLF checkout needs no normalising here; it also consumes a
+        // UTF-8 BOM, which would otherwise sit in front of the comment marker.
+        string line = (File.ReadLines(path).FirstOrDefault() ?? "").Trim();
 
         // XML comment first: an .editorconfig header opens with '#', and nothing else does.
         string body;
