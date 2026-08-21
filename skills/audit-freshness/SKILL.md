@@ -32,7 +32,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 
 ## Steps
 
-1. **Collect frontmatter** from every file under `opinions/` and any commented headers in `templates/` files: `targets`, `last-reviewed`, `last-used`, `sources`.
+1. **Collect frontmatter** from every file under `opinions/` and `research/`, and the commented headers in `templates/` files: `targets`, `last-reviewed`, `sources`, plus `last-used` on `opinions/` and `templates/` only — `research/` topics carry neither `last-used` nor a status field (AGENTS.md explains why).
 2. **Determine the latest released versions** of .NET, C#, and F# (same sources as `refresh-dotnet-versions`, step 1), plus the latest GA SDK feature band and the latest stable version of every package pinned in `templates/Directory.Packages.props` (same lookups as `refresh-dotnet-versions`, steps 4a and 4b). Skip whichever of these checks is unavailable if offline and say so in the report — an unchecked pin is reported as "not verified", never as fresh.
 3. **Evaluate each resource** against the tolerances above. Malformed or missing frontmatter is itself a finding (severity: high — the living-reference mechanism depends on it).
 4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no activity recorded in over a year as candidates for `vet-source` re-evaluation.
@@ -45,7 +45,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 
 - **Brand-new repository** (no opinions yet): report that the audit has nothing to check rather than passing vacuously.
 - **House content** (`house` in `sources:`, `**House:**` markings — see HOUSE-OPINIONS.md): the reserved id is never an unknown-source finding, and this skill must never suggest stripping it. A `house` id with no `**House:**`-marked content in the file (or vice versa) IS a finding — the marking and the id travel together.
-- **Files that cannot carry a comment header** (both `global.json` files, `.slnf` filters, JSON generally): they have no `last-reviewed`, so absence of frontmatter is not a malformed-frontmatter finding for them. Audit the pinned value itself against the latest release instead. `.slnx` is XML and does carry one, so it is not exempt — `scripts/validate-metadata.cs` enforces exactly this exemption list in CI.
+- **Files that cannot carry a comment header** (the repository-root `global.json`, plus exactly two `templates/` files: `templates/global.json` and `templates/example.slnf`): they have no `last-reviewed`, so absence of frontmatter is not a malformed-frontmatter finding for them. Audit the pinned value itself against the latest release instead. `.slnx` is XML and does carry one, so it is not exempt — `scripts/validate-metadata.cs` enforces exactly this two-file exemption list in CI, so any other headerless JSON added under `templates/` fails there rather than escaping silently.
 - **A package pin deliberately held back** (a known-bad release, or a major whose migration is tracked elsewhere): still report the drift, but as informational once the reason is recorded as a comment beside the pin. Silent staleness and deliberate staleness must look different in the report.
 - **A resource that is intentionally version-agnostic** (e.g. naming conventions): may declare `targets: [any]`; version-drift checks skip it, review-age checks still apply.
 - **Clock skew / future dates** in frontmatter: report as malformed.

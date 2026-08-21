@@ -45,12 +45,18 @@ string[] required = ["targets", "last-reviewed", "last-used", "sources"];
 // which re-verifies it, so its two dates would always move together (research-topic).
 string[] researchRequired = ["targets", "last-reviewed", "sources"];
 
+// ...and two fields it must not carry. A last-used or status key on a research topic is
+// the retired frontmatter shape sneaking back in — a topic on disk is unresolved by
+// definition, and deletion is the only promotion signal (AGENTS.md), so these are
+// rejected rather than ignored.
+string[] researchForbidden = ["last-used", "status"];
+
 string[] dateFields = ["last-reviewed", "last-used"];
 
 List<string> errors = [];
 IDeserializer deserializer = new DeserializerBuilder().Build();
 
-List<(string Path, IDictionary? Fields, string? Error, string[] Required)> resources = [];
+List<(string Path, IDictionary? Fields, string? Error, string[] Required, string[] Forbidden)> resources = [];
 
 string[] opinions = Opinions.Names();
 if (opinions.Length == 0)
@@ -61,7 +67,7 @@ if (opinions.Length == 0)
 foreach (string name in opinions)
 {
     string path = Opinions.PathOf(name);
-    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, required));
+    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, required, []));
 }
 
 // research/ is staging, and legitimately empty once every topic has been resolved —
@@ -71,7 +77,7 @@ string[] research = MarkdownIn("research");
 
 foreach (string path in research)
 {
-    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, researchRequired));
+    resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, researchRequired, researchForbidden));
 }
 
 string[] templates = TemplatesWithHeaders(TemplatesDirectory);
@@ -82,10 +88,10 @@ if (templates.Length == 0)
 
 foreach (string path in templates)
 {
-    resources.Add((path, CommentHeader.Read(path, out string? error), error, required));
+    resources.Add((path, CommentHeader.Read(path, out string? error), error, required, []));
 }
 
-foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRequired) in resources)
+foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRequired, string[] fieldsForbidden) in resources)
 {
     if (fields is null)
     {
@@ -98,6 +104,14 @@ foreach ((string path, IDictionary? fields, string? readError, string[] fieldsRe
         if (!fields.Contains(field) || IsEmpty(fields[field]))
         {
             errors.Add($"{path}: missing or empty metadata field '{field}'");
+        }
+    }
+
+    foreach (string field in fieldsForbidden)
+    {
+        if (fields.Contains(field))
+        {
+            errors.Add($"{path}: field '{field}' is not allowed on a research topic");
         }
     }
 
@@ -161,8 +175,10 @@ static string[] MarkdownIn(string directory)
 }
 
 // JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot
-// hold a header at all. They are exempt here rather than permanently failing; what they
-// pin is audited against the latest releases instead (skills/audit-freshness/SKILL.md).
+// hold a header at all. Exactly those two files are exempt — the same list AGENTS.md
+// documents — so a headerless JSON file added anywhere else under templates/ fails
+// loudly here instead of silently escaping validation. What the two pin is audited
+// against the latest releases instead (skills/audit-freshness/SKILL.md).
 static string[] TemplatesWithHeaders(string directory)
 {
     if (!Directory.Exists(directory))
@@ -174,10 +190,10 @@ static string[] TemplatesWithHeaders(string directory)
     [
         .. new DirectoryInfo(directory)
             .EnumerateFiles("*", SearchOption.AllDirectories)
-            .Where(file => file.Extension is not (".json" or ".slnf"))
             // Reported as repository-relative paths with forward slashes, so a finding
             // reads the same whichever platform ran the check.
             .Select(file => $"{directory}/{Path.GetRelativePath(directory, file.FullName).Replace('\\', '/')}")
+            .Where(path => path is not ("templates/global.json" or "templates/example.slnf"))
             .Order(StringComparer.Ordinal),
     ];
 }
