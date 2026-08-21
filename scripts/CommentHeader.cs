@@ -3,12 +3,13 @@
 // statements, and the YamlDotNet reference it compiles beside is declared by the script
 // including it.
 //
-// Templates cannot carry YAML frontmatter: they are XML, INI and JSON files that have to
-// stay valid for the tools that read them, and a `---` block would break every one. The
-// same metadata rides in a comment on the first line instead, and this parses it:
+// Templates cannot carry YAML frontmatter: they are XML, INI, JSON and source files that
+// have to stay valid for the tools that read them, and a `---` block would break every
+// one. The same metadata rides in a comment on the first line instead, and this parses it:
 //
 //     <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | … -->
 //     # dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …
+//     // dotnet-awesome-humans template | targets: net10.0 | last-reviewed: … | …
 
 using System.Collections;
 
@@ -30,11 +31,16 @@ internal static class CommentHeader
         // UTF-8 BOM, which would otherwise sit in front of the comment marker.
         string line = (File.ReadLines(path).FirstOrDefault() ?? "").Trim();
 
-        // XML comment first: an .editorconfig header opens with '#', and nothing else does.
+        // XML comment first: an .editorconfig header opens with '#', an exemplar source
+        // file (.fs, .cs) with '//', and nothing else opens with either.
         string body;
         if (line.StartsWith("<!--", StringComparison.Ordinal) && line.EndsWith("-->", StringComparison.Ordinal))
         {
             body = line[4..^3];
+        }
+        else if (line.StartsWith("//", StringComparison.Ordinal))
+        {
+            body = line[2..];
         }
         else if (line.StartsWith('#'))
         {
