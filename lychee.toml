@@ -27,13 +27,16 @@ user_agent = "Mozilla/5.0 (compatible; lychee link checker; +https://github.com/
 # hosts that a human browser reaches fine — checked manually when it appears.
 accept = ["200", "203", "206", "403", "429"]
 
-# obj/ and bin/ are build artefacts from smoke-testing the templates. .claude is
-# a symlink to skills/, so leaving it in reports every finding twice.
-# package-lock.json needs no entry: lychee extracts no URLs from it (verified by
-# passing the file explicitly — zero registry links found).
+# templates/artifacts/ is build output from smoke-testing the templates —
+# Directory.Build.props sets UseArtifactsOutput, so obj/, bin/ and generated
+# files all land there. .claude is a symlink to skills/, so leaving it in
+# reports every finding twice. package-lock.json needs no entry: lychee
+# extracts no URLs from it (verified by passing the file explicitly — zero
+# registry links found).
 exclude_path = [
   "node_modules",
   ".claude",
+  "templates/artifacts",
   "templates/projects/obj",
   "templates/projects/bin",
 ]

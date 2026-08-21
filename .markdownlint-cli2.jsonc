@@ -1,5 +1,6 @@
 {
-  // Markdown linting for this repository. Run: npx markdownlint-cli2 "**/*.md"
+  // Markdown linting for this repository. Run via `npm run check`, which uses the
+  // versions pinned in package.json — never `npx markdownlint-cli2` (see AGENTS.md).
   // Formatting is prettier's job (--prose-wrap preserve); this file only turns
   // off the rules that conflict with that or misfire on our content.
   "config": {

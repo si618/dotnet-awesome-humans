@@ -24,8 +24,10 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
    - **Depth** — sample 3–5 representative posts. Original insight (internals, measurements, worked reasoning) or paraphrased release notes?
    - **Accuracy** — any history of corrections issued, or of claims later shown wrong and left standing?
    - **Independence of signal** — does the content stand on merit, or on marketing reach / algorithm-chasing? Vendor blogs and personality-driven channels need extra scrutiny here.
-3. **Classify:**
+3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md — Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
    - All four criteria met at Tier 1/2 longevity → **admit** at the appropriate tier.
+   - **Independence caps tier**: Tier 1 longevity with a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) → admit at **Tier 2**, concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance keeps full tier.
+   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless output demonstrably continues on other channels (talks, repositories, official docs), in which case the track record follows the human and the dormant channel is noted.
    - Strong on depth/accuracy but short on longevity → **watch list**, with the blocker recorded.
    - Aggregators (link roundups, newsletters) → admissible, but marked as **discovery-only**; they never appear in an opinion's `sources:`.
    - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
