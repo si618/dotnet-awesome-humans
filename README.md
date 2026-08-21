@@ -1,8 +1,8 @@
 # dotnet-awesome-humans
 
-Opinionated best practices for modern .NET — written for humans, applied by AI agents.
+Opinionated best practices for modern .NET.
 
-Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Aims to answer the question _"what does good look like in .NET right now?"_ and to keep answering it as .NET moves.
+Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Aims to answer the question _"what does good look like in .NET right now?"_ and to keep answering it as .NET improves.
 
 Three ways to use it:
 
@@ -34,7 +34,7 @@ A new opinion file must appear both here and in [Repository layout](#repository-
 
 Opinions target the latest released versions of .NET, C#, and F# — GA only, never an older LTS for comfort, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
-Every resource carries metadata recording when it was last reviewed, and — for the `opinions/` and `templates/` files that get consulted rather than resolved — when it was last used as a reference, so staleness is visible rather than silent:
+Every resource carries metadata recording when it was last reviewed, so staleness is visible rather than silent. `opinions/` and `templates/` files also record when each was last used as a reference; `research/` topics don't, because the only way to consult one is to build on it, which re-verifies it. An opinion's YAML frontmatter (a research topic carries the same block minus `last-used`):
 
 ```yaml
 ---
@@ -45,9 +45,33 @@ sources: [dotnet-blog, andrew-lock]
 ---
 ```
 
+Template files carry the same fields in a first-line comment header instead — an XML or INI file cannot open with a `---` block and stay valid for MSBuild or the editors that read it (the two JSON templates have no comment syntax at all and are exempt):
+
+```xml
+<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
+```
+
 ## Awesome humans
 
 Opinions have to be earned. Each one traces back to a vetted source — an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — admitted on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+
+How a source gets in, and what its tier lets it do (orientation only — the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
+
+```mermaid
+flowchart LR
+    candidate["Candidate source"] --> vet["vet-source"]
+    vet -->|"all four criteria,<br>5+ years"| tier1["Tier 1"]
+    vet -->|"2–5 years, or capped<br>on independence/depth"| tier2["Tier 2"]
+    vet -->|"strong today, track<br>record still forming"| watch["Watch list"]
+    vet -->|"otherwise"| declined["Declined"]
+    watch -->|"blocker clears"| vet
+    tier1 -->|"gone dormant,<br>quality dropped"| vet
+    tier2 -->|"gone dormant,<br>quality dropped"| vet
+    tier1 --> cite["citable in an opinion's sources:"]
+    tier2 --> cite
+    tier1 -.->|"rows marked Discovery-only:<br>leads only — CI rejects citation"| discovery["discovery + cross-checking"]
+    watch -.-> discovery
+```
 
 ### House opinions
 
@@ -110,6 +134,21 @@ They are built for a cost-aware split: cheaper worker agents fan out across the 
 | [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited and saved |
 | [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic — weave it into the opinions and templates, or discard it       |
 
+### Research lifecycle
+
+Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request — a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only — the two `SKILL.md` files are canonical):
+
+```mermaid
+flowchart LR
+    research["research-topic"] -->|"PR"| staged["research/{topic}.md"]
+    staged --> resolve["resolve-research"]
+    resolve -->|"promote"| woven["woven into opinions/<br>and templates/"]
+    resolve -->|"discard"| deleted["file deleted"]
+    woven -->|"same PR"| deleted
+    resolve -->|"partial promotion"| remainder["blocked remainder<br>stays staged"]
+    remainder -.->|"vet-source clears it,<br>or discard"| resolve
+```
+
 ### Release watch automation
 
 A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.github/workflows/dotnet-release-watch.yml)) polls the official [.NET releases index](https://github.com/dotnet/core/blob/main/release-notes/releases-index.json) daily against the checked-in snapshot at [`.github/state/dotnet-releases.json`](.github/state/dotnet-releases.json). A new GA release opens a pull request updating that snapshot. The PR is a trigger for running [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md); it changes no opinion or template itself.
@@ -130,7 +169,7 @@ Run them from the repository root, exactly as CI does:
 dotnet run scripts/validate-metadata.cs
 ```
 
-[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) parses the first-line comment header that carries the same fields on `templates/` files, which cannot open with a `---` block and stay valid. None runs alone: they declare no top-level statements, and compile into whichever script `#:include`s them.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) parses the first-line comment header that carries the same fields on `templates/` files (see [Freshness policy](#freshness-policy) for why templates use a comment instead). None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
 
 The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). One check is still Python — the Agent Skills spec validator, published only to PyPI.
 

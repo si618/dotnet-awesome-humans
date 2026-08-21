@@ -186,6 +186,12 @@ static string[] TemplatesWithHeaders(string directory)
         return [];
     }
 
+    // Smoke-testing the exemplar projects (audit-freshness, refresh-dotnet-versions)
+    // leaves gitignored build output under templates/ — generated files, not resources.
+    // Skipping the same directories .gitignore does keeps a post-build working tree and
+    // a fresh checkout passing identically; CI is not the only place this check runs.
+    string[] buildOutput = ["artifacts", "bin", "obj"];
+
     return
     [
         .. new DirectoryInfo(directory)
@@ -193,6 +199,7 @@ static string[] TemplatesWithHeaders(string directory)
             // Reported as repository-relative paths with forward slashes, so a finding
             // reads the same whichever platform ran the check.
             .Select(file => $"{directory}/{Path.GetRelativePath(directory, file.FullName).Replace('\\', '/')}")
+            .Where(path => !path.Split('/').Any(buildOutput.Contains))
             .Where(path => path is not ("templates/global.json" or "templates/example.slnf"))
             .Order(StringComparer.Ordinal),
     ];
