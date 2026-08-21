@@ -4,7 +4,7 @@ Opinionated best practices for modern .NET.
 
 Distils the published guidance of awesome humans: people and publications with a proven, multi-year track record, catalogued in [AWESOME-HUMANS.md](AWESOME-HUMANS.md). Aims to answer the question _"what does good look like in .NET right now?"_ and to keep answering it as .NET improves.
 
-Three ways to use it:
+How to use this project:
 
 - **Point an agent at it.** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code." The opinions cover conventions, project layout, language usage, and library choices.
 - **Scaffold from it.** Copy files out of [`templates/`](templates), or run [`verify-project`](skills/verify-project/SKILL.md) against a codebase you already have.
