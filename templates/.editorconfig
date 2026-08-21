@@ -45,7 +45,8 @@ dotnet_diagnostic.IDE0032.severity = warning
 dotnet_diagnostic.CA1307.severity = warning
 
 # The one Meziantou.Analyzer TimeProvider rule that ships disabled: prefer overloads taking a
-# TimeProvider. MA0166/MA0188 already warn by default (opinions/datetime.md).
+# TimeProvider. MA0166/MA0188 ship enabled at info severity and are raised to warnings by the
+# bulk dotnet_analyzer_diagnostic.severity above (opinions/datetime.md).
 dotnet_diagnostic.MA0167.severity = warning
 
 # --- Nullability and correctness ---

@@ -70,7 +70,7 @@ Tests are first-class code: same review bar, same conventions.
 
 ## Deterministic time
 
-- **Test time-dependent code through an injected `TimeProvider` with `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`), never with `Thread.Sleep` or the real clock.** Set the start instant, drive it with `Advance(TimeSpan)`, and timers created from it fire as time moves — stepping in small increments where callback interleaving matters, since one large `Advance` fires everything at the boundary. For date-sensitive logic, exercise the awkward instants deliberately: a DST spring-forward gap, a fall-back overlap, a leap day, and a year boundary that splits calendar year from ISO week year. The full date/time stance, including the analyzer rules that already ban hand-rolled clock abstractions in this repository's templates, is in [datetime.md](datetime.md). ([Lock — Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
+- **Test time-dependent code through an injected `TimeProvider` with `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`), never with `Thread.Sleep` or the real clock.** How to drive it, its large-`Advance` caveat, and the awkward instants worth exercising (DST gaps and overlaps, leap days, ISO-week year boundaries) are in [datetime.md](datetime.md#testing-time) — along with the analyzer rules that already ban hand-rolled clock abstractions in this repository's templates.
 
 ## Output and scale
 

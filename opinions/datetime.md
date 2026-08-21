@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-21
 last-used: 2026-08-21
-sources: [ms-learn, jon-skeet, meziantou, andrew-lock]
+sources: [ms-learn, dotnet-blog, jon-skeet, meziantou, andrew-lock]
 ---
 
 # Dates, times, and time zones
@@ -27,7 +27,7 @@ Two caveats the documentation states explicitly:
 - **`DateTimeOffset` does not know its time zone.** It records the offset that applied at one moment, and the same offset belongs to many zones — it "can't reflect a time zone's transition to and from daylight saving time". Adding 24 hours is not the same as adding one day; for DST-sensitive arithmetic, convert to the zone with `TimeZoneInfo`, do the arithmetic in local terms, convert back.
 - **`DateTime` with `Kind = Unspecified` is ambiguous even on the machine that produced it.** If a `DateTime` must cross a boundary, it is UTC with `Kind = Utc` or it is a bug.
 
-And the assumptions to stop making: offsets are not whole hours (Newfoundland is UTC−2:30), DST shifts are not always an hour (Lord Howe is 30 minutes), zones within one country differ on whether they observe DST at all, and abbreviations like "BST" are ambiguous across three real zones. Anything narrower than an IANA id loses information. ([Meziantou — 39 misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
+And the assumptions to stop making: offsets are not whole hours (Newfoundland is UTC−3:30), DST shifts are not always an hour (Lord Howe is 30 minutes), zones within one country differ on whether they observe DST at all, and abbreviations like "BST" are ambiguous across three real zones. Anything narrower than an IANA id loses information. ([Meziantou — 39 misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
 
 ## Persistence: split by kind of data, not by layer
 
@@ -67,13 +67,13 @@ public sealed class OrderService(TimeProvider time)
 
 Forward it rather than dropping it — `Task.Delay`, `Task.WaitAsync`, and `CancellationTokenSource` all have `TimeProvider` overloads, and a `PeriodicTimer` or `BackgroundService` built on the raw ones is untestable for no gain.
 
-This is enforced, not aspirational: [templates/Directory.Build.props](../templates/Directory.Build.props) ships Meziantou.Analyzer with `TreatWarningsAsErrors`, and its date/time rules fail the build for hand-rolled clock abstractions ([analyzer docs](https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/README.md)):
+This is enforced, not aspirational — but the enforcement is a pair, not one file. [templates/Directory.Build.props](../templates/Directory.Build.props) ships Meziantou.Analyzer with `TreatWarningsAsErrors`, and the date/time rules below all ship at **info** severity, so on their own they never trip it; it is [templates/.editorconfig](../templates/.editorconfig)'s `dotnet_analyzer_diagnostic.severity = warning` that raises them to warnings, which `TreatWarningsAsErrors` then turns into build failures. Adopt both files, or a hand-rolled `IClock` builds clean ([analyzer docs](https://github.com/meziantou/Meziantou.Analyzer/blob/main/docs/README.md)):
 
-| Rule     | Title                                                          | Default                                                                     |
-| -------- | -------------------------------------------------------------- | --------------------------------------------------------------------------- |
-| `MA0188` | Use `System.TimeProvider` instead of a custom time abstraction | enabled                                                                     |
-| `MA0166` | Forward the `TimeProvider` to methods that take one            | enabled                                                                     |
-| `MA0167` | Use an overload with a `TimeProvider` argument                 | disabled — [templates/.editorconfig](../templates/.editorconfig) enables it |
+| Rule     | Title                                                          | Default                                                                         |
+| -------- | -------------------------------------------------------------- | ------------------------------------------------------------------------------- |
+| `MA0188` | Use `System.TimeProvider` instead of a custom time abstraction | enabled, info severity                                                          |
+| `MA0166` | Forward the `TimeProvider` to methods that take one            | enabled, info severity                                                          |
+| `MA0167` | Use an overload with a `TimeProvider` argument                 | disabled — [templates/.editorconfig](../templates/.editorconfig) enables it too |
 
 ## Testing time
 
@@ -90,4 +90,4 @@ For date-sensitive logic, exercise the awkward instants deliberately: a DST spri
 ## Smaller traps
 
 - **`TimeSpan.From*` gained integer overloads in .NET 9** because the `double` ones are lossy — `TimeSpan.FromSeconds(101.832)` is not 101.832 seconds. In F# this broke overload resolution: `TimeSpan.FromMinutes(20)` now needs an explicit type annotation. ([Breaking change note](https://learn.microsoft.com/dotnet/core/compatibility/core-libraries/9.0/timespan-from-overloads))
-- **`TimeZoneInfo.FindSystemTimeZoneById` accepts the platform's native ids** and converts between the IANA and Windows families on modern .NET — but only outside invariant-globalization and NLS modes ([globalisation.md](globalisation.md)).
+- **`TimeZoneInfo.FindSystemTimeZoneById` accepts the platform's native ids**, and the lookup itself needs only tzdata — it works even in invariant-globalization mode. Converting between the IANA and Windows id families (`TryConvertIanaIdToWindowsId` / `TryConvertWindowsIdToIanaId`) is the ICU-dependent part, unavailable in invariant and NLS modes ([globalisation.md](globalisation.md)).
