@@ -43,4 +43,5 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 - **The target pins an older .NET for a stated reason** (e.g. deployment constraint documented in its README): still report the drift, but mark it acknowledged rather than actionable.
 - **F#-only or mixed solutions:** verify against the F# opinions too — do not report C#-specific conventions as violations in F# projects.
 - **No opinions exist yet for something the target does:** report it as out of scope, and note it as a candidate opinion gap for `harvest-sources`.
+- **The target spells things differently:** never a finding, in either direction. This repository's spelling rule (AGENTS.md) governs prose written here and says nothing about anyone else's code. British or American, in identifiers, comments or documentation, is the target's own business — report it and you bury the real findings under noise the author never asked for.
 - **The template files and opinions disagree** (repository bug): report the inconsistency against _this_ repository, and verify the target against the opinion text, which wins.

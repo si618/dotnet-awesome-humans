@@ -16,7 +16,7 @@ EF Core is the default ORM. Write set-based work as set-based SQL; keep the chan
 - **Use `ExecuteUpdateAsync` / `ExecuteDeleteAsync` for updates and deletes that don't need the entities loaded.** Load-modify-`SaveChanges` pulls every row into the change tracker to emit statements the database could have generated itself; the set-based APIs issue one `UPDATE`/`DELETE`. Independent benchmarks put the gap in the hundreds of times on 10,000-row operations. ([Mukesh: Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović: What you need to know about EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
 
   ```csharp
-  // Set-based: one statement, no entities materialised
+  // Set-based: one statement, no entities materialized
   await db.Orders
       .Where(o => o.Status == OrderStatus.Pending && o.Placed < cutoff)
       .ExecuteUpdateAsync(

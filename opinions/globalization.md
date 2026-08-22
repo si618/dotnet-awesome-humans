@@ -14,15 +14,15 @@ sources:
   ]
 ---
 
-# Globalisation & localisation
+# Globalization & localization
 
-The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, culture selection via request localisation middleware, ICU as the culture-data engine on every platform. The decisions that bite are all defaults — culture leaking into machine-facing strings, invariant mode arriving by template rather than by choice, and container images that quietly ship without the data the runtime needs.
+The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, culture selection via request localization middleware, ICU as the culture-data engine on every platform. The decisions that bite are all defaults — culture leaking into machine-facing strings, invariant mode arriving by template rather than by choice, and container images that quietly ship without the data the runtime needs.
 
 ## Opinions
 
 ### Split every format, parse, and compare call by audience
 
-**Human-facing text uses the current culture; machine-facing text uses `CultureInfo.InvariantCulture` explicitly, and machine-facing comparison uses `StringComparison.Ordinal`.** This one rule prevents most globalisation bugs, and the second half is the half that gets skipped — the failure is silent until someone runs the service under `de-DE` and `1.5` round-trips as `15`.
+**Human-facing text uses the current culture; machine-facing text uses `CultureInfo.InvariantCulture` explicitly, and machine-facing comparison uses `StringComparison.Ordinal`.** This one rule prevents most globalization bugs, and the second half is the half that gets skipped — the failure is silent until someone runs the service under `de-DE` and `1.5` round-trips as `15`.
 
 | Audience                                                         | Formatting & parsing                       | Comparison                                     |
 | ---------------------------------------------------------------- | ------------------------------------------ | ---------------------------------------------- |
@@ -49,7 +49,7 @@ With `TreatWarningsAsErrors` already on, that turns "someone forgot a `StringCom
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 
-**Decide invariant mode on its own merits, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU entirely and use built-in invariant data — a legitimate size and startup win for a service that renders no localised output, and a trap when it arrives attached to an unrelated decision. Verified on SDK 10.0.400: `dotnet new webapi` does not set it, `dotnet new webapiaot` does, sitting in the generated project file next to `<PublishAot>true</PublishAot>`. So it typically enters a codebase because someone went Native AOT (see [runtime-performance.md](runtime-performance.md)), and then quietly changes how every `ToString` and `Compare` in the app behaves.
+**Decide invariant mode on its own merits, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU entirely and use built-in invariant data — a legitimate size and startup win for a service that renders no localized output, and a trap when it arrives attached to an unrelated decision. Verified on SDK 10.0.400: `dotnet new webapi` does not set it, `dotnet new webapiaot` does, sitting in the generated project file next to `<PublishAot>true</PublishAot>`. So it typically enters a codebase because someone went Native AOT (see [runtime-performance.md](runtime-performance.md)), and then quietly changes how every `ToString` and `Compare` in the app behaves.
 
 What turning it on costs:
 
@@ -61,7 +61,7 @@ What turning it on costs:
 
 ### Pin ICU only when reproducible comparison beats current comparison
 
-**Take the default — system ICU — unless you have a stated reason not to.** Globalisation has run on ICU on every platform since .NET 5, including Windows, which ships `icu.dll`. Three escape hatches exist, in descending order of how often they are right:
+**Take the default — system ICU — unless you have a stated reason not to.** Globalization has run on ICU on every platform since .NET 5, including Windows, which ships `icu.dll`. Three escape hatches exist, in descending order of how often they are right:
 
 - **`System.Globalization.AppLocalIcu`** plus a `Microsoft.ICU.ICU4C.Runtime` package reference carries a pinned ICU with the app, so collation and CLDR data are byte-identical across every deployment. The right answer when a sort order is part of your contract.
 - **`DOTNET_ICU_VERSION_OVERRIDE`** pins a system ICU version on Linux. Note the .NET 10 rename — it was `CLR_ICU_VERSION_OVERRIDE` before — and that it only applies to Microsoft-built .NET, not distro builds. ([Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
@@ -69,7 +69,7 @@ What turning it on costs:
 
 ([Globalization config settings](https://learn.microsoft.com/dotnet/core/runtime-config/globalization))
 
-### ASP.NET Core: register localisation, then drive culture from a cookie
+### ASP.NET Core: register localization, then drive culture from a cookie
 
 **Call `AddLocalization` with a `ResourcesPath`, and select culture with `UseRequestLocalization` early in the pipeline.**
 
@@ -98,10 +98,10 @@ One failure worth recognising on sight: **if `RootNamespace` and `AssemblyName` 
 
 Designer-generated strongly-typed resource classes are the compile-time-safe alternative and lost on portability: .NET still ships no cross-platform strongly-typed resource generator in the box — `<GenerateSource>true</GenerateSource>` on an `EmbeddedResource` builds clean and emits nothing on net10.0 — so the designer route is Visual Studio tooling with a checked-in `.Designer.cs`, and the cross-platform route is `Microsoft.CodeAnalysis.ResxSourceGenerator`, which dotnet/runtime itself uses but Microsoft still publishes only as a prerelease. Revisit when it ships stable. ([Abuhakmeh: Getting Started With .NET Localization](https://khalidabuhakmeh.com/getting-started-with-net-localization))
 
-### Client-side: ship the globalisation data the app can actually reach
+### Client-side: ship the globalization data the app can actually reach
 
-- **Blazor WebAssembly loads only the app's own culture data by default.** Blazor loads a subset covering the app's own culture, so set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` if the user can switch culture at runtime. Time-zone data trims separately via `<InvariantTimezone>true</InvariantTimezone>`; `<BlazorEnableTimeZoneSupport>` is superseded — delete it. In .NET 10, standalone WASM apps also load globalisation data for `CultureInfo.DefaultThreadCurrentUICulture`, where .NET 9 and earlier honoured only `DefaultThreadCurrentCulture`. ([Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))
-- **.NET MAUI has no localisation abstraction:** plain per-culture `.resx` plus `CultureInfo.DefaultThreadCurrentUICulture`, and no `RequestLocalization` equivalent, so switching culture at runtime means re-resolving bindings yourself. ([.NET MAUI: Localization](https://learn.microsoft.com/dotnet/maui/fundamentals/localization?view=net-maui-10.0))
+- **Blazor WebAssembly loads only the app's own culture data by default.** Blazor loads a subset covering the app's own culture, so set `<BlazorWebAssemblyLoadAllGlobalizationData>true</BlazorWebAssemblyLoadAllGlobalizationData>` if the user can switch culture at runtime. Time-zone data trims separately via `<InvariantTimezone>true</InvariantTimezone>`; `<BlazorEnableTimeZoneSupport>` is superseded — delete it. In .NET 10, standalone WASM apps also load globalization data for `CultureInfo.DefaultThreadCurrentUICulture`, where .NET 9 and earlier honoured only `DefaultThreadCurrentCulture`. ([Blazor globalization and localization](https://learn.microsoft.com/aspnet/core/blazor/globalization-localization?view=aspnetcore-10.0))
+- **.NET MAUI has no localization abstraction:** plain per-culture `.resx` plus `CultureInfo.DefaultThreadCurrentUICulture`, and no `RequestLocalization` equivalent, so switching culture at runtime means re-resolving bindings yourself. ([.NET MAUI: Localization](https://learn.microsoft.com/dotnet/maui/fundamentals/localization?view=net-maui-10.0))
 - **Avalonia reaches `.resx` from XAML via `{x:Static}`** against a generated resources class. Switching language without a restart has no first-party answer — it needs a custom markup extension, and the community packages that offer one are unvetted. This is the project's own documentation, so take it for mechanism rather than for whether you should want it; the source-redundancy caveat in [ui-frameworks.md](ui-frameworks.md) applies. ([Localizing using ResX](https://docs.avaloniaui.net/docs/app-development/localizing))
 
 ### Containers: chiseled and Alpine images drop this data
@@ -113,7 +113,7 @@ The two missing pieces fail differently, and so does the ICU one depending on wh
 - **No ICU — and the image has already decided for you.** The base images set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` as an image environment variable, so the app runs in invariant mode however it was built. An app that names a culture throws `CultureNotFoundException` at startup — `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above dies before serving a request. An app that only leans on `CurrentCulture` fails quietly instead, formatting and comparing as invariant. Because the setting lives in the environment rather than the project file, `<InvariantGlobalization>false</InvariantGlobalization>` does not undo it — installing `icu-libs` and `icu-data-full` by hand means clearing the variable too. Taking `-extra` is the version that works, because those images simply omit the variable.
 - **No tzdata — a loud failure.** `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`, which is unaffected by invariant mode and so survives as a real exception. `RUN apk add --no-cache tzdata` fixes that one alone. ([Gordon: TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
-### Localisation makes dates look right, not be right
+### Localization makes dates look right, not be right
 
 **Store instants as UTC, store a user's IANA time-zone id rather than a fixed offset, and convert at the edge** — the full storage and type-choice stance, including when a future local event should _not_ collapse to UTC, is in [datetime.md](datetime.md). A local date and time can legitimately occur twice or not at all, and no amount of culture-correct formatting fixes a value that was ambiguous before it was formatted — which is the argument behind Noda Time's separate `Instant`, `LocalDateTime`, and `ZonedDateTime` types. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
