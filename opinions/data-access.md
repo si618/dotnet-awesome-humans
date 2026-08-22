@@ -2,7 +2,7 @@
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-14
 last-used: 2026-08-19
-sources: [code-with-mukesh, milan-jovanovic]
+sources: [code-with-mukesh, milan-jovanovic, shay-rojansky]
 ---
 
 # Data access
@@ -26,10 +26,13 @@ EF Core is the default ORM. Write set-based work as set-based SQL; keep the chan
 
 - **Know what the set-based APIs skip, and keep audited writes on `SaveChanges`.** They bypass the change tracker entirely: interceptors don't fire, `SaveChanges`-based audit and outbox logic doesn't run, and global query filters are not applied to the predicate — so a soft-delete filter you rely on everywhere else silently isn't there. Spell the filter out in the `Where` clause, or keep that write on `SaveChanges`. ([Mukesh — Bulk operations in EF Core 10](https://codewithmukesh.com/blog/bulk-operations-efcore/), [Jovanović — EF Core bulk updates](https://milanjovanovic.tech/blog/what-you-need-to-know-about-ef-core-bulk-updates))
 - **Model dates and times with the types in [datetime.md](datetime.md), and let EF Core map them natively** — `DateOnly`/`TimeOnly` to the SQL date and time column types on EF Core 8+, not the legacy `DateTime`-for-a-date shape. The provider differences and the UTC-vs-local storage decision live in [datetime.md](datetime.md#persistence-split-by-kind-of-data-not-by-layer).
+- **On PostgreSQL, store instants as `DateTime` with `Kind.Utc` and let Npgsql map them to `timestamptz`.** Despite its name `timestamptz` stores a UTC instant and no zone at all, so the offset on a `DateTimeOffset` has nowhere to round-trip to: Npgsql rejects any `DateTimeOffset` whose offset is non-zero, maps `Kind.Utc` to `timestamptz`, and maps `Local`/`Unspecified` to plain `timestamp`. Read the resulting "UTC everywhere" rule as provider-shaped rather than domain-shaped — it describes what the column can faithfully round-trip, not what the domain is allowed to forget. It therefore sits underneath the split in [datetime.md](datetime.md#persistence-split-by-kind-of-data-not-by-layer) rather than against it: the instant column is UTC either way, and a future or recurring human-scheduled event still needs its local time and IANA zone id in their own columns beside it. ([Rojansky — PostgreSQL/.NET timestamp mapping](https://www.roji.org/postgresql-dotnet-timestamp-mapping))
 - **For inserts, batched `SaveChanges` is the default; reach for a bulk-copy path only above roughly ten thousand rows.** `AddRange` + one `SaveChanges` keeps interceptors and audit trails working and is fast enough for ordinary write paths. Adding entities one at a time in a loop is the anti-pattern — an order of magnitude slower than the batched call for no benefit. ([Mukesh — Fastest way to bulk insert thousands of rows in EF Core](https://codewithmukesh.com/blog/ef-core-bulk-insert/))
 
 ## Source redundancy
 
-Both sources were admitted on 2026-08-14 under the lowered longevity bars, and the benchmark numbers behind the first opinion are theirs, not reproduced here. The shape of the guidance (set-based writes for set-based work; change-tracker semantics are the trade) is corroborated across both; the specific ratios are not this repository's claim. Re-verify against Microsoft Learn's EF Core documentation before quoting figures.
+`code-with-mukesh` and `milan-jovanovic` were both admitted on 2026-08-14 under the lowered longevity bars, and the benchmark numbers behind the first opinion are theirs, not reproduced here. The shape of the guidance (set-based writes for set-based work; change-tracker semantics are the trade) is corroborated across both; the specific ratios are not this repository's claim. Re-verify against Microsoft Learn's EF Core documentation before quoting figures.
 
-<!-- TODO: extend with query-side opinions (AsNoTracking defaults, split queries, projection over Include), migrations workflow, and connection resiliency — none of it sourced yet. PostgreSQL-specific timestamp mapping (Npgsql's timestamptz rules) is staged in research/datetime-timezone.md, blocked on vetting Shay Rojansky (roji.org) as a source. -->
+`shay-rojansky` is Tier 2 under the independence cap — he maintains Npgsql and is on Microsoft's EF Core team, so the mapping rules above are cited as mechanism, which is what that cap permits. The judgment of when to reach for those types is `jon-skeet`'s in [datetime.md](datetime.md), not his.
+
+<!-- TODO: extend with query-side opinions (AsNoTracking defaults, split queries, projection over Include), migrations workflow, and connection resiliency — none of it sourced yet. -->
