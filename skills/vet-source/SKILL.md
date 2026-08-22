@@ -20,11 +20,11 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
 
 1. **Identify the candidate** (URL, author, focus area) and check the roster: already listed? Then this is a re-evaluation (promotion/demotion), not an admission.
 2. **Establish the track record.** Gather evidence for each criterion:
-   - **Longevity** — earliest verifiable publication (archives, post history, Wayback Machine). Tier 1 needs 5+ years of sustained output; Tier 2 covers 2–5 years. Under two years is the watch list regardless of quality.
-   - **Depth** — sample 3–5 representative posts. Original insight (internals, measurements, worked reasoning) or paraphrased release notes?
-   - **Accuracy** — any history of corrections issued, or of claims later shown wrong and left standing?
-   - **Independence of signal** — does the content stand on merit, or on marketing reach / algorithm-chasing? Vendor blogs and personality-driven channels need extra scrutiny here.
-3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md — Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
+   - **Longevity:** earliest verifiable publication (archives, post history, Wayback Machine). Tier 1 needs 5+ years of sustained output; Tier 2 covers 2–5 years. Under two years is the watch list regardless of quality.
+   - **Depth:** sample 3–5 representative posts. Original insight (internals, measurements, worked reasoning) or paraphrased release notes?
+   - **Accuracy:** any history of corrections issued, or of claims later shown wrong and left standing?
+   - **Independence of signal:** does the content stand on merit, or on marketing reach / algorithm-chasing? Vendor blogs and personality-driven channels need extra scrutiny here.
+3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
    - All four criteria met at Tier 1/2 longevity → **admit** at the appropriate tier.
    - **Independence caps tier**: Tier 1 longevity with a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) → admit at **Tier 2**, concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance keeps full tier.
    - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless output demonstrably continues on other channels (talks, repositories, official docs), in which case the track record follows the human and the dormant channel is noted.

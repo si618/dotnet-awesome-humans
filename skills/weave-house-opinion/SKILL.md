@@ -19,7 +19,7 @@ House opinions are the owner's preferences — first-class, but never disguised 
 3. **Weave it in, marked**:
    - In `opinions/`: write it in the house style (opinion first, rationale after) prefixed with **House:** in bold, and add `house` to the file's `sources:` frontmatter.
    - In `templates/`: apply the change and add `house` to the header's `sources:` list (the pipe-delimited comment header audit-freshness reads), with an inline comment on the changed setting where the format allows.
-4. **Handle conflicts explicitly** per the canonical precedence rule in [HOUSE-OPINIONS.md — How this works](../../HOUSE-OPINIONS.md#how-this-works): house wins, the sourced position stays as the one-line cited note. Never silently delete the sourced view.
+4. **Handle conflicts explicitly** per the canonical precedence rule in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works): house wins, the sourced position stays as the one-line cited note. Never silently delete the sourced view.
 5. **Move the inbox entry to the Woven table** in HOUSE-OPINIONS.md with the date and destination link.
 6. **Update frontmatter** (`last-reviewed`) on every file touched, then open a PR to the default branch (work on a branch; follow the host environment's branch-naming convention). Title it so the house origin is obvious, e.g. `docs: weave house opinion — <title>`.
 

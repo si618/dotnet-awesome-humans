@@ -39,7 +39,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 5. **Produce the report**, ordered most-stale first:
    - Per resource: path, findings, days over tolerance, and which skill fixes it.
    - Summary counts: fresh / stale / malformed, plus the oldest `last-reviewed` in the repository.
-6. **Recommend next actions** — typically "run `refresh-dotnet-versions`", "run `harvest-sources`", or "run `resolve-research`" for an open research topic past tolerance — but do not run them unless asked.
+6. **Recommend next actions:** typically "run `refresh-dotnet-versions`", "run `harvest-sources`", or "run `resolve-research`" for an open research topic past tolerance — but do not run them unless asked.
 
 ## Edge cases
 

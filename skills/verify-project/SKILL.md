@@ -15,11 +15,11 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 ## Steps
 
 1. **Resolve the target**, given either a local path or a repository URL:
-   - **Local path** — read it in place; never write to it during the review.
-   - **URL** — read it remotely through whatever repository browsing the host offers. Cloning is for _writing_, not reading: clone only when a fix is requested (step 9), or when the host cannot browse the tree well enough to sample files, in which case a shallow `git clone --depth 1` into a scratch location is a local read cache — never a write to the target.
+   - **Local path:** read it in place; never write to it during the review.
+   - **URL:** read it remotely through whatever repository browsing the host offers. Cloning is for _writing_, not reading: clone only when a fix is requested (step 9), or when the host cannot browse the tree well enough to sample files, in which case a shallow `git clone --depth 1` into a scratch location is a local read cache — never a write to the target.
    - **Record what was read.** For a URL: the branch and commit sha — a review without a sha cannot be reproduced, and step 9 branches from it. For a local path: the sha when it is a git worktree, plus a note when that tree is dirty, since the findings then describe the working tree and not the commit; when it is not a git checkout at all, say so and let the file paths stand as the record.
 2. **Inventory the target**: solution files (`.slnx`/`.sln`/`.slnf`), project files, `global.json`, `Directory.Build.props`, `Directory.Packages.props`, `.editorconfig`, test projects, language mix (C#/F#).
-3. **Update `last-used`** on every opinion and template file consulted during this run — YAML frontmatter on an opinion, the first-line comment header on a template, always an ISO 8601 date (see [AGENTS.md — Metadata](../../AGENTS.md#metadata)). This is how the repository knows it is being used.
+3. **Update `last-used`** on every opinion and template file consulted during this run — YAML frontmatter on an opinion, the first-line comment header on a template, always an ISO 8601 date (see [AGENTS.md: Metadata](../../AGENTS.md#metadata)). This is how the repository knows it is being used.
 4. **Compare structure and tooling** against `templates/`:
    - Missing files the opinions mandate (e.g. no `.editorconfig`, no central package management).
    - Present-but-divergent files: diff against the template and classify each divergence as _violation_ (contradicts an opinion) or _local choice_ (the opinions are silent).
@@ -43,4 +43,5 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 - **The target pins an older .NET for a stated reason** (e.g. deployment constraint documented in its README): still report the drift, but mark it acknowledged rather than actionable.
 - **F#-only or mixed solutions:** verify against the F# opinions too — do not report C#-specific conventions as violations in F# projects.
 - **No opinions exist yet for something the target does:** report it as out of scope, and note it as a candidate opinion gap for `harvest-sources`.
+- **The target spells things differently:** never a finding, in either direction. This repository's spelling rule (AGENTS.md) governs prose written here and says nothing about anyone else's code. British or American, in identifiers, comments or documentation, is the target's own business — report it and you bury the real findings under noise the author never asked for.
 - **The template files and opinions disagree** (repository bug): report the inconsistency against _this_ repository, and verify the target against the opinion text, which wins.

@@ -39,7 +39,7 @@ Where the host supports worker agents, delegate the web lookups (step 1's versio
    - Update `targets:` and `last-reviewed:` frontmatter on every file touched **or verified unchanged**.
    - **Never remove or dilute `**House:**`-marked content** (`house` source id — see HOUSE-OPINIONS.md). Version bumps may update the sourced context around a house opinion, and may mark it superseded-by-release where a new version genuinely obsoletes it — but the marking and the owner's intent stay.
 6. **Verify** code samples against the new targets where a .NET SDK is available: assemble a scratch project from `templates/` and run **`dotnet build` and `dotnet test`** — not `dotnet build` or `dotnet run` alone. `dotnet run` executes the test project's entry point directly and bypasses the SDK's runner selection, so it passes while `dotnet test` — what `templates/`, `opinions/ci.md` and `audit-freshness` all invoke — fails. Treat "0 tests ran, exit 0" as a failure, not a pass: a test project that has lost its runner wiring reports exactly that. Otherwise flag samples as unverified in the PR description.
-7. **Record the change** in `AWESOME-HUMANS.md`'s decision log only if source rosters changed; otherwise just summarize in the PR.
+7. **Record the change** in `AWESOME-HUMANS.md`'s decision log only if source rosters changed; otherwise just summarise in the PR.
 8. **Open a PR** to the default branch describing: versions before/after (framework, SDK band, and each package pin that moved), opinions changed, opinions verified-unchanged, and anything left as TODO. A human reviews before it becomes "the opinion".
 
 ## Edge cases

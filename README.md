@@ -14,26 +14,26 @@ How to use this project:
 
 The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one topic per file:
 
-- **[Runtime & BCL](opinions/runtime-performance.md)** — performance idioms, `Span<T>`/memory, async, GC awareness
-- **[Project structure & SDK](opinions/project-structure.md)** — project files, solution formats, central package management, analyzers, source generators
-- **[C#](opinions/csharp.md)** — the latest released language version, and idiomatic use of what it added
-- **[F#](opinions/fsharp.md)** — domain modelling, mixed C#/F# solutions, testing
-- **[Application architecture](opinions/architecture.md)** — modular monolith, vertical slices, and when layering earns its keep
-- **[ASP.NET Core](opinions/aspnet-core.md)** — minimal APIs, hosting, auth, OpenAPI, performance
-- **[Data access](opinions/data-access.md)** — EF Core defaults, set-based work, when to drop to SQL
-- **[Dates, times & time zones](opinions/datetime.md)** — type choice, UTC vs local storage, `TimeProvider`, testing time
-- **[Globalisation & localisation](opinions/globalisation.md)** — culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
-- **[Logging & tracing](opinions/logging.md)** — structured logging, source-generated log messages, OpenTelemetry over OTLP
-- **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
-- **[Testing](opinions/testing.md)** — framework choice, naming and structure, integration tests, coverage
-- **[CI & automation](opinions/ci.md)** — pinned, reproducible builds and supply-chain hygiene
-- **Libraries** — what to reach for and what to avoid, spread across the files above
+- **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
+- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, source generators
+- **[C#](opinions/csharp.md):** the latest released language version, and idiomatic use of what it added
+- **[F#](opinions/fsharp.md):** domain modelling, mixed C#/F# solutions, testing
+- **[Application architecture](opinions/architecture.md):** modular monolith, vertical slices, and when layering earns its keep
+- **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, auth, OpenAPI, performance
+- **[Data access](opinions/data-access.md):** EF Core defaults, set-based work, when to drop to SQL
+- **[Dates, times & time zones](opinions/datetime.md):** type choice, UTC vs local storage, `TimeProvider`, testing time
+- **[Globalization & localization](opinions/globalization.md):** culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
+- **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, OpenTelemetry over OTLP
+- **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
+- **[Testing](opinions/testing.md):** framework choice, naming and structure, integration tests, coverage
+- **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain hygiene
+- **Libraries:** what to reach for and what to avoid, spread across the files above
 
 A new opinion file must appear both here and in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
 
 ## Freshness policy
 
-Opinions target the latest released versions of .NET, C#, and F# — GA only, never an older LTS for comfort, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
+Opinions target the latest released versions of .NET, C#, and F#, never an older LTS, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
 Every resource carries metadata recording when it was last reviewed, so staleness is visible rather than silent. `opinions/` and `templates/` files also record when each was last used as a reference; `research/` topics don't, because the only way to consult one is to build on it, which re-verifies it. An opinion's YAML frontmatter (a research topic carries the same block minus `last-used`):
 
@@ -54,7 +54,7 @@ Template files carry the same fields in a first-line comment header instead — 
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source — an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn) — admitted on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 How a source gets in, and what its tier lets it do (orientation only — the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
@@ -94,7 +94,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── data-access.md
 │   ├── datetime.md
 │   ├── fsharp.md
-│   ├── globalisation.md
+│   ├── globalization.md
 │   ├── logging.md
 │   ├── project-structure.md
 │   ├── runtime-performance.md
@@ -138,7 +138,7 @@ They are built for a cost-aware split: cheaper worker agents fan out across the 
 
 ### Research lifecycle
 
-Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request — a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only — the two `SKILL.md` files are canonical):
+Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request: a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only; the two `SKILL.md` files are canonical):
 
 ```mermaid
 flowchart LR
@@ -159,11 +159,11 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
-| Script                                                               | Checks                                                                                                                                                                       |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` — plus `last-used` outside `research/` — with ISO 8601 dates |
-| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                                               |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                                              |
+| Script                                                               | Checks                                                                                                                                                                     |
+| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates |
+| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                                             |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                                            |
 
 Run them from the repository root, exactly as CI does:
 
