@@ -21,6 +21,6 @@ Start with a modular monolith. Organise the code inside each module as vertical 
 
 ## Source redundancy
 
-Both sources here were admitted on 2026-08-14 under the lowered longevity bars (`milan-jovanovic` Tier 1 with a conflict-of-interest note, `code-with-mukesh` Tier 2 capped on depth), and both sell templates and courses built on exactly these patterns. The guidance above is the uncontroversial core the two agree on; treat anything stronger — prescribed folder names, mediator libraries, per-slice project counts — as unsourced until a third, independent source corroborates it.
+Both sources here were admitted on 2026-08-14 under the lowered longevity bars (`milan-jovanovic` Tier 1 with a conflict-of-interest note, `code-with-mukesh` Tier 2 capped on depth), and both sell templates and courses built on exactly these patterns. The guidance above is the uncontroversial core the two agree on; treat anything stronger (prescribed folder names, mediator libraries, per-slice project counts) as unsourced until a third, independent source corroborates it.
 
 <!-- TODO: corroborate from an independent Tier 1 source, then extend with messaging between modules, transactional boundaries, and when a module has earned a process boundary -->
