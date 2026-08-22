@@ -75,11 +75,11 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ### Typed clients
 
-**Generate typed clients from your own OpenAPI document at build time (Kiota)** rather than hand-writing HttpClient wrappers — the contract stays versioned and the client cannot drift. ([Meziantou — Kiota client at build time](https://www.meziantou.net/generate-a-kiota-client-at-build-time-from-an-asp-net-core-openapi-file.htm))
+**Generate typed clients from your own OpenAPI document at build time (Kiota)** rather than hand-writing HttpClient wrappers — the contract stays versioned and the client cannot drift. ([Meziantou: Kiota client at build time](https://www.meziantou.net/generate-a-kiota-client-at-build-time-from-an-asp-net-core-openapi-file.htm))
 
 ### HTTP caching defaults
 
-**APIs send `Cache-Control: no-cache, no-store, must-revalidate` by default**; opt individual endpoints into caching deliberately. Stale-data bugs and cache-poisoning surprises come from the opposite default. ([Meziantou — Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
+**APIs send `Cache-Control: no-cache, no-store, must-revalidate` by default**; opt individual endpoints into caching deliberately. Stale-data bugs and cache-poisoning surprises come from the opposite default. ([Meziantou: Disable HTTP caching by default](https://www.meziantou.net/disable-http-caching-by-default-in-asp-net-core-apis.htm))
 
 ### Server push
 
@@ -89,7 +89,7 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 **Use ASP.NET Core Identity's built-in passkey (WebAuthn/FIDO2) support for user sign-in instead of passwords or a third-party FIDO library.** Passkey management and login ship in Identity and the Blazor Web App template out of the box in .NET 10 — phishing-resistant, nothing server-side to leak, and no extra dependency to vet. Keep a second factor or recovery path for account recovery, but new apps should not be growing a password table in 2026. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Passkeys in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authentication/passkeys/))
 
-**Return 401/403 from API endpoints, never login redirects** — ASP.NET Core 10 avoids cookie redirects for known API endpoints; align custom auth handlers with that. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+**Return 401/403 from API endpoints, never login redirects:** ASP.NET Core 10 avoids cookie redirects for known API endpoints; align custom auth handlers with that. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
 ### Rate limiting
 
@@ -116,11 +116,11 @@ This is a per-node fairness and abuse-control tool, not DDoS protection — that
 
 ### Observability: propagate trace context across async boundaries
 
-**When work crosses a process or time boundary — message queues, background jobs, outbox tables, scheduled work — capture the OpenTelemetry context explicitly and restore it on the consumer side; automatic propagation only covers synchronous HTTP.** Serialize `Activity.Current`'s context with `Propagators.DefaultTextMapPropagator` and store it alongside the message; on consumption, start the new activity with the extracted `ActivityContext` as parent for linear flows, or attach it as an `ActivityLink` when many messages fan into one operation. Do not propagate `Baggage` by default — it bloats payloads and leaks whatever anyone upstream stuffed into it. ([Meziantou — Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm))
+**When work crosses a process or time boundary — message queues, background jobs, outbox tables, scheduled work — capture the OpenTelemetry context explicitly and restore it on the consumer side; automatic propagation only covers synchronous HTTP.** Serialize `Activity.Current`'s context with `Propagators.DefaultTextMapPropagator` and store it alongside the message; on consumption, start the new activity with the extracted `ActivityContext` as parent for linear flows, or attach it as an `ActivityLink` when many messages fan into one operation. Do not propagate `Baggage` by default — it bloats payloads and leaks whatever anyone upstream stuffed into it. ([Meziantou: Propagating OpenTelemetry context in .NET](https://www.meziantou.net/propagating-opentelemetry-context-in-dotnet.htm))
 
 ### CSRF defence in depth
 
-**Layer CSRF defence with Fetch Metadata headers (`Sec-Fetch-Site` and friends)** alongside token-based antiforgery; .NET 11 will automate this. ([Lock — Understanding the Fetch Metadata headers](https://andrewlock.net/understanding-the-fetch-metadata-http-headers-sec-fetch-site-and-friends/))
+**Layer CSRF defence with Fetch Metadata headers (`Sec-Fetch-Site` and friends)** alongside token-based antiforgery; .NET 11 will automate this. ([Lock: Understanding the Fetch Metadata headers](https://andrewlock.net/understanding-the-fetch-metadata-http-headers-sec-fetch-site-and-friends/))
 
 ### Localisation
 
@@ -128,4 +128,4 @@ This is a per-node fairness and abuse-control tool, not DDoS protection — that
 
 ## Coming next (preview — not yet the opinion)
 
-.NET 11 previews add automatic Fetch-Metadata-based CSRF protection (removing `UseAntiforgery()` for minimal APIs/Blazor SSR). ([Lock — .NET 11 preview 6](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))
+.NET 11 previews add automatic Fetch-Metadata-based CSRF protection (removing `UseAntiforgery()` for minimal APIs/Blazor SSR). ([Lock: .NET 11 preview 6](https://andrewlock.net/exploring-the-dotnet-11-preview-6-automatic-csrf-protection-based-on-fetch-metadata-http-headers/))

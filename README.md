@@ -14,20 +14,20 @@ How to use this project:
 
 The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one topic per file:
 
-- **[Runtime & BCL](opinions/runtime-performance.md)** — performance idioms, `Span<T>`/memory, async, GC awareness
-- **[Project structure & SDK](opinions/project-structure.md)** — project files, solution formats, central package management, analyzers, source generators
-- **[C#](opinions/csharp.md)** — the latest released language version, and idiomatic use of what it added
-- **[F#](opinions/fsharp.md)** — domain modelling, mixed C#/F# solutions, testing
-- **[Application architecture](opinions/architecture.md)** — modular monolith, vertical slices, and when layering earns its keep
-- **[ASP.NET Core](opinions/aspnet-core.md)** — minimal APIs, hosting, auth, OpenAPI, performance
-- **[Data access](opinions/data-access.md)** — EF Core defaults, set-based work, when to drop to SQL
-- **[Dates, times & time zones](opinions/datetime.md)** — type choice, UTC vs local storage, `TimeProvider`, testing time
-- **[Globalisation & localisation](opinions/globalisation.md)** — culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
-- **[Logging & tracing](opinions/logging.md)** — structured logging, source-generated log messages, OpenTelemetry over OTLP
-- **[UI frameworks](opinions/ui-frameworks.md)** — Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
-- **[Testing](opinions/testing.md)** — framework choice, naming and structure, integration tests, coverage
-- **[CI & automation](opinions/ci.md)** — pinned, reproducible builds and supply-chain hygiene
-- **Libraries** — what to reach for and what to avoid, spread across the files above
+- **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
+- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, source generators
+- **[C#](opinions/csharp.md):** the latest released language version, and idiomatic use of what it added
+- **[F#](opinions/fsharp.md):** domain modelling, mixed C#/F# solutions, testing
+- **[Application architecture](opinions/architecture.md):** modular monolith, vertical slices, and when layering earns its keep
+- **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, auth, OpenAPI, performance
+- **[Data access](opinions/data-access.md):** EF Core defaults, set-based work, when to drop to SQL
+- **[Dates, times & time zones](opinions/datetime.md):** type choice, UTC vs local storage, `TimeProvider`, testing time
+- **[Globalisation & localisation](opinions/globalisation.md):** culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
+- **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, OpenTelemetry over OTLP
+- **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
+- **[Testing](opinions/testing.md):** framework choice, naming and structure, integration tests, coverage
+- **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain hygiene
+- **Libraries:** what to reach for and what to avoid, spread across the files above
 
 A new opinion file must appear both here and in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
 

@@ -27,11 +27,11 @@ Two caveats the documentation states explicitly:
 - **`DateTimeOffset` does not know its time zone.** It records the offset that applied at one moment, and the same offset belongs to many zones — it "can't reflect a time zone's transition to and from daylight saving time". Adding 24 hours is not the same as adding one day; for DST-sensitive arithmetic, convert to the zone with `TimeZoneInfo`, do the arithmetic in local terms, convert back.
 - **`DateTime` with `Kind = Unspecified` is ambiguous even on the machine that produced it.** If a `DateTime` must cross a boundary, it is UTC with `Kind = Utc` or it is a bug.
 
-And the assumptions to stop making: offsets are not whole hours (Newfoundland is UTC−3:30), DST shifts are not always an hour (Lord Howe is 30 minutes), zones within one country differ on whether they observe DST at all, and abbreviations like "BST" are ambiguous across three real zones. Anything narrower than an IANA id loses information. ([Meziantou — 39 misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
+And the assumptions to stop making: offsets are not whole hours (Newfoundland is UTC−3:30), DST shifts are not always an hour (Lord Howe is 30 minutes), zones within one country differ on whether they observe DST at all, and abbreviations like "BST" are ambiguous across three real zones. Anything narrower than an IANA id loses information. ([Meziantou: 39 misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
 
 ## Persistence: split by kind of data, not by layer
 
-**Machine-generated timestamps are instants — store them UTC. Human-supplied future or recurring events are not instants until zone rules that may still change are applied — store the local time and the IANA zone id, and treat UTC as derived.** ([Skeet — Storing UTC is not a silver bullet](https://codeblog.jonskeet.uk/2019/03/27/storing-utc-is-not-a-silver-bullet/))
+**Machine-generated timestamps are instants — store them UTC. Human-supplied future or recurring events are not instants until zone rules that may still change are applied — store the local time and the IANA zone id, and treat UTC as derived.** ([Skeet: Storing UTC is not a silver bullet](https://codeblog.jonskeet.uk/2019/03/27/storing-utc-is-not-a-silver-bullet/))
 
 The failure the blanket "convert to UTC on the way in" advice invites: a conference registered for 9am Amsterdam on 2022-07-10 converts to `07:00Z` under the tzdb rules of the day. If the Netherlands later drops summer time, the correct instant becomes `08:00Z` — and a row storing only UTC is silently an hour wrong, with no way to recover the organiser's intent. The schema that survives rule changes stores what was supplied and caches the conversion:
 
@@ -42,7 +42,7 @@ UtcStart:      2022-07-10T07:00:00Z    ← derived; recomputed when tzdb updates
 TimeZoneRules: 2019a                   ← optional, for resumable re-derivation
 ```
 
-The same holds for recurring events — "10 AM in New York every week" is a rule, not a series of instants. ([Meziantou — 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) Two operational corollaries: IANA publishes multiple tzdb releases a year, sometimes days before they take effect, so updating the base image is also the trigger to re-derive the UTC column; and persist IANA ids, not Windows ids — .NET converts between the families, but Windows ids tie data to a platform.
+The same holds for recurring events — "10 AM in New York every week" is a rule, not a series of instants. ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) Two operational corollaries: IANA publishes multiple tzdb releases a year, sometimes days before they take effect, so updating the base image is also the trigger to re-derive the UTC column; and persist IANA ids, not Windows ids — .NET converts between the families, but Windows ids tie data to a platform.
 
 Provider mechanics worth knowing ([EF Core](https://learn.microsoft.com/ef/core/), Microsoft Learn):
 
@@ -53,7 +53,7 @@ Provider mechanics worth knowing ([EF Core](https://learn.microsoft.com/ef/core/
 
 ### When the BCL types aren't enough
 
-**Reach for [NodaTime](https://nodatime.org/) when the domain models future or recurring local-time events across zones — the schema above — and stay on the BCL types otherwise.** NodaTime turns this file's conventions into compile-time properties: `Instant` for machine timestamps, `LocalDateTime` + `DateTimeZone` for the human-supplied columns, `ZonedDateTime` for the derived conversion — the argument that a local date and time is not yet an instant is the library's founding design case. The cost is an adapter at every boundary the BCL types cross natively (`NodaTime.Serialization.SystemTextJson`, per-provider EF Core plugins such as `Npgsql.NodaTime`, model binding), which is why it is the escape hatch and not the default — `DateTimeOffset`, `DateOnly`/`TimeOnly`, and `TimeProvider` cover the ordinary service in-box. Conflict of interest: the source cited here created NodaTime. ([Skeet — More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
+**Reach for [NodaTime](https://nodatime.org/) when the domain models future or recurring local-time events across zones — the schema above — and stay on the BCL types otherwise.** NodaTime turns this file's conventions into compile-time properties: `Instant` for machine timestamps, `LocalDateTime` + `DateTimeZone` for the human-supplied columns, `ZonedDateTime` for the derived conversion — the argument that a local date and time is not yet an instant is the library's founding design case. The cost is an adapter at every boundary the BCL types cross natively (`NodaTime.Serialization.SystemTextJson`, per-provider EF Core plugins such as `Npgsql.NodaTime`, model binding), which is why it is the escape hatch and not the default — `DateTimeOffset`, `DateOnly`/`TimeOnly`, and `TimeProvider` cover the ordinary service in-box. Conflict of interest: the source cited here created NodaTime. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
 ## Services: inject `TimeProvider`, stop writing your own clock
 
@@ -81,9 +81,9 @@ This is enforced, not aspirational — but the enforcement is a pair, not one fi
 
 ## Testing time
 
-**Use `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing` — set a start instant, advance manually with `Advance(TimeSpan)`, and timers created from it fire as time moves** — which is what makes retry, backoff, and scheduling logic testable without `Thread.Sleep`. One caveat: a single large `Advance` fires every elapsed callback at the boundary rather than spread out, so tests asserting interleaving should step time in small increments. ([Lock — Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
+**Use `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing` — set a start instant, advance manually with `Advance(TimeSpan)`, and timers created from it fire as time moves** — which is what makes retry, backoff, and scheduling logic testable without `Thread.Sleep`. One caveat: a single large `Advance` fires every elapsed callback at the boundary rather than spread out, so tests asserting interleaving should step time in small increments. ([Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
 
-For date-sensitive logic, exercise the awkward instants deliberately: a DST spring-forward gap (a local time that does not exist), a fall-back overlap (a local time that happens twice), a leap day, and a year boundary that splits calendar year from ISO week year — 2022-01-02 is in week 52 of 2021. ([Meziantou — 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) See [testing.md](testing.md) for the framework stack this slots into.
+For date-sensitive logic, exercise the awkward instants deliberately: a DST spring-forward gap (a local time that does not exist), a fall-back overlap (a local time that happens twice), a leap day, and a year boundary that splits calendar year from ISO week year — 2022-01-02 is in week 52 of 2021. ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) See [testing.md](testing.md) for the framework stack this slots into.
 
 ## UI and hosts
 

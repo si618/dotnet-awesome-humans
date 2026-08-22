@@ -24,11 +24,11 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 4. **Sweep the roster in precedence order:**
    - **Tier 1/2 sources** weighted by focus match (check the roster's Focus column) — these are quotable.
    - **Watch-list sources** for discovery and cross-checking — label them.
-   - **Non-roster material is welcome in research** — recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the closing section. Research is permissive; **promotion is the strict gate** (see Lifecycle).
+   - **Non-roster material is welcome in research:** recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the closing section. Research is permissive; **promotion is the strict gate** (see Lifecycle).
 5. **Assemble the research topic:**
    - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
    - Every claim cites its source id (and tier); dates on anything time-sensitive.
-   - **Preview features are labeled per the freshness policy** — "in preview as of `<date>`, not yet an opinion" — and clearly separated from GA guidance.
+   - **Preview features are labeled per the freshness policy:** "in preview as of `<date>`, not yet an opinion" — and clearly separated from GA guidance.
    - Where sources disagree, say so and weigh them; don't average them into mush.
 6. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
 7. **Close the loop.** End it by noticing what the research revealed about the repository, and recommend (never run unprompted) the matching skill:

@@ -112,7 +112,7 @@ public static decimal DiscountFor(Customer customer) => customer switch
 };
 ```
 
-Order arms most-specific first — arms are matched top to bottom. Don't force patterns where a plain boolean expression reads better; a two-way `if` is not improved by becoming a switch. ([Pattern matching — Microsoft Learn](https://learn.microsoft.com/dotnet/csharp/fundamentals/functional/pattern-matching))
+Order arms most-specific first — arms are matched top to bottom. Don't force patterns where a plain boolean expression reads better; a two-way `if` is not improved by becoming a switch. ([Microsoft Learn: Pattern matching](https://learn.microsoft.com/dotnet/csharp/fundamentals/functional/pattern-matching))
 
 ### Collection expressions
 
@@ -132,11 +132,11 @@ List<int> ids = [1, 2, 3];
 int[] merged = [.. first, .. second];
 ```
 
-The one cost: the target type must be explicit (`List<int> ids = [...]`, not `var ids = [...]`). Accept that — the type is documentation. ([Collection expressions — Microsoft Learn](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
+The one cost: the target type must be explicit (`List<int> ids = [...]`, not `var ids = [...]`). Accept that — the type is documentation. ([Microsoft Learn: Collection expressions](https://learn.microsoft.com/dotnet/csharp/language-reference/operators/collection-expressions))
 
 ### Nullable reference types
 
-**Enable nullable reference types in every project and promote nullable warnings to errors** — `<Nullable>enable</Nullable>` plus `<WarningsAsErrors>nullable</WarningsAsErrors>` in `Directory.Build.props`, so annotations are load-bearing rather than advisory. Never start a new project without it; never use `#nullable disable` in new code. Reserve the null-forgiving operator `!` for cases the flow analysis genuinely cannot see (e.g. values populated by a serializer or test setup), and treat every `!` as a code smell to justify in review. In annotated code, `ArgumentNullException.ThrowIfNull` at public API boundaries is still correct — annotations are compile-time only and do not protect against un-annotated or reflection-based callers. ([Nullable reference types — Microsoft Learn](https://learn.microsoft.com/dotnet/csharp/nullable-references))
+**Enable nullable reference types in every project and promote nullable warnings to errors** — `<Nullable>enable</Nullable>` plus `<WarningsAsErrors>nullable</WarningsAsErrors>` in `Directory.Build.props`, so annotations are load-bearing rather than advisory. Never start a new project without it; never use `#nullable disable` in new code. Reserve the null-forgiving operator `!` for cases the flow analysis genuinely cannot see (e.g. values populated by a serializer or test setup), and treat every `!` as a code smell to justify in review. In annotated code, `ArgumentNullException.ThrowIfNull` at public API boundaries is still correct — annotations are compile-time only and do not protect against un-annotated or reflection-based callers. ([Microsoft Learn: Nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references))
 
 ### Analyzers
 
@@ -149,13 +149,13 @@ The one cost: the target type must be explicit (`List<int> ids = [...]`, not `va
 </PropertyGroup>
 ```
 
-The built-in analyzers ship with the SDK and track it; `latest-recommended` keeps rules current across SDK updates without opting into the noisy `all` bucket. `EnforceCodeStyleInBuild` makes `.editorconfig` style rules (IDExxxx) build-time diagnostics instead of IDE-only suggestions, so CI and editors agree. Meziantou.Analyzer adds the correctness rules the SDK set misses (culture-sensitive string operations, `CancellationToken` forwarding, async pitfalls) with a low false-positive rate; StyleCop lost on signal-to-noise — it polices formatting the SDK analyzers and `dotnet format` already cover. Fix or explicitly suppress with justification; never blanket-lower severity. ([Code analysis overview — Microsoft Learn](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
+The built-in analyzers ship with the SDK and track it; `latest-recommended` keeps rules current across SDK updates without opting into the noisy `all` bucket. `EnforceCodeStyleInBuild` makes `.editorconfig` style rules (IDExxxx) build-time diagnostics instead of IDE-only suggestions, so CI and editors agree. Meziantou.Analyzer adds the correctness rules the SDK set misses (culture-sensitive string operations, `CancellationToken` forwarding, async pitfalls) with a low false-positive rate; StyleCop lost on signal-to-noise — it polices formatting the SDK analyzers and `dotnet format` already cover. Fix or explicitly suppress with justification; never blanket-lower severity. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
 
 ### Records
 
 **Keep records to the data they are constructed from — no derived state, no collection members.** A record's generated members only behave the way the syntax suggests when every property is a constructor parameter held as-is. Two traps follow from that, both worth an analyzer or a code-review reflex:
 
-- **A property initialized from a constructor parameter goes stale under `with`.** `with` does not re-run the constructor: it lowers to roughly `var copy = original.<Clone>$(); copy.Value = 3;`, and the copy constructor duplicates every field _before_ the property assignments run — so anything computed at construction keeps its old value while the parameter it was computed from changes. ([Skeet — Unexpected inconsistency in records](https://codeblog.jonskeet.uk/2025/07/19/unexpected-inconsistency-in-records/), [Skeet — Records and the `with` operator, redux](https://codeblog.jonskeet.uk/2025/07/29/records-and-the-with-operator-redux/))
+- **A property initialized from a constructor parameter goes stale under `with`.** `with` does not re-run the constructor: it lowers to roughly `var copy = original.<Clone>$(); copy.Value = 3;`, and the copy constructor duplicates every field _before_ the property assignments run — so anything computed at construction keeps its old value while the parameter it was computed from changes. ([Skeet: Unexpected inconsistency in records](https://codeblog.jonskeet.uk/2025/07/19/unexpected-inconsistency-in-records/), [Skeet: Records and the `with` operator, redux](https://codeblog.jonskeet.uk/2025/07/29/records-and-the-with-operator-redux/))
 
   ```csharp
   // Wrong — Even is computed once, at construction
@@ -173,14 +173,14 @@ The built-in analyzers ship with the SDK and track it; `latest-recommended` keep
   }
   ```
 
-- **A collection member breaks value equality.** Generated `Equals` compares each member with `EqualityComparer<T>.Default`, and the immutable collections do not override `Equals`/`GetHashCode` — so `ImmutableList<T>` and friends compare by reference, and two records with identical contents are unequal. Hold a collection in a record only where reference equality is genuinely what you want (shared instances within one object graph); otherwise expose the collection outside the record, or accept that equality is identity and document it. ([Skeet — Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
+- **A collection member breaks value equality.** Generated `Equals` compares each member with `EqualityComparer<T>.Default`, and the immutable collections do not override `Equals`/`GetHashCode` — so `ImmutableList<T>` and friends compare by reference, and two records with identical contents are unequal. Hold a collection in a record only where reference equality is genuinely what you want (shared instances within one object graph); otherwise expose the collection outside the record, or accept that equality is identity and document it. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Smaller opinions
 
-- **Prefer `Span<T>`/`ReadOnlySpan<T>` parameters in new APIs** — C# 14's implicit span conversions make them as ergonomic as arrays, without the allocation. Note the .NET 10 breaking change: span overloads now win overload resolution in more cases. ([What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
+- **Prefer `Span<T>`/`ReadOnlySpan<T>` parameters in new APIs:** C# 14's implicit span conversions make them as ergonomic as arrays, without the allocation. Note the .NET 10 breaking change: span overloads now win overload resolution in more cases. ([What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14), [Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Use `nameof(List<>)` on unbound generics** rather than hard-coded strings in diagnostics and exceptions. ([What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14))
 - **Use `StringComparison.Ordinal` for every machine-facing comparison and `CultureInfo.InvariantCulture` for every machine-facing format or parse** — and never `StringComparison.InvariantCulture`, whose collation is not actually invariant. ([globalisation.md](globalisation.md))
-- **Clone records with `with` expressions — never declare an instance `Clone()` method**, which conflicts with the compiler-generated cloning; wrap `with` in an extension method if a named method is wanted. ([Meziantou — Adding a Clone method to a C# record](https://www.meziantou.net/adding-a-clone-method-to-a-csharp-record.htm))
+- **Clone records with `with` expressions — never declare an instance `Clone()` method**, which conflicts with the compiler-generated cloning; wrap `with` in an extension method if a named method is wanted. ([Meziantou: Adding a Clone method to a C# record](https://www.meziantou.net/adding-a-clone-method-to-a-csharp-record.htm))
 
 ## Coming next (preview — not yet the opinion)
 
