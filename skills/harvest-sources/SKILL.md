@@ -29,7 +29,7 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
    - Keep opinions opinionated — one recommendation. If a new post contradicts the current opinion, prefer the stronger-sourced or better-evidenced position and note the supersession in one line.
    - **Never remove, dilute, or un-mark house content** (`house` source id, `**House:**` marking — canonical rules in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). If a source contradicts a house opinion, the house opinion stands per those rules; if a source newly agrees, add the citation alongside the marking — the marking stays.
    - Add the post's source id to the opinion's `sources:` frontmatter and update `last-reviewed:`.
-6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: date, window covered, sources swept, posts folded in.
+6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: date, window covered, and what was folded in, at the length of the entries already there. Per-source findings go in the PR (step 7), not the table cell.
 7. **Open a PR** to the default branch summarising per-source findings and per-opinion changes. A human reviews before it becomes "the opinion".
 
 ## Edge cases
