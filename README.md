@@ -173,7 +173,7 @@ dotnet run scripts/validate-metadata.cs
 
 [`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) parses the first-line comment header that carries the same fields on `templates/` files (see [Freshness policy](#freshness-policy) for why templates use a comment instead). None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
 
-The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). One check is still Python — the Agent Skills spec validator, published only to PyPI.
+The SDK comes from [`global.json`](global.json), whose floor is the feature band that understands `#:include`. It is not tied to [`templates/global.json`](templates/global.json): each pin follows what its own consumers need, and `rollForward: latestFeature` picks up newer bands without an edit. One check is still Python — the Agent Skills spec validator, published only to PyPI.
 
 ## License
 
