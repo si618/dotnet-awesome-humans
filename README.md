@@ -62,7 +62,7 @@ How a source gets in, and what its tier lets it do (orientation only — the adm
 flowchart LR
     candidate["Candidate source"] --> vet["vet-source"]
     vet -->|"all four criteria,<br>5+ years"| tier1["Tier 1"]
-    vet -->|"2–5 years, or capped<br>on independence/depth"| tier2["Tier 2"]
+    vet -->|"2–5 years, or capped<br>on independence"| tier2["Tier 2"]
     vet -->|"track record still forming,<br>or previously strong, now dormant"| watch["Watch list"]
     vet -->|"otherwise"| declined["Declined"]
     watch -->|"blocker clears"| vet
@@ -71,6 +71,7 @@ flowchart LR
     tier1 --> cite["citable in an opinion's sources:"]
     tier2 --> cite
     tier1 -.->|"rows marked Discovery-only:<br>leads only — CI rejects citation"| discovery["discovery + cross-checking"]
+    cite -.->|"rows marked Corroborate:<br>never the only citation"| cite
     watch -.-> discovery
 ```
 

@@ -39,6 +39,7 @@ using YamlDotNet.Serialization;
 
 const string RosterPath = "AWESOME-HUMANS.md";
 const string DiscoveryMarker = "**Discovery-only.**";
+const string CorroborateMarker = "**Corroborate.**";
 const string WatchBucket = "watch";
 
 if (!Opinions.DirectoryExists)
@@ -155,6 +156,14 @@ HashSet<string> discovery =
         .Select(entry => entry.Key),
 ];
 
+// Rows admitted on track record but thin on depth: citable, never the only citation.
+HashSet<string> corroborate =
+[
+    .. roster
+        .Where(entry => entry.Value.Notes.Contains(CorroborateMarker, StringComparison.Ordinal))
+        .Select(entry => entry.Key),
+];
+
 IDeserializer deserializer = new DeserializerBuilder().Build();
 
 // Every resource held to the roster, as (path, declared ids).
@@ -233,6 +242,30 @@ foreach ((string path, List<string> sourceIds) in citing)
                     + "— cite the primary source it led you to");
         }
     }
+
+    // A Corroborate-marked source may carry the shape of a claim but never the claim alone,
+    // so something unmarked has to stand beside it. `house` does not count: it is the owner's
+    // position, not a second reading of the evidence.
+    bool marked = false;
+    bool unmarked = false;
+    foreach (string sourceId in sourceIds)
+    {
+        if (corroborate.Contains(sourceId))
+        {
+            marked = true;
+        }
+        else if (!reserved.Contains(sourceId) && roster.ContainsKey(sourceId) && !discovery.Contains(sourceId))
+        {
+            unmarked = true;
+        }
+    }
+
+    if (marked && !unmarked)
+    {
+        errors.Add(
+            $"{path}: every citable source here is marked '{CorroborateMarker}' "
+                + "— add a Tier 1/2 source that is not, or drop the claim");
+    }
 }
 
 if (errors.Count > 0)
@@ -248,7 +281,8 @@ if (errors.Count > 0)
 
 Console.WriteLine(
     $"All sources in {citing.Count} opinions and templates resolve to the roster "
-    + $"({roster.Count} sources across {tables.Count} tables, {discovery.Count} discovery-only), "
+    + $"({roster.Count} sources across {tables.Count} tables, {discovery.Count} discovery-only, "
+    + $"{corroborate.Count} corroborate-only), "
     + "and every table is sorted by id.");
 return 0;
 

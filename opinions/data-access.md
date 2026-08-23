@@ -31,7 +31,7 @@ EF Core is the default ORM. Write set-based work as set-based SQL; keep the chan
 
 ## Source redundancy
 
-`code-with-mukesh` and `milan-jovanovic` were both admitted on 2026-08-14 under the lowered longevity bars, and the benchmark numbers behind the first opinion are theirs, not reproduced here. The shape of the guidance (set-based writes for set-based work; change-tracker semantics are the trade) is corroborated across both; the specific ratios are not this repository's claim. Re-verify against Microsoft Learn's EF Core documentation before quoting figures.
+`code-with-mukesh` (marked **Corroborate.**) and `milan-jovanovic` were both admitted on 2026-08-14 under the lowered longevity bars, and the benchmark numbers behind the first opinion are theirs, not reproduced here. The shape of the guidance (set-based writes for set-based work; change-tracker semantics are the trade) is corroborated across both; the specific ratios are not this repository's claim. Re-verify against Microsoft Learn's EF Core documentation before quoting figures.
 
 `shay-rojansky` is Tier 2 under the independence cap — he maintains Npgsql and is on Microsoft's EF Core team, so the mapping rules above are cited as mechanism, which is what that cap permits. The judgment of when to reach for those types is `jon-skeet`'s in [datetime.md](datetime.md), not his.
 
