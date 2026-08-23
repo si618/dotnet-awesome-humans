@@ -3,6 +3,11 @@ artifacts/
 bin/
 obj/
 
+# A repo-local SDK from an sdk.paths trial (`dotnet-install --install-dir
+# .dotnet`). A build prerequisite rather than build output, so the SDK's own
+# gitignore template never covers it — see opinions/project-structure.md.
+.dotnet/
+
 # IDE and OS noise
 .vs/
 .idea/
