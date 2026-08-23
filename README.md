@@ -63,7 +63,7 @@ flowchart LR
     candidate["Candidate source"] --> vet["vet-source"]
     vet -->|"all four criteria,<br>5+ years"| tier1["Tier 1"]
     vet -->|"2–5 years, or capped<br>on independence/depth"| tier2["Tier 2"]
-    vet -->|"strong today, track<br>record still forming"| watch["Watch list"]
+    vet -->|"track record still forming,<br>or previously strong, now dormant"| watch["Watch list"]
     vet -->|"otherwise"| declined["Declined"]
     watch -->|"blocker clears"| vet
     tier1 -->|"gone dormant,<br>quality dropped"| vet
