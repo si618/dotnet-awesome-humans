@@ -54,7 +54,7 @@ Opt individual endpoints out with `.DisableValidation()` rather than opting the 
 
 ### OpenAPI and API versioning
 
-**Treat OpenAPI as a build artefact, not an afterthought.** OpenAPI 3.1 generation is in the box and on by default in the Web API template; set `<GenerateDocumentationFile>true</GenerateDocumentationFile>` so the source generator populates XML doc comments into the document (name your handlers — lambdas lose their comments). Version APIs with `Asp.Versioning` v10 (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, `Asp.Versioning.OpenApi`) and `WithDocumentPerVersion()` for one document per version:
+**Treat OpenAPI as a build artefact, not an afterthought.** OpenAPI 3.1 generation comes from Microsoft's own `Microsoft.AspNetCore.OpenApi`, which the Web API template references and calls for you; set `<GenerateDocumentationFile>true</GenerateDocumentationFile>` so the source generator populates XML doc comments into the document (name your handlers — lambdas lose their comments). Version APIs with `Asp.Versioning` v10 (`Asp.Versioning.Http`, `Asp.Versioning.Mvc.ApiExplorer`, `Asp.Versioning.OpenApi`) and `WithDocumentPerVersion()` for one document per version:
 
 ```csharp
 builder.Services.AddOpenApi();
@@ -87,7 +87,7 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ### Authentication: passkeys first
 
-**Use ASP.NET Core Identity's built-in passkey (WebAuthn/FIDO2) support for user sign-in instead of passwords or a third-party FIDO library.** Passkey management and login ship in Identity and the Blazor Web App template out of the box in .NET 10 — phishing-resistant, nothing server-side to leak, and no extra dependency to vet. Keep a second factor or recovery path for account recovery, but new apps should not be growing a password table in 2026. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Passkeys in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authentication/passkeys/))
+**Use ASP.NET Core Identity's built-in passkey (WebAuthn/FIDO2) support for user sign-in instead of passwords or a third-party FIDO library.** Passkey management and login ship in Identity and the Blazor Web App template in .NET 10 — phishing-resistant, nothing server-side to leak, and no extra dependency to vet. Keep a second factor or recovery path for account recovery, but new apps should not be growing a password table in 2026. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Passkeys in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authentication/passkeys/))
 
 **Return 401/403 from API endpoints, never login redirects:** ASP.NET Core 10 avoids cookie redirects for known API endpoints; align custom auth handlers with that. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
