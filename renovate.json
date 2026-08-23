@@ -22,9 +22,14 @@
       "groupName": "github actions"
     },
     {
-      "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while making the header lie, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one. Scoped to templates/ rather than disabling nuget outright, because the root global.json IS a real dependency now — it is the SDK the scripts/ checks run on, and a bot bump there is exactly the mechanical change Renovate should make.",
+      "description": "templates/Directory.Packages.props and templates/global.json are CONTENT, not this repository's dependencies — nothing builds against them. They are maintained by the refresh-dotnet-versions skill, which resolves each pin against nuget.org, checks target-framework compatibility, reads release notes on a major bump, and updates the 'verified on <date>' header comment. A bot bumping the version string alone would satisfy none of that while making the header lie, and audit-freshness would stop being able to tell a reviewed pin from an unreviewed one. Scoped to templates/ rather than disabling nuget outright, because the #:package pins under scripts/ are a real dependency: YamlDotNet is what the checks compile against, and a bot bump there is exactly the mechanical change Renovate should make.",
       "matchManagers": ["nuget"],
       "matchFileNames": ["templates/**"],
+      "enabled": false
+    },
+    {
+      "description": "The SDK pin in a global.json is a floor, not a selection: rollForward latestFeature already takes the newest feature band and patch installed on the machine. Every bump Renovate can offer either narrows that floor to a patch, failing contributors one servicing release behind for nothing, or names a band latestFeature would have accepted anyway. The one edit that is real is a major bump, which latestFeature does not cross, and that arrives through the dotnet-release-watch workflow and refresh-dotnet-versions. Renovate's nuget manager reads global.json and defaults rangeStrategy to bump, so without this it would raise the floor to an exact patch build. Matched by depType so it covers the root and templates/ files alike.",
+      "matchDepTypes": ["dotnet-sdk"],
       "enabled": false
     }
   ],
