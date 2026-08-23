@@ -23,7 +23,7 @@ Compare a target .NET project against the opinions and `templates/` files in thi
 4. **Compare structure and tooling** against `templates/`:
    - Missing files the opinions mandate (e.g. no `.editorconfig`, no central package management).
    - Present-but-divergent files: diff against the template and classify each divergence as _violation_ (contradicts an opinion) or _local choice_ (the opinions are silent).
-5. **Compare versions:** TFMs, `LangVersion`, and SDK version against the `targets:` declared in the opinions. Older LTS targets are findings, per the freshness policy — note them even if the project has reasons.
+5. **Compare versions:** TFMs, `LangVersion`, and SDK version against the `targets:` declared in the opinions. Older LTS targets are findings, per the freshness policy — note them even if the project has reasons. A `global.json` sitting a feature band or two behind the newest is not one: the pin is a floor that `latestFeature` rolls forward from, so only a patch-level pin, a narrower `rollForward`, or a floor below the declared `targets:` is worth reporting ([project-structure.md](../../opinions/project-structure.md)).
 6. **Compare code-level opinions** for areas the target actually uses (ASP.NET Core, testing, F#, etc.) — sample representative files rather than exhaustively reading everything, and say what was sampled.
 7. **Produce the report:**
    - Findings grouped by severity: **violation** (contradicts an opinion — cite the opinion file), **drift** (older versions), **gap** (missing scaffolding), **observation** (local choices worth a look).
