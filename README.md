@@ -116,7 +116,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── example.slnf
 │   ├── example.slnx
 │   ├── global.json
-│   └── projects/             ← exemplar .csproj / .fsproj files
+│   └── projects/             ← example .csproj / .fsproj files
 └── skills/                   ← maintenance skills (see below)
 ```
 

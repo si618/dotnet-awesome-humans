@@ -33,7 +33,7 @@ internal static class CommentHeader
             return [];
         }
 
-        // Smoke-testing the exemplar projects (audit-freshness, refresh-dotnet-versions) leaves
+        // Smoke-testing the example projects (audit-freshness, refresh-dotnet-versions) leaves
         // gitignored build output under templates/ — generated files, not resources. Skipping the
         // same directories .gitignore does keeps a post-build working tree and a fresh checkout
         // passing identically; CI is not the only place these checks run.
@@ -71,7 +71,7 @@ internal static class CommentHeader
         // UTF-8 BOM, which would otherwise sit in front of the comment marker.
         string line = (File.ReadLines(path).FirstOrDefault() ?? "").Trim();
 
-        // XML comment first: an .editorconfig header opens with '#', an exemplar source
+        // XML comment first: an .editorconfig header opens with '#', an example source
         // file (.fs, .cs) with '//', and nothing else opens with either.
         string body;
         if (line.StartsWith("<!--", StringComparison.Ordinal) && line.EndsWith("-->", StringComparison.Ordinal))

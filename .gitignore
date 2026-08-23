@@ -1,4 +1,4 @@
-# Build artifacts from smoke-testing the exemplar projects in templates/
+# Build artifacts from smoke-testing the example projects in templates/
 artifacts/
 bin/
 obj/
