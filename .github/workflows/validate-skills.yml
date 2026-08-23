@@ -81,7 +81,7 @@ jobs:
       - name: Verify resource metadata
         run: dotnet run scripts/validate-metadata.cs
 
-      - name: Verify opinion sources against the roster
+      - name: Verify the roster and the opinion sources against it
         run: dotnet run scripts/validate-opinion-sources.cs
 
       - name: Verify README indexes every opinion and skill

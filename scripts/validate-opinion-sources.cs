@@ -14,6 +14,11 @@
 // sources have not been admitted yet, and discovery-only sources are channels that
 // lead you to a primary source rather than being one.
 //
+// It also holds the roster itself to its shape: each table sorted by id, and no id
+// used twice. Both are conventions a reader cannot spot in a 30-row table, and the
+// second is worse than untidy — the parse below is keyed by id, so a duplicate would
+// silently decide a source's bucket by whichever row came last.
+//
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root:
 //
@@ -55,6 +60,14 @@ HashSet<string> reserved = ["house"];
 
 // Parse the roster: source id -> (bucket, the row's Notes/Blocker cell).
 Dictionary<string, (string Bucket, string Notes)> roster = new(StringComparer.Ordinal);
+
+// Ids in the order they appear, one entry per table. Order is checked per table rather
+// than across the file, because Tier 2 legitimately starts over at 'a' where Tier 1 left
+// off at 's'. Replaced at each heading; the initial list is never filled.
+List<(string Heading, List<string> Ids)> tables = [];
+List<string> ids = [];
+
+List<string> errors = [];
 string? bucket = null;
 
 foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Split('\n'))
@@ -68,6 +81,12 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
             {
                 bucket = name;
             }
+        }
+
+        if (bucket is not null)
+        {
+            ids = [];
+            tables.Add((line[3..].Trim(), ids));
         }
 
         continue;
@@ -90,14 +109,37 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
         continue; // header or separator row
     }
 
-    roster[id.Groups[1].Value] = (bucket, cells[^1]);
-}
+    string rowId = id.Groups[1].Value;
+    ids.Add(rowId);
 
-List<string> errors = [];
+    // TryAdd rather than the indexer: two rows sharing an id would otherwise leave the
+    // roster holding whichever came last, deciding a source's bucket by row order.
+    if (!roster.TryAdd(rowId, (bucket, cells[^1])))
+    {
+        errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row — ids are unique");
+    }
+}
 
 if (roster.Count == 0)
 {
     errors.Add($"{RosterPath}: no source rows parsed — roster tables may have changed shape");
+}
+
+// Roster tables are kept alphabetical by id (vet-source, step 5) so a new row lands in
+// one predictable place instead of wherever the admitting PR happened to put it. Nothing
+// about a 30-row table makes a misplaced row visible, so it is checked rather than left
+// to review.
+foreach ((string heading, List<string> tableIds) in tables)
+{
+    for (int index = 1; index < tableIds.Count; index++)
+    {
+        if (StringComparer.Ordinal.Compare(tableIds[index - 1], tableIds[index]) > 0)
+        {
+            errors.Add(
+                $"{RosterPath}: '{heading}' is not sorted by id "
+                    + $"— '{tableIds[index]}' follows '{tableIds[index - 1]}'");
+        }
+    }
 }
 
 HashSet<string> discovery =
@@ -164,7 +206,7 @@ foreach (string name in Opinions.Names())
 
 if (errors.Count > 0)
 {
-    Console.WriteLine("Opinion source validation failed:");
+    Console.WriteLine("Roster and opinion source validation failed:");
     foreach (string error in errors)
     {
         Console.WriteLine($"  - {error}");
@@ -174,7 +216,8 @@ if (errors.Count > 0)
 }
 
 Console.WriteLine(
-    $"All opinion sources resolve to the roster ({roster.Count} sources, {discovery.Count} discovery-only).");
+    $"All opinion sources resolve to the roster ({roster.Count} sources across {tables.Count} tables, "
+    + $"{discovery.Count} discovery-only), and every table is sorted by id.");
 return 0;
 
 internal static partial class Patterns
