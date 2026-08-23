@@ -28,8 +28,8 @@
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root:
 //
-//     dotnet run scripts/validate-opinion-sources.cs
-//     ./scripts/validate-opinion-sources.cs      (the shebang above)
+//     dotnet run scripts/validate-sources.cs
+//     ./scripts/validate-sources.cs      (the shebang above)
 //
 // Exit codes: 0 clean, 1 findings printed, 2 not run from the repository root.
 
@@ -270,7 +270,7 @@ foreach ((string path, List<string> sourceIds) in citing)
 
 if (errors.Count > 0)
 {
-    Console.WriteLine("Roster and opinion source validation failed:");
+    Console.WriteLine("Roster and source validation failed:");
     foreach (string error in errors)
     {
         Console.WriteLine($"  - {error}");
