@@ -35,7 +35,7 @@ Make staleness visible. This skill only **reports** — it never edits content. 
 1. **Collect frontmatter** from every file under `opinions/` and `research/`, and the commented headers in `templates/` files: `targets`, `last-reviewed`, `sources`, plus `last-used` on `opinions/` and `templates/` only — `research/` topics carry neither `last-used` nor a status field (AGENTS.md explains why).
 2. **Determine the latest released versions** of .NET, C#, and F# (same sources as `refresh-dotnet-versions`, step 1), plus the latest stable version of every package pinned in `templates/Directory.Packages.props` (same lookup as `refresh-dotnet-versions`, step 4b). No SDK-band lookup is needed: the `global.json` check reads the shape of the pin, not its distance from the newest release. Skip whichever of these checks is unavailable if offline and say so in the report — an unchecked pin is reported as "not verified", never as fresh.
 3. **Evaluate each resource** against the tolerances above. Malformed or missing frontmatter is itself a finding (severity: high — the living-reference mechanism depends on it).
-4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no activity recorded in over a year as candidates for `vet-source` re-evaluation.
+4. **Check the roster:** flag `AWESOME-HUMANS.md` sources with no _published writing_ recorded in over a year as candidates for `vet-source` re-evaluation. Repository activity does not clear this: it is not what an opinion cites.
 5. **Produce the report**, ordered most-stale first:
    - Per resource: path, findings, days over tolerance, and which skill fixes it.
    - Summary counts: fresh / stale / malformed, plus the oldest `last-reviewed` in the repository.
