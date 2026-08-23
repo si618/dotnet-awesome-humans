@@ -65,9 +65,15 @@ let describe payment =
           text.PadLeft w
   ```
 
-- **Write `seq { ... }` explicitly:** bare sequence expressions now raise FS3873 and the explicit form was always clearer. ([What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
+- **Write `seq { ... }` explicitly:** a brace block on its own is a deprecated sequence expression, and F# 10 warns `FS3873: This construct is deprecated. Sequence expressions should be of the form 'seq { ... }'`. The warning is about the braces, not what is inside them, so a comprehension already written inside `seq { ... }` is the correct form with or without an explicit `yield`. ([What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
 
   ```fsharp
+  // Before: FS3873
+  let numbers: seq<int> = { 1..10 }
+
+  // After
+  let numbers = seq { 1..10 }
+
   let evenSquares =
       seq {
           for i in 1..10 do
