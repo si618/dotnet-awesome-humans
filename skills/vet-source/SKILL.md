@@ -1,6 +1,6 @@
 ---
 name: vet-source
-description: Evaluate a candidate source (blog, author, channel, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
+description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -27,7 +27,7 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
 3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
    - All four criteria met at Tier 1/2 longevity → **admit** at the appropriate tier.
    - **Independence caps tier**: Tier 1 longevity with a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) → admit at **Tier 2**, concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance keeps full tier.
-   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless output demonstrably continues on other channels (talks, repositories, official docs), in which case the track record follows the human and the dormant channel is noted.
+   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless their **writing** demonstrably continues elsewhere (official documentation, another publication, a book), in which case the track record follows the human and the dormant channel is noted.
    - Strong on depth/accuracy but short on longevity → **watch list**, with the blocker recorded.
    - Aggregators (link roundups, newsletters) → admissible, but marked as **discovery-only**; they never appear in an opinion's `sources:`.
    - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
@@ -38,6 +38,6 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
 ## Edge cases
 
 - **Institutional sources** (Microsoft, JetBrains): longevity attaches to the publication, not individual authors; depth still needs per-author scrutiny when citing.
-- **An author who moved platforms** (e.g. blog → YouTube → newsletter): the track record follows the human, not the URL — aggregate their history across platforms.
+- **An author who moved platforms** (e.g. personal blog → an employer's engineering blog → newsletter): the track record follows the human, not the URL, so aggregate their writing across platforms. A move to video, talks or a podcast is not a platform change but an exit from scope ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
 - **Candidate found via a single viral post:** never admit on one post; watch-list at most.
 - **Conflicts of interest** (the candidate sells a product the opinions might recommend): admissible, but note it in the roster's Notes column so opinions citing them flag it.

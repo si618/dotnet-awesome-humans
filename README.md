@@ -54,7 +54,7 @@ Template files carry the same fields in a first-line comment header instead — 
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained writing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 How a source gets in, and what its tier lets it do (orientation only — the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
