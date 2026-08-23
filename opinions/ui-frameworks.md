@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-08-21
-last-used: 2026-08-20
+last-used: 2026-08-23
 sources:
   [
     ms-learn,
@@ -9,7 +9,6 @@ sources:
     meziantou,
     gerald-versluis,
     james-montemagno,
-    nick-polyak,
     avalonia-blog,
   ]
 ---
@@ -81,8 +80,8 @@ Blazor for web UI, .NET MAUI for mobile + desktop, Avalonia for cross-platform d
 
 ## Avalonia & reactive UI
 
-- **Keep view models free of UI-framework references.** Property-change notification (`INotifyPropertyChanged`) and Rx/Dynamic Data types are platform-neutral — a view model with no Avalonia (or WPF) reference binds unchanged on either framework and unit-tests without a UI. ([Polyak: Rx and Dynamic Data overview](https://dev.to/npolyak/reactive-extensions-rxnet-and-dynamic-data-overview-in-c-59lb))
-- **For reactive collection state in XAML UIs, use Dynamic Data over hand-rolled `ObservableCollection` plumbing.** Key entities in a `SourceCache<T, TKey>` and project filtered/sorted views into a bindable collection with `Connect()` — updates, filters, and sorts then compose instead of being re-implemented per screen. ([Polyak: Introduction to Dynamic Data](https://dev.to/npolyak/introduction-to-dynamic-data-10hf), [Observable Cache](https://dev.to/npolyak/introduction-to-dynamic-datas-observable-cache-eeh))
+- **Keep view models free of UI-framework references.** Property-change notification (`INotifyPropertyChanged`) and Rx/Dynamic Data types are platform-neutral — a view model with no Avalonia (or WPF) reference binds unchanged on either framework and unit-tests without a UI. ([Avalonia Docs: The MVVM pattern](https://docs.avaloniaui.net/docs/concepts/the-mvvm-pattern/))
+- **For reactive collection state in XAML UIs, use Dynamic Data over hand-rolled `ObservableCollection` plumbing.** Key entities in a `SourceCache<T, TKey>` and project filtered/sorted views into a bindable collection with `Connect()` — updates, filters, and sorts then compose instead of being re-implemented per screen. ([Avalonia Docs: Sorting, filtering, and grouping collections](https://docs.avaloniaui.net/docs/data-binding/collection-views))
 
   <!-- Verified: compiles and runs on net10.0 / DynamicData 9.4.33 (2026-08-12) -->
 
@@ -107,6 +106,6 @@ Blazor for web UI, .NET MAUI for mobile + desktop, Avalonia for cross-platform d
 - **Use the built-in page navigation for mobile-shaped Avalonia apps:** `ContentPage`, `DrawerPage`, `CarouselPage`, `TabView`, and `PipsPager` ship in 12 with gesture and wrap-selection support. Hand-rolled navigation stacks over a `ContentControl` were the pre-12 workaround; retire them. ([Avalonia 12: Ready for What's Next](https://avaloniaui.net/blog/avalonia-12))
 - **Don't build on Impeller yet.** The Impeller backend — Avalonia's collaboration with Google's Flutter team to bring a GPU-first renderer to .NET — is experimental and currently paused while the team lands v12 and new controls. Stay on the default Skia renderer and treat Impeller as a "coming next" item. ([Avalonia partners with Google's Flutter team](https://avaloniaui.net/blog/avalonia-partners-with-google-s-flutter-t-eam-to-bring-impeller-rendering-to-net))
 
-- **Source-redundancy note:** Avalonia guidance is thinner-sourced than the rest of this repository. The vetted bench is `nick-polyak` (Tier 1, independent) plus `avalonia-blog` (Tier 2) and `awesome-avalonia` (Tier 1, discovery-only) — both admitted 2026-08-14 under the lowered longevity bars. `avalonia-blog` is the project's own blog: authoritative on what shipped, adoption-focused on whether you should want it, so read release claims (the headline FPS numbers especially) as vendor benchmarks. Polyak's Dev.to MVVM coverage is still introductory (the deep architecture series lives in his read-only CodeProject archive), so verify Avalonia-specific claims against the project docs.
+- **Source-redundancy note:** Avalonia guidance is the thinnest-sourced material in this repository, and got thinner on 2026-08-23 when `nick-polyak` — the one independent voice on the bench — was demoted to the watch list for dormancy, taking his back catalogue with him. What remains is `avalonia-blog` (Tier 2) and `awesome-avalonia` (Tier 1, discovery-only), both admitted 2026-08-14 under the lowered longevity bars, and both the project's own output: authoritative on what shipped and on the documented API, adoption-focused on whether you should want it, so read release claims (the headline FPS numbers especially) as vendor benchmarks. Nothing here corroborates Avalonia's own account of itself. Treat that as a standing gap for `vet-source` rather than a settled bench.
 
 <!-- Mobile practice opinions (lifecycle, offline/sync, store compliance) split out into their own file if the MAUI section outgrows this one -->
