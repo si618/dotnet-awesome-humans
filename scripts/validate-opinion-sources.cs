@@ -2,6 +2,7 @@
 #:package YamlDotNet@18.1.0
 #:include Opinions.cs
 #:include Frontmatter.cs
+#:include CommentHeader.cs
 // PublishAot is on by default for file-based apps, and YamlDotNet's reflection-based
 // builder trips its analyzer (IL3050). These scripts are run, never published, so turn
 // AOT off rather than suppress the diagnostic that is telling the truth.
@@ -9,10 +10,15 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Verifies that every source id in an opinion's frontmatter resolves to the roster
-// in AWESOME-HUMANS.md, and that it is allowed to feed an opinion: watch-list
-// sources have not been admitted yet, and discovery-only sources are channels that
-// lead you to a primary source rather than being one.
+// Verifies that every source id in an opinion's frontmatter or a template's comment
+// header resolves to the roster in AWESOME-HUMANS.md, and that it is allowed to feed
+// one: watch-list sources have not been admitted yet, and discovery-only sources are
+// channels that lead you to a primary source rather than being one. templates/ is held
+// to the same gate as opinions/ because it is what people copy.
+//
+// research/ is deliberately outside the gate. A topic may cite unvetted material as long
+// as the text flags it as such (research-topic, audit-freshness); the roster gate lands at
+// promotion instead, where resolve-research drops or re-sources every unvetted claim.
 //
 // It also holds the roster itself to its shape: each table sorted by id, and no id
 // used twice. Both are conventions a reader cannot spot in a 30-row table, and the
@@ -151,6 +157,9 @@ HashSet<string> discovery =
 
 IDeserializer deserializer = new DeserializerBuilder().Build();
 
+// Every resource held to the roster, as (path, declared ids).
+List<(string Path, List<string> Ids)> citing = [];
+
 foreach (string name in Opinions.Names())
 {
     string path = Opinions.PathOf(name);
@@ -174,10 +183,32 @@ foreach (string name in Opinions.Names())
         continue;
     }
 
+    List<string> declaredIds = [];
     foreach (object? entry in sources)
     {
-        string sourceId = entry?.ToString() ?? string.Empty;
+        declaredIds.Add(entry?.ToString() ?? string.Empty);
+    }
 
+    citing.Add((path, declaredIds));
+}
+
+// A template carries the same ids comma-separated inside its one-line comment header.
+foreach (string path in CommentHeader.Files())
+{
+    if (CommentHeader.Read(path, out _) is not IDictionary header || header["sources"] is not string declared)
+    {
+        continue;
+    }
+
+    citing.Add((
+        path,
+        [.. declared.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)]));
+}
+
+foreach ((string path, List<string> sourceIds) in citing)
+{
+    foreach (string sourceId in sourceIds)
+    {
         if (reserved.Contains(sourceId))
         {
             continue;
@@ -192,7 +223,7 @@ foreach (string name in Opinions.Names())
         if (row.Bucket == WatchBucket)
         {
             errors.Add(
-                $"{path}: source '{sourceId}' is on the watch list and may not feed opinions "
+                $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates "
                     + "— corroborate with a Tier 1/2 source or admit it via vet-source");
         }
         else if (discovery.Contains(sourceId))
@@ -216,8 +247,9 @@ if (errors.Count > 0)
 }
 
 Console.WriteLine(
-    $"All opinion sources resolve to the roster ({roster.Count} sources across {tables.Count} tables, "
-    + $"{discovery.Count} discovery-only), and every table is sorted by id.");
+    $"All sources in {citing.Count} opinions and templates resolve to the roster "
+    + $"({roster.Count} sources across {tables.Count} tables, {discovery.Count} discovery-only), "
+    + "and every table is sorted by id.");
 return 0;
 
 internal static partial class Patterns

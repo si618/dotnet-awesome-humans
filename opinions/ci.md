@@ -26,12 +26,17 @@ Supply-chain hygiene is not optional in the agentic era.
 - **Publish/pack** with `--no-build` and upload the output as the single artifact that later stages (deploy, release) consume — never rebuild for deployment. No `--output` flag: with the artifacts layout from [templates/Directory.Build.props](../templates/Directory.Build.props), publish output lands at `artifacts/publish/<Project>/release` for a single-TFM, non-RID publish (the pivot gains `_<tfm>`/`_<rid>` suffixes otherwise) and pack output at `artifacts/package/<configuration>` — no project segment (see [project-structure.md](project-structure.md)). Keep the deploy artifact deploy-only: test projects set `<IsPublishable>false</IsPublishable>` as [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) does, otherwise a solution-level publish writes the test host and a second copy of every referenced library into `artifacts/publish`. ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output))
 
 ```yaml
+# Least privilege at the top: the default token is read/write on contents unless
+# the repository says otherwise, and a build job needs neither.
+permissions:
+  contents: read
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@08c6903cd8c0fde910a37f88322edcfb5dd907a8 # v5.0.0
-      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4.3.1
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
         with:
           global-json-file: global.json
       - run: dotnet restore
@@ -44,7 +49,7 @@ jobs:
           path: artifacts/publish
 ```
 
-(SHAs shown are illustrative of the _pinning shape_ — resolve the current release SHA when copying.)
+(The `checkout` and `setup-dotnet` pins are the ones this repository runs; `upload-artifact` is illustrative. Resolve every SHA against the current release when copying, and check the major while you are there — a pinned SHA never tells you it has gone stale, which is why the pinning opinion above and a dependency bot are one policy, not two.)
 
 ## Artifact signing
 
