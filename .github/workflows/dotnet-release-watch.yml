@@ -27,8 +27,15 @@ jobs:
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
+      # pipefail is set explicitly: the default shell for an unqualified `run` is
+      # `bash -e`, which reports only the LAST command in a pipeline. Without it a failed
+      # fetch leaves jq reading empty stdin, which it turns into no output and exit 0 —
+      # a truncated snapshot that the diff below reads as "every channel removed", and a
+      # trigger PR that deletes the state file instead of updating it.
       - name: Snapshot GA release state
         run: |
+          set -euo pipefail
+          snapshot="$(mktemp)"
           curl -fsSL --retry 3 \
             https://raw.githubusercontent.com/dotnet/core/main/release-notes/releases-index.json \
           | jq '{channels: [.["releases-index"][]
@@ -40,19 +47,37 @@ jobs:
                  "latest-release-date": .["latest-release-date"],
                  "latest-runtime": .["latest-runtime"],
                  "latest-sdk": .["latest-sdk"]}]}' \
-          > .github/state/dotnet-releases.json
+          > "$snapshot"
+
+          # Guard against a fetch that succeeds but returns something unexpected:
+          # replace the checked-in file only once the new one parses and carries channels.
+          # An empty or unparseable snapshot fails the run loudly instead of opening a PR.
+          channels="$(jq '.channels | length' "$snapshot" 2>/dev/null || echo 0)"
+          case "$channels" in
+            0 | '' | *[!0-9]*)
+              echo "Release index fetch produced no usable channel count (got '$channels') — leaving the snapshot untouched." >&2
+              exit 1
+              ;;
+          esac
+
+          mv "$snapshot" .github/state/dotnet-releases.json
 
       - name: Summarize changes
         id: diff
         run: |
+          set -euo pipefail
           if git diff --quiet -- .github/state/dotnet-releases.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
+            # Random delimiter, because the summary is remote content: a diff line reading
+            # exactly the delimiter would close the block early and let the rest be parsed
+            # as further step outputs (opinions/ci.md on never interpolating input).
+            delimiter="EOF_$(openssl rand -hex 16)"
             {
-              echo "summary<<EOF"
+              echo "summary<<$delimiter"
               git diff -- .github/state/dotnet-releases.json | grep -E '^[+-] ' || true
-              echo "EOF"
+              echo "$delimiter"
             } >> "$GITHUB_OUTPUT"
           fi
 

@@ -42,6 +42,8 @@ One structured pipeline, exported over OTLP. Logs and traces are the same teleme
       .CreateLogger();
   ```
 
+  **Run a collector on localhost and let it own the durable queue: the default pipeline has no equivalent of the chain above.** `AddOtlpExporter` batches in memory and has no on-disk queue to replay, so a failed export or a killed process loses whatever was in flight. Exporting to a collector on the loopback turns the app's export into a call that succeeds even while the backend is down. Retry and disk buffering then belong to the one component built for them, and are configured there, not in the app. Taking Serilog for the logging pipeline and using the chain above is the other way. Doing neither is defensible for a service whose logs are diagnostic rather than an audit trail, as long as that is decided rather than inherited. ([Microsoft Learn: .NET observability with OpenTelemetry](https://learn.microsoft.com/dotnet/core/diagnostics/observability-with-otel))
+
 ## Levels
 
 - **`Information` is for events an operator would want in production; `Debug` is for developers.** Set the default minimum level to `Information` and raise noisy categories (`Microsoft.AspNetCore`, `Microsoft.EntityFrameworkCore.Database.Command`) to `Warning` in configuration rather than deleting the log calls.

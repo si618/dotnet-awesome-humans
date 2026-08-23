@@ -54,7 +54,7 @@ Template files carry the same fields in a first-line comment header instead — 
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained publishing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained writing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 How a source gets in, and what its tier lets it do (orientation only — the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
@@ -62,8 +62,8 @@ How a source gets in, and what its tier lets it do (orientation only — the adm
 flowchart LR
     candidate["Candidate source"] --> vet["vet-source"]
     vet -->|"all four criteria,<br>5+ years"| tier1["Tier 1"]
-    vet -->|"2–5 years, or capped<br>on independence/depth"| tier2["Tier 2"]
-    vet -->|"strong today, track<br>record still forming"| watch["Watch list"]
+    vet -->|"2–5 years, or capped<br>on independence"| tier2["Tier 2"]
+    vet -->|"track record still forming,<br>or previously strong, now dormant"| watch["Watch list"]
     vet -->|"otherwise"| declined["Declined"]
     watch -->|"blocker clears"| vet
     tier1 -->|"gone dormant,<br>quality dropped"| vet
@@ -71,6 +71,7 @@ flowchart LR
     tier1 --> cite["citable in an opinion's sources:"]
     tier2 --> cite
     tier1 -.->|"rows marked Discovery-only:<br>leads only — CI rejects citation"| discovery["discovery + cross-checking"]
+    cite -.->|"rows marked Corroborate:<br>never the only citation"| cite
     watch -.-> discovery
 ```
 
@@ -106,8 +107,8 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
 │   ├── validate-metadata.cs
-│   ├── validate-opinion-sources.cs
-│   └── validate-readme-index.cs
+│   ├── validate-readme-index.cs
+│   └── validate-sources.cs
 ├── templates/                ← copy-paste-ready example files
 │   ├── .editorconfig
 │   ├── Directory.Build.props
@@ -115,7 +116,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── example.slnf
 │   ├── example.slnx
 │   ├── global.json
-│   └── projects/             ← exemplar .csproj / .fsproj files
+│   └── projects/             ← example .csproj / .fsproj files
 └── skills/                   ← maintenance skills (see below)
 ```
 
@@ -159,11 +160,11 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
-| Script                                                               | Checks                                                                                                                                                                     |
-| -------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`validate-metadata.cs`](scripts/validate-metadata.cs)               | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates |
-| [`validate-opinion-sources.cs`](scripts/validate-opinion-sources.cs) | Every source id resolves to the roster in AWESOME-HUMANS.md, and is allowed to feed an opinion                                                                             |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs)       | This README indexes every opinion and skill, in both directions                                                                                                            |
+| Script                                                         | Checks                                                                                                                                                                        |
+| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates    |
+| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables are sorted by id, with no id used twice |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions                                                                                                               |
 
 Run them from the repository root, exactly as CI does:
 
@@ -171,9 +172,9 @@ Run them from the repository root, exactly as CI does:
 dotnet run scripts/validate-metadata.cs
 ```
 
-[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) parses the first-line comment header that carries the same fields on `templates/` files (see [Freshness policy](#freshness-policy) for why templates use a comment instead). None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the header-carrying `templates/` files and parses the first-line comment header that carries the same fields on them (see [Freshness policy](#freshness-policy) for why templates use a comment instead). None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
 
-The SDK comes from [`global.json`](global.json), pinned to the feature band that understands `#:include` and kept in step with [`templates/global.json`](templates/global.json). One check is still Python — the Agent Skills spec validator, published only to PyPI.
+The SDK comes from [`global.json`](global.json), whose floor is the feature band that understands `#:include`. It is not tied to [`templates/global.json`](templates/global.json): each pin follows what its own consumers need, and `rollForward: latestFeature` picks up newer bands without an edit. One check is still Python — the Agent Skills spec validator, published only to PyPI.
 
 ## License
 

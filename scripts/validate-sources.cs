@@ -1,0 +1,294 @@
+#!/usr/bin/env dotnet
+#:package YamlDotNet@18.1.0
+#:include Opinions.cs
+#:include Frontmatter.cs
+#:include CommentHeader.cs
+// PublishAot is on by default for file-based apps, and YamlDotNet's reflection-based
+// builder trips its analyzer (IL3050). These scripts are run, never published, so turn
+// AOT off rather than suppress the diagnostic that is telling the truth.
+#:property PublishAot=false
+#:property Nullable=enable
+#:property TreatWarningsAsErrors=true
+
+// Verifies that every source id in an opinion's frontmatter or a template's comment
+// header resolves to the roster in AWESOME-HUMANS.md, and that it is allowed to feed
+// one: watch-list sources have not been admitted yet, and discovery-only sources are
+// channels that lead you to a primary source rather than being one. templates/ is held
+// to the same gate as opinions/ because it is what people copy.
+//
+// research/ is deliberately outside the gate. A topic may cite unvetted material as long
+// as the text flags it as such (research-topic, audit-freshness); the roster gate lands at
+// promotion instead, where resolve-research drops or re-sources every unvetted claim.
+//
+// It also holds the roster itself to its shape: each table sorted by id, and no id
+// used twice. Both are conventions a reader cannot spot in a 30-row table, and the
+// second is worse than untidy — the parse below is keyed by id, so a duplicate would
+// silently decide a source's bucket by whichever row came last.
+//
+// A .NET 10 file-based app: no project, no build step, sharing its helpers with the
+// other checks via #:include. Run it from the repository root:
+//
+//     dotnet run scripts/validate-sources.cs
+//     ./scripts/validate-sources.cs      (the shebang above)
+//
+// Exit codes: 0 clean, 1 findings printed, 2 not run from the repository root.
+
+using System.Collections;
+using System.Text.RegularExpressions;
+using YamlDotNet.Serialization;
+
+const string RosterPath = "AWESOME-HUMANS.md";
+const string DiscoveryMarker = "**Discovery-only.**";
+const string CorroborateMarker = "**Corroborate.**";
+const string WatchBucket = "watch";
+
+if (!Opinions.DirectoryExists)
+{
+    Console.Error.WriteLine($"No {Opinions.DirectoryName}/ directory here — run this script from the repository root.");
+    return 2;
+}
+
+if (!File.Exists(RosterPath))
+{
+    Console.WriteLine($"{RosterPath} not found");
+    return 1;
+}
+
+// The reserved id for house opinions: the repository owner is not on the roster.
+HashSet<string> reserved = ["house"];
+
+// Which level-2 headings open which bucket. Anything outside them — the admission
+// criteria, the decision log — carries no source rows.
+(string Bucket, string[] Prefixes)[] sections =
+[
+    ("citable", ["## Tier 1", "## Tier 2"]),
+    (WatchBucket, ["## Watch list"]),
+];
+
+// Parse the roster: source id -> (bucket, the row's Notes/Blocker cell).
+Dictionary<string, (string Bucket, string Notes)> roster = new(StringComparer.Ordinal);
+
+// Ids in the order they appear, one entry per table. Order is checked per table rather
+// than across the file, because Tier 2 legitimately starts over at 'a' where Tier 1 left
+// off at 's'. Replaced at each heading; the initial list is never filled.
+List<(string Heading, List<string> Ids)> tables = [];
+List<string> ids = [];
+
+List<string> errors = [];
+string? bucket = null;
+
+foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Split('\n'))
+{
+    if (line.StartsWith("## ", StringComparison.Ordinal))
+    {
+        bucket = null;
+        foreach ((string name, string[] prefixes) in sections)
+        {
+            if (Array.Exists(prefixes, prefix => line.StartsWith(prefix, StringComparison.Ordinal)))
+            {
+                bucket = name;
+            }
+        }
+
+        if (bucket is not null)
+        {
+            ids = [];
+            tables.Add((line[3..].Trim(), ids));
+        }
+
+        continue;
+    }
+
+    if (bucket is null || !line.StartsWith('|'))
+    {
+        continue;
+    }
+
+    string[] cells = [.. line.Trim().Trim('|').Split('|').Select(cell => cell.Trim())];
+    if (cells.Length < 5)
+    {
+        continue;
+    }
+
+    Match id = Patterns.SourceId().Match(cells[0]);
+    if (!id.Success)
+    {
+        continue; // header or separator row
+    }
+
+    string rowId = id.Groups[1].Value;
+    ids.Add(rowId);
+
+    // TryAdd rather than the indexer: two rows sharing an id would otherwise leave the
+    // roster holding whichever came last, deciding a source's bucket by row order.
+    if (!roster.TryAdd(rowId, (bucket, cells[^1])))
+    {
+        errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row — ids are unique");
+    }
+}
+
+if (roster.Count == 0)
+{
+    errors.Add($"{RosterPath}: no source rows parsed — roster tables may have changed shape");
+}
+
+// Roster tables are kept alphabetical by id (vet-source, step 5) so a new row lands in
+// one predictable place instead of wherever the admitting PR happened to put it. Nothing
+// about a 30-row table makes a misplaced row visible, so it is checked rather than left
+// to review.
+foreach ((string heading, List<string> tableIds) in tables)
+{
+    for (int index = 1; index < tableIds.Count; index++)
+    {
+        if (StringComparer.Ordinal.Compare(tableIds[index - 1], tableIds[index]) > 0)
+        {
+            errors.Add(
+                $"{RosterPath}: '{heading}' is not sorted by id "
+                    + $"— '{tableIds[index]}' follows '{tableIds[index - 1]}'");
+        }
+    }
+}
+
+HashSet<string> discovery =
+[
+    .. roster
+        .Where(entry => entry.Value.Notes.Contains(DiscoveryMarker, StringComparison.Ordinal))
+        .Select(entry => entry.Key),
+];
+
+// Rows admitted on track record but thin on depth: citable, never the only citation.
+HashSet<string> corroborate =
+[
+    .. roster
+        .Where(entry => entry.Value.Notes.Contains(CorroborateMarker, StringComparison.Ordinal))
+        .Select(entry => entry.Key),
+];
+
+IDeserializer deserializer = new DeserializerBuilder().Build();
+
+// Every resource held to the roster, as (path, declared ids).
+List<(string Path, List<string> Ids)> citing = [];
+
+foreach (string name in Opinions.Names())
+{
+    string path = Opinions.PathOf(name);
+
+    // A file with no frontmatter, or unreadable frontmatter, is reported in detail by
+    // validate-metadata.cs — this check stays quiet about it.
+    if (Frontmatter.Read(deserializer, path, out _) is not IDictionary frontmatter)
+    {
+        continue;
+    }
+
+    object? declared = frontmatter.Contains("sources") ? frontmatter["sources"] : null;
+    if (declared is null or "")
+    {
+        continue;
+    }
+
+    if (declared is not IList sources)
+    {
+        errors.Add($"{path}: 'sources' must be a list");
+        continue;
+    }
+
+    List<string> declaredIds = [];
+    foreach (object? entry in sources)
+    {
+        declaredIds.Add(entry?.ToString() ?? string.Empty);
+    }
+
+    citing.Add((path, declaredIds));
+}
+
+// A template carries the same ids comma-separated inside its one-line comment header.
+foreach (string path in CommentHeader.Files())
+{
+    if (CommentHeader.Read(path, out _) is not IDictionary header || header["sources"] is not string declared)
+    {
+        continue;
+    }
+
+    citing.Add((
+        path,
+        [.. declared.Split(',', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)]));
+}
+
+foreach ((string path, List<string> sourceIds) in citing)
+{
+    foreach (string sourceId in sourceIds)
+    {
+        if (reserved.Contains(sourceId))
+        {
+            continue;
+        }
+
+        if (!roster.TryGetValue(sourceId, out (string Bucket, string Notes) row))
+        {
+            errors.Add($"{path}: source '{sourceId}' is not on the roster in {RosterPath}");
+            continue;
+        }
+
+        if (row.Bucket == WatchBucket)
+        {
+            errors.Add(
+                $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates "
+                    + "— corroborate with a Tier 1/2 source or admit it via vet-source");
+        }
+        else if (discovery.Contains(sourceId))
+        {
+            errors.Add(
+                $"{path}: source '{sourceId}' is marked discovery-only and never appears in 'sources:' "
+                    + "— cite the primary source it led you to");
+        }
+    }
+
+    // A Corroborate-marked source may carry the shape of a claim but never the claim alone,
+    // so something unmarked has to stand beside it. `house` does not count: it is the owner's
+    // position, not a second reading of the evidence.
+    bool marked = false;
+    bool unmarked = false;
+    foreach (string sourceId in sourceIds)
+    {
+        if (corroborate.Contains(sourceId))
+        {
+            marked = true;
+        }
+        else if (!reserved.Contains(sourceId) && roster.ContainsKey(sourceId) && !discovery.Contains(sourceId))
+        {
+            unmarked = true;
+        }
+    }
+
+    if (marked && !unmarked)
+    {
+        errors.Add(
+            $"{path}: every citable source here is marked '{CorroborateMarker}' "
+                + "— add a Tier 1/2 source that is not, or drop the claim");
+    }
+}
+
+if (errors.Count > 0)
+{
+    Console.WriteLine("Roster and source validation failed:");
+    foreach (string error in errors)
+    {
+        Console.WriteLine($"  - {error}");
+    }
+
+    return 1;
+}
+
+Console.WriteLine(
+    $"All sources in {citing.Count} opinions and templates resolve to the roster "
+    + $"({roster.Count} sources across {tables.Count} tables, {discovery.Count} discovery-only, "
+    + $"{corroborate.Count} corroborate-only), "
+    + "and every table is sorted by id.");
+return 0;
+
+internal static partial class Patterns
+{
+    // A roster row's first cell is a bare source id in backticks: `andrew-lock`.
+    [GeneratedRegex(@"\A`([a-z0-9-]+)`\z")]
+    internal static partial Regex SourceId();
+}

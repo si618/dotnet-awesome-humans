@@ -37,8 +37,6 @@ if (!Opinions.DirectoryExists)
     return 2;
 }
 
-const string TemplatesDirectory = "templates";
-
 string[] required = ["targets", "last-reviewed", "last-used", "sources"];
 
 // A research topic carries no last-used: the only way to consult one is to build on it,
@@ -80,10 +78,10 @@ foreach (string path in research)
     resources.Add((path, Frontmatter.Read(deserializer, path, out string? error), error, researchRequired, researchForbidden));
 }
 
-string[] templates = TemplatesWithHeaders(TemplatesDirectory);
+string[] templates = CommentHeader.Files();
 if (templates.Length == 0)
 {
-    errors.Add($"no header-carrying files found under {TemplatesDirectory}/");
+    errors.Add($"no header-carrying files found under {CommentHeader.TemplatesDirectory}/");
 }
 
 foreach (string path in templates)
@@ -170,37 +168,6 @@ static string[] MarkdownIn(string directory)
         .. new DirectoryInfo(directory)
             .EnumerateFiles("*.md")
             .Select(file => $"{directory}/{file.Name}")
-            .Order(StringComparer.Ordinal),
-    ];
-}
-
-// JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot
-// hold a header at all. Exactly those two files are exempt — the same list AGENTS.md
-// documents — so a headerless JSON file added anywhere else under templates/ fails
-// loudly here instead of silently escaping validation. What the two pin is audited
-// against the latest releases instead (skills/audit-freshness/SKILL.md).
-static string[] TemplatesWithHeaders(string directory)
-{
-    if (!Directory.Exists(directory))
-    {
-        return [];
-    }
-
-    // Smoke-testing the exemplar projects (audit-freshness, refresh-dotnet-versions)
-    // leaves gitignored build output under templates/ — generated files, not resources.
-    // Skipping the same directories .gitignore does keeps a post-build working tree and
-    // a fresh checkout passing identically; CI is not the only place this check runs.
-    string[] buildOutput = ["artifacts", "bin", "obj"];
-
-    return
-    [
-        .. new DirectoryInfo(directory)
-            .EnumerateFiles("*", SearchOption.AllDirectories)
-            // Reported as repository-relative paths with forward slashes, so a finding
-            // reads the same whichever platform ran the check.
-            .Select(file => $"{directory}/{Path.GetRelativePath(directory, file.FullName).Replace('\\', '/')}")
-            .Where(path => !path.Split('/').Any(buildOutput.Contains))
-            .Where(path => path is not ("templates/global.json" or "templates/example.slnf"))
             .Order(StringComparer.Ordinal),
     ];
 }

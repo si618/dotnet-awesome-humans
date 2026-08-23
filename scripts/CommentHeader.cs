@@ -18,6 +18,46 @@ internal static class CommentHeader
     /// <summary>The literal every template header opens with, inside its comment marker.</summary>
     internal const string Marker = "dotnet-awesome-humans template";
 
+    /// <summary>The directory whose files carry these headers, as the reports quote it.</summary>
+    internal const string TemplatesDirectory = "templates";
+
+    /// <summary>
+    /// Every file under <see cref="TemplatesDirectory"/> expected to carry a header, sorted,
+    /// as repository-relative paths with forward slashes so a finding reads the same whichever
+    /// platform ran the check. Empty when the directory is absent.
+    /// </summary>
+    internal static string[] Files()
+    {
+        if (!Directory.Exists(TemplatesDirectory))
+        {
+            return [];
+        }
+
+        // Smoke-testing the example projects (audit-freshness, refresh-dotnet-versions) leaves
+        // gitignored build output under templates/ — generated files, not resources. Skipping the
+        // same directories .gitignore does keeps a post-build working tree and a fresh checkout
+        // passing identically; CI is not the only place these checks run.
+        string[] buildOutput = ["artifacts", "bin", "obj"];
+
+        // JSON carries no comment syntax, so templates/global.json and the .slnf filter cannot hold
+        // a header at all. Exactly those two are exempt — the same list AGENTS.md documents — so a
+        // headerless JSON file added anywhere else under templates/ fails loudly rather than
+        // silently escaping validation. What the two pin is audited against the latest releases
+        // instead (skills/audit-freshness/SKILL.md).
+        string[] exempt = [$"{TemplatesDirectory}/global.json", $"{TemplatesDirectory}/example.slnf"];
+
+        return
+        [
+            .. new DirectoryInfo(TemplatesDirectory)
+                .EnumerateFiles("*", SearchOption.AllDirectories)
+                .Select(file =>
+                    $"{TemplatesDirectory}/{Path.GetRelativePath(TemplatesDirectory, file.FullName).Replace('\\', '/')}")
+                .Where(path => !path.Split('/').Any(buildOutput.Contains))
+                .Where(path => !Array.Exists(exempt, entry => string.Equals(entry, path, StringComparison.Ordinal)))
+                .Order(StringComparer.Ordinal),
+        ];
+    }
+
     /// <summary>
     /// Parses a template file's first-line comment header. Returns the fields, or null with
     /// <paramref name="error"/> set to the reason — deliberately the same shape as
@@ -31,7 +71,7 @@ internal static class CommentHeader
         // UTF-8 BOM, which would otherwise sit in front of the comment marker.
         string line = (File.ReadLines(path).FirstOrDefault() ?? "").Trim();
 
-        // XML comment first: an .editorconfig header opens with '#', an exemplar source
+        // XML comment first: an .editorconfig header opens with '#', an example source
         // file (.fs, .cs) with '//', and nothing else opens with either.
         string body;
         if (line.StartsWith("<!--", StringComparison.Ordinal) && line.EndsWith("-->", StringComparison.Ordinal))

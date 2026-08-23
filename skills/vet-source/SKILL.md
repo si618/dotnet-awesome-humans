@@ -1,6 +1,6 @@
 ---
 name: vet-source
-description: Evaluate a candidate source (blog, author, channel, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
+description: Evaluate a candidate source (blog, author, documentation site, newsletter) against the AWESOME-HUMANS.md admission criteria and admit, watch-list, decline, promote, or demote it. Use when proposing a new source, when a watch-list source may be ready for promotion, or when an admitted source has gone quiet or declined in quality.
 license: See repository LICENSE
 compatibility: Requires git and internet access
 metadata:
@@ -27,17 +27,18 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
 3. **Classify**, applying the two qualifying rules from [AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria) exactly as written there:
    - All four criteria met at Tier 1/2 longevity → **admit** at the appropriate tier.
    - **Independence caps tier**: Tier 1 longevity with a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) → admit at **Tier 2**, concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance keeps full tier.
-   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless output demonstrably continues on other channels (talks, repositories, official docs), in which case the track record follows the human and the dormant channel is noted.
+   - **Dormancy blocks admission**: publishing stopped for over a year → **watch list**, unless their **writing** demonstrably continues elsewhere (official documentation, another publication, a book), in which case the track record follows the human and the dormant channel is noted. Repository activity is not evidence: commits, releases and issue threads are not what an opinion cites, so a busy GitHub profile beside a silent blog is a dormant source rather than a live one. Documentation authored in a repository does count — what was published is the test, not where the commits landed.
    - Strong on depth/accuracy but short on longevity → **watch list**, with the blocker recorded.
    - Aggregators (link roundups, newsletters) → admissible, but marked as **discovery-only**; they never appear in an opinion's `sources:`.
+   - Thin on depth but sound on the other three → admit at the tier longevity earns and mark **`**Corroborate.**`**, never cap a tier lower. Tier states the track record; the marking states what a citation may rest on.
    - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
-4. **For re-evaluations:** promote a watch-list source whose blocker has cleared; demote or annotate an admitted source that has gone dormant (no posts in over a year) or declined in quality. Demoted sources keep their row with a note — existing opinions may still cite their back catalogue.
-5. **Apply on a working branch** (never the default branch; follow the host environment's branch-naming convention): update the appropriate roster table, assign a stable kebab-case `id`, and append the decision with evidence summary to the decision log.
+4. **For re-evaluations:** promote a watch-list source whose blocker has cleared; demote or annotate an admitted source that has gone dormant (no posts in over a year) or declined in quality. A demoted source keeps its row with a note, but **demotion to the watch list revokes citation, including the back catalogue** — `scripts/validate-sources.cs` rejects a watch-list id wherever it appears in `sources:`. So a demotion is not finished until no opinion cites it: in the same PR, re-source each affected claim from a Tier 1/2 source, or drop it. A back catalogue worth keeping citable is an argument for annotating the row rather than demoting it.
+5. **Apply on a working branch** (never the default branch; follow the host environment's branch-naming convention): update the appropriate roster table, assign a stable kebab-case `id` and insert the row alphabetically by that id, and append the decision to the decision log. **Keep the log entry to the decision and the fact that carried it** — two sentences, in the register of the rows already there. The per-criterion evidence belongs in the PR (step 6), which is linked from the commit; a log cell holding a full vetting report is unreadable as a table and duplicates what review already saw.
 6. **Open a PR** with the evidence per criterion so a human ratifies the admission. A human reviews before the source can feed opinions.
 
 ## Edge cases
 
 - **Institutional sources** (Microsoft, JetBrains): longevity attaches to the publication, not individual authors; depth still needs per-author scrutiny when citing.
-- **An author who moved platforms** (e.g. blog → YouTube → newsletter): the track record follows the human, not the URL — aggregate their history across platforms.
+- **An author who moved platforms** (e.g. personal blog → an employer's engineering blog → newsletter): the track record follows the human, not the URL, so aggregate their writing across platforms. A move to video, talks or a podcast is not a platform change but an exit from scope ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)).
 - **Candidate found via a single viral post:** never admit on one post; watch-list at most.
 - **Conflicts of interest** (the candidate sells a product the opinions might recommend): admissible, but note it in the roster's Notes column so opinions citing them flag it.
