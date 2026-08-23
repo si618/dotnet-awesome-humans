@@ -32,7 +32,7 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
    - Aggregators (link roundups, newsletters) → admissible, but marked as **discovery-only**; they never appear in an opinion's `sources:`.
    - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
 4. **For re-evaluations:** promote a watch-list source whose blocker has cleared; demote or annotate an admitted source that has gone dormant (no posts in over a year) or declined in quality. A demoted source keeps its row with a note, but **demotion to the watch list revokes citation, including the back catalogue** — `scripts/validate-opinion-sources.cs` rejects a watch-list id wherever it appears in `sources:`. So a demotion is not finished until no opinion cites it: in the same PR, re-source each affected claim from a Tier 1/2 source, or drop it. A back catalogue worth keeping citable is an argument for annotating the row rather than demoting it.
-5. **Apply on a working branch** (never the default branch; follow the host environment's branch-naming convention): update the appropriate roster table, assign a stable kebab-case `id`, and append the decision with evidence summary to the decision log.
+5. **Apply on a working branch** (never the default branch; follow the host environment's branch-naming convention): update the appropriate roster table, assign a stable kebab-case `id` and insert the row alphabetically by that id, and append the decision with evidence summary to the decision log.
 6. **Open a PR** with the evidence per criterion so a human ratifies the admission. A human reviews before the source can feed opinions.
 
 ## Edge cases
