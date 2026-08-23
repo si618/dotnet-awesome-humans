@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14, fsharp-10]
 last-reviewed: 2026-08-21
-last-used: 2026-08-21
+last-used: 2026-08-23
 sources: [ms-learn, dotnet-blog, gerald-versluis, steve-gordon, house]
 ---
 
@@ -12,8 +12,22 @@ One solution format, central package management, versions pinned at the root. Th
 ## Solution & SDK
 
 - **Use `.slnx` for new solutions:** `dotnet new sln` defaults to it in the .NET 10 SDK; migrate `.sln` files opportunistically. Use `.slnf` filters for large solutions. Start from [templates/example.slnx](../templates/example.slnx) and [templates/example.slnf](../templates/example.slnf). ([Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
-- **Pin the SDK with `global.json`** (roll-forward `latestFeature`, per [templates/global.json](../templates/global.json)); use `sdk.paths` to trial preview SDKs per-repo without touching the machine. ([Versluis: sdk.paths](https://blog.verslu.is/), [What's new in .NET 10](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
+- **Pin the SDK with `global.json`** (roll-forward `latestFeature`, per [templates/global.json](../templates/global.json)). ([What's new in .NET 10](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
 - **The pinned version is a floor, not a selection, so raise it only when you need a newer feature band.** Under `rollForward: latestFeature`, `10.0.400` means that version or any later band and patch installed on the machine, so a new band reaches the build without the file changing. Pinning a patch (`10.0.412`) or chasing each band as it ships narrows who can build and fails contributors one servicing release behind, buying nothing. Move the floor when a band ships something the repository actually uses, and record which feature in the commit. ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json))
+- **Trial a preview SDK with `sdk.paths`, and ignore the folder it installs into in the same commit.** `./dotnet-install.sh --install-dir .dotnet` (`-InstallDir` on the PowerShell script) puts the preview SDK inside the repository rather than on the machine, and `paths` makes the host prefer it while still falling back to the machine install via `$host$`. Paths resolve relative to `global.json`, not the working directory, so this holds from any subdirectory; `errorMessage` is what a contributor who has neither SDK sees instead of a bare version error. Two limits worth knowing: `paths` applies only to commands that engage the SDK (`dotnet build`, `dotnet run`) and is ignored by the apphost and `dotnet app.dll`; and the folder is a full SDK — hundreds of megabytes that must never be committed. ([Versluis: test preview SDKs locally](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/), [Microsoft Learn: test prerelease SDKs locally](https://learn.microsoft.com/dotnet/core/tools/test-prerelease-sdk-locally))
+
+  ```json
+  {
+    "sdk": {
+      "version": "11.0.100-preview.1.25000.1",
+      "paths": [".dotnet", "$host$"],
+      "errorMessage": "Run ./dotnet-install.sh --install-dir .dotnet --version 11.0.100-preview.1.25000.1"
+    }
+  }
+  ```
+
+  `dotnet new gitignore` does not cover `.dotnet/` — the template ignores build output, and a locally installed SDK is a build _prerequisite_ — so every .NET repository that installs one this way adds the rule by hand (`dotnet/runtime`, `dotnet/aspnetcore`, `dotnet/sdk`, `dotnet/maui` all carry it). Adopting `sdk.paths` therefore means one line in the repo-specific block of `.gitignore` below, and it is not optional.
+
 - **Central Package Management (`Directory.Packages.props`) is mandatory** for multi-project repositories; note NU1510 now flags pruned direct references. [templates/Directory.Packages.props](../templates/Directory.Packages.props) is the canonical starting point, including `CentralPackageTransitivePinningEnabled`. ([Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
 - **Shared build settings live in `Directory.Build.props`:** TFM, `LangVersion` (latest), nullable enabled, analyzers on, warnings as errors. Copy [templates/Directory.Build.props](../templates/Directory.Build.props); the ideal project file is then nearly empty (see [templates/projects/](../templates/projects/)).
 - **House:** the warnings-as-errors setting above is always on, never CI-only, and every suppression carries a comment giving the reason — canonical statement in [ci.md](ci.md).
@@ -29,7 +43,7 @@ One solution format, central package management, versions pinned at the root. Th
 - **Test projects sit beside, never inside, the code under test:** `tests/Example.Library.Tests` mirrors `src/Example.Library` and is named `<Project>.Tests`. This keeps packing, coverage filters, and `.slnf` filters trivial (see [opinions/testing.md](testing.md) for what goes in them).
 - **Inside a project, group by feature, not by pattern:** see [architecture.md](architecture.md) for how modules and vertical slices sit under this layout.
 - **Don't add layout you don't need yet.** A single-project tool is fine as `src/Tool` plus `tests/Tool.Tests`; add `docs/` and solution filters when the repository earns them, not on day one.
-- **Generate `.gitignore` with `dotnet new gitignore` — don't hand-maintain one.** The SDK template is the canonical .NET ignore set and evolves with the toolchain; a hand-rolled copy (or a copy-paste from another repo) drifts, which is why this repository deliberately ships no `.gitignore` template. Regenerate after major SDK upgrades; keep any repo-specific additions in a clearly marked block at the bottom so regeneration is a safe overwrite-above-the-line. ([Microsoft Learn: dotnet new gitignore](https://learn.microsoft.com/dotnet/core/tools/dotnet-new-sdk-templates))
+- **Generate `.gitignore` with `dotnet new gitignore` — don't hand-maintain one.** The SDK template is the canonical .NET ignore set and evolves with the toolchain; a hand-rolled copy (or a copy-paste from another repo) drifts, which is why this repository deliberately ships no `.gitignore` template. Regenerate after major SDK upgrades; keep any repo-specific additions in a clearly marked block at the bottom so regeneration is a safe overwrite-above-the-line — `.dotnet/` from an `sdk.paths` install is exactly such an addition. ([Microsoft Learn: dotnet new gitignore](https://learn.microsoft.com/dotnet/core/tools/dotnet-new-sdk-templates))
 
 ## .editorconfig
 
