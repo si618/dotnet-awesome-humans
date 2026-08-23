@@ -41,7 +41,7 @@ public static class OrderExtensions
 }
 ```
 
-Callers are unchanged (`order.Total`), so migrate opportunistically — whenever you touch an extension class, convert it. ([Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14))
+Reach for an extension member when the operation is a pure query or transform over a type you don't own, or over one you own and want to keep as a plain data holder — validation, formatting and mapping stay outside the entity. Use the property form when the member reads as a fact about the instance rather than an action: `IsEmpty` and `WordCount` were awkward as calls and read naturally as properties. Converting a method to a property breaks every call site, so do it while they are already in hand. ([Introducing C# 14](https://devblogs.microsoft.com/dotnet/introducing-csharp-14/), [What's new in C# 14](https://learn.microsoft.com/dotnet/csharp/whats-new/csharp-14))
 
 ### The `field` keyword
 

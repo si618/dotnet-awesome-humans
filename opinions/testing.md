@@ -27,21 +27,20 @@ Tests are first-class code: same review bar, same conventions.
     <PropertyGroup>
       <TargetFramework>net10.0</TargetFramework>
       <Nullable>enable</Nullable>
-      <ImplicitUsings>enable</ImplicitUsings>
       <OutputType>Exe</OutputType>
       <UseMicrosoftTestingPlatformRunner>true</UseMicrosoftTestingPlatformRunner>
     </PropertyGroup>
     <ItemGroup>
-      <PackageReference Include="xunit.v3" Version="4.0.0" />
+      <PackageReference Include="xunit.v3" />
     </ItemGroup>
   </Project>
   ```
 
-  No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP. Do not pin `Microsoft.Testing.Platform` yourself either: xunit.v3 4.0.0 dropped MTP v1 and brings its own v2, and a separate pin overrides it (via transitive pinning under CPM) into a runtime `TypeLoadException`.
+  The reference carries no version: central package management is mandatory (see [project-structure.md](project-structure.md)), so the pin lives in [templates/Directory.Packages.props](../templates/Directory.Packages.props). No `Microsoft.NET.Test.Sdk` reference — that is the VSTest world; the `xunit.v3` package is self-sufficient under MTP. Do not pin `Microsoft.Testing.Platform` yourself either: xunit.v3 4.0.0 dropped MTP v1 and brings its own v2, and a separate pin overrides it (via transitive pinning under CPM) into a runtime `TypeLoadException`.
 
 ## Naming and structure
 
-- **House:** name tests `UnitOfWork_Scenario_ExpectedBehavior` and structure bodies with explicit Arrange / Act / Assert comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
+- **House:** name tests `UnitOfWork_Scenario_ExpectedBehaviour` and structure bodies with explicit Arrange / Act / Assert comments. ([HOUSE-OPINIONS.md](../HOUSE-OPINIONS.md))
 
   ```csharp
   public class BasketTests
