@@ -56,24 +56,18 @@ Template files carry the same fields in a first-line comment header instead — 
 
 Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained writing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
-How a source gets in, and what its tier lets it do (orientation only — the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
+How a source gets in, and what its standing lets it do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
 ```mermaid
-flowchart LR
-    candidate["Candidate source"] --> vet["vet-source"]
-    vet -->|"all four criteria,<br>5+ years"| tier1["Tier 1"]
-    vet -->|"2–5 years, or capped<br>on independence"| tier2["Tier 2"]
-    vet -->|"track record still forming,<br>or previously strong, now dormant"| watch["Watch list"]
-    vet -->|"otherwise"| declined["Declined"]
-    watch -->|"blocker clears"| vet
-    tier1 -->|"gone dormant,<br>quality dropped"| vet
-    tier2 -->|"gone dormant,<br>quality dropped"| vet
-    tier1 --> cite["citable in an opinion's sources:"]
-    tier2 --> cite
-    tier1 -.->|"rows marked Discovery-only:<br>leads only — CI rejects citation"| discovery["discovery + cross-checking"]
-    cite -.->|"rows marked Corroborate:<br>never the only citation"| cite
-    watch -.-> discovery
+flowchart TD
+    candidate["Candidate source"] --> vet{"vet-source"}
+    vet -->|"5+ years, all four criteria"| tier1["Tier 1: citable"]
+    vet -->|"2–5 years, or independence cap"| tier2["Tier 2: citable"]
+    vet -->|"under 2 years, or dormant"| watch["Watch list: leads only"]
+    vet -->|"otherwise"| declined["Declined: off the roster"]
 ```
+
+Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. Two markings in a roster row's Notes narrow citation at either tier: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at.
 
 ### House opinions
 
@@ -142,15 +136,15 @@ They are built for a cost-aware split: cheaper worker agents fan out across the 
 Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request: a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only; the two `SKILL.md` files are canonical):
 
 ```mermaid
-flowchart LR
-    research["research-topic"] -->|"PR"| staged["research/{topic}.md"]
-    staged --> resolve["resolve-research"]
-    resolve -->|"promote"| woven["woven into opinions/<br>and templates/"]
-    resolve -->|"discard"| deleted["file deleted"]
-    woven -->|"same PR"| deleted
-    resolve -->|"partial promotion"| remainder["blocked remainder<br>stays staged"]
-    remainder -.->|"vet-source clears it,<br>or discard"| resolve
+flowchart TD
+    research["research-topic"] -->|"pull request"| staged["research/{topic}.md"]
+    staged --> resolve{"resolve-research"}
+    resolve -->|"promote"| woven["Opinions and templates updated"]
+    resolve -->|"discard"| dropped["Nothing woven"]
+    resolve -->|"partial promotion"| remainder["Blocked remainder stays staged"]
 ```
+
+A blocked remainder goes back through `resolve-research` once `vet-source` clears the source it was waiting on, or is discarded.
 
 ### Release watch automation
 
