@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-21
-last-used: 2026-08-20
+last-reviewed: 2026-09-02
+last-used: 2026-09-02
 sources: [ms-learn, meziantou, andrew-lock, house]
 ---
 
@@ -70,6 +70,53 @@ Tests are first-class code: same review bar, same conventions.
 ## Deterministic time
 
 - **Test time-dependent code through an injected `TimeProvider` with `FakeTimeProvider` (`Microsoft.Extensions.TimeProvider.Testing`), never with `Thread.Sleep` or the real clock.** How to drive it, its large-`Advance` caveat, and the awkward instants worth exercising (DST gaps and overlaps, leap days, ISO-week year boundaries) are in [datetime.md](datetime.md#testing-time) — along with the analyzer rules that already ban hand-rolled clock abstractions in this repository's templates.
+- **Give a test one clock: construct the `FakeTimeProvider` with an explicit start instant, and derive every other date in the test from it.** Fixed dates are not the problem; a test probing an awkward instant has to name it. The rule is where the literal lives: once, as the provider's start, where its choice reads as deliberate. From there, arrange with `time.GetUtcNow()`, move with `Advance`, and assert the code's time-derived outputs against `time.Start` plus the span, so the relationship between cause and expected effect is visible in the test body. Two literal dates that happen to be six minutes apart are correct today and opaque at the next review, and a hand-typed expected value silently re-encodes the arithmetic the code under test is supposed to be doing. The two constructor overloads that quietly break this rule are in [datetime.md](datetime.md#testing-time). ([Andrew Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/) for `Advance` and `GetUtcNow`)
+
+  Before: two unrelated literals, and the reader diffs them to learn the test's intent.
+
+  ```csharp
+  public class TokenValidatorTests
+  {
+      [Fact]
+      public void IsExpired_LifetimeElapsed_ReturnsTrue()
+      {
+          // Arrange
+          var token = new Token(issuedAt: new DateTimeOffset(2026, 10, 25, 0, 57, 0, TimeSpan.Zero), lifetime: TimeSpan.FromMinutes(5));
+          var validator = new TokenValidator(new FakeTimeProvider(new DateTimeOffset(2026, 10, 25, 1, 3, 0, TimeSpan.Zero)));
+
+          // Act
+          var expired = validator.IsExpired(token);
+
+          // Assert
+          Assert.True(expired);
+      }
+  }
+  ```
+
+  After: one clock, one deliberately chosen start, and the elapsed time is the test. The start sits six minutes before the EU fall-back in a zone that observes it, so the local wall clock runs from 02:57 CEST back to 02:03 CET while only six minutes elapse: a validator that compared wall-clock times would call the token unexpired, and this test would catch it.
+
+  ```csharp
+  public class TokenValidatorTests
+  {
+      [Fact]
+      public void IsExpired_LifetimeElapsedAcrossFallBack_ReturnsTrue()
+      {
+          // Arrange
+          var time = new FakeTimeProvider(new DateTimeOffset(2026, 10, 25, 0, 57, 0, TimeSpan.Zero));
+          time.SetLocalTimeZone(TimeZoneInfo.FindSystemTimeZoneById("Europe/Paris"));
+          var lifetime = TimeSpan.FromMinutes(5);
+          var token = new Token(issuedAt: time.GetUtcNow(), lifetime);
+          var validator = new TokenValidator(time);
+
+          // Act
+          time.Advance(TimeSpan.FromMinutes(6));
+
+          // Assert
+          Assert.Equal(time.Start.Add(lifetime), token.ExpiresAt);
+          Assert.True(validator.IsExpired(token));
+      }
+  }
+  ```
 
 ## Output and scale
 
