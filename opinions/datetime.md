@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-21
-last-used: 2026-08-21
+last-reviewed: 2026-09-02
+last-used: 2026-09-02
 sources: [ms-learn, dotnet-blog, jon-skeet, meziantou, andrew-lock]
 ---
 
@@ -82,6 +82,8 @@ This is enforced, not aspirational — but the enforcement is a pair, not one fi
 ## Testing time
 
 **Use `FakeTimeProvider` from `Microsoft.Extensions.TimeProvider.Testing` — set a start instant, advance manually with `Advance(TimeSpan)`, and timers created from it fire as time moves** — which is what makes retry, backoff, and scheduling logic testable without `Thread.Sleep`. One caveat: a single large `Advance` fires every elapsed callback at the boundary rather than spread out, so tests asserting interleaving should step time in small increments. ([Lock: Avoiding flaky tests with TimeProvider and ITimer](https://andrewlock.net/exploring-the-dotnet-8-preview-avoiding-flaky-tests-with-timeprovider-and-itimer/))
+
+Two constructor overloads undermine the start instant. The parameterless one starts at midnight on 2000-01-01 UTC, a hardcoded date the test never states; it is tolerable only for a test that would pass at any instant, and even then naming a start costs one line and says so. Passing `DateTimeOffset.UtcNow` as the start reintroduces the real clock, so the test's dates change on every run and a DST or month boundary is crossed by luck. ([Microsoft Learn: FakeTimeProvider constructors](https://learn.microsoft.com/dotnet/api/microsoft.extensions.time.testing.faketimeprovider.-ctor)) [testing.md](testing.md#deterministic-time) has the one-clock rule this serves.
 
 For date-sensitive logic, exercise the awkward instants deliberately: a DST spring-forward gap (a local time that does not exist), a fall-back overlap (a local time that happens twice), a leap day, and a year boundary that splits calendar year from ISO week year — 2022-01-02 is in week 52 of 2021. ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) See [testing.md](testing.md) for the framework stack this slots into.
 
