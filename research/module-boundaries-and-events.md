@@ -1,9 +1,10 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-04
+last-reviewed: 2026-09-10
 sources:
   [
     ms-learn,
+    ardalis,
     mark-seemann,
     jeremy-miller,
     oskar-dudycz,
@@ -16,25 +17,30 @@ sources:
 
 Research for the open TODO in [architecture.md](../opinions/architecture.md), which asks for corroboration from an independent Tier 1 source and then three extensions: messaging between modules, transactional boundaries, and when a module has earned a process boundary. Event sourcing and event-driven architecture sit in the same topic because the three extensions all reach for them.
 
-This is the second pass. The first, on 2026-08-24, had one independent source and reported that half the TODO was blocked. The roster admitted four sources on 2026-09-03 in response, and this pass sweeps all four.
+This is the third pass. The first, on 2026-08-24, had one independent source and reported that half the TODO was blocked. The second, on 2026-09-04, swept the four sources admitted on 2026-09-03 and found they split the five opinions rather than confirming the file. This pass sweeps `ardalis`, admitted 2026-09-10, and it lands on the two opinions the second pass left least settled.
 
-**The independent corroboration the TODO asked for now exists, and it does not confirm what the file assumed it would.** `mark-seemann` corroborates the boundary and coupling reasoning, says nothing at all about event mechanics, and contradicts the fourth opinion outright. Two of the other three admissions do corroborate the slice opinions, but they co-maintain the same product and so cannot count as two voices. And the modular-monolith-first claim, which the first pass recorded as the settled half, rests on a page that pass misdated by five years.
+**The headline is that the disagreement over layering was smaller than it looked, because one side of it was a single author quoted twice.** The second pass weighed `ms-learn`, which prescribes layering solution-wide, against `mark-seemann` and `jeremy-miller`, who reject the application layer. The `ms-learn` page making that case is written by `ardalis`, and admitting him puts both citations under one name. He has also moved: the 2021 article gives an unqualified three-project prescription, and by 2024 he is calling Clean Architecture one option among several, denying that it delivers modularity at all, and shipping a second template that organises by vertical slice.
 
-Discharging the TODO therefore means rewording three of the five opinions, not appending citations to them. On the three extensions the material is now strong enough to write opinions from. On event sourcing the answer is a firm "rarely, per module, and never by default", and it is the one claim in this topic that four sources reach independently.
+That reverses the second pass's verdict on the fourth opinion. It reported that no source swept held the position; the position now has partial support from the architect most identified with the pattern it names. The recommended rewrite is unchanged, and it is now positively corroborated rather than merely unopposed.
+
+The pass also closes the commands-versus-events gap that the second pass left open for want of a third voice, and adds the first concrete, code-level enforcement rule for a module boundary that this topic has found.
 
 ## Sources swept
 
-| id                | Tier                          | Used for                                                                                 |
-| ----------------- | ----------------------------- | ---------------------------------------------------------------------------------------- |
-| `ms-learn`        | 1, independent                | Corroboration, transactional boundaries, process boundaries, idempotency, event sourcing |
-| `mark-seemann`    | 1, independent, unmarked      | Boundary explicitness, module contracts, coupling, layering                              |
-| `jeremy-miller`   | 1, **Corroborate.**           | Modular monolith criteria, vertical slices, outbox, event sourcing scope                 |
-| `oskar-dudycz`    | 1, **Corroborate.**           | Slices and modules, internal and external events, event sourcing scope, cutting services |
-| `derek-comartin`  | 1, **Corroborate.**           | Boundary ownership, commands versus events, the cost of decoupling                       |
-| `milan-jovanovic` | 1, conflict of interest noted | Module communication patterns, event sourcing framing (carried from the first pass)      |
-| `andrew-lock`     | 1, independent                | Swept 2026-08-24, nothing on this ground (negative result, recorded below)               |
+| id                | Tier                                                                       | Used for                                                                                   |
+| ----------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `ms-learn`        | 1, independent _except_ on the architecture e-book, which `ardalis` writes | Corroboration, transactional boundaries, process boundaries, idempotency, event sourcing   |
+| `ardalis`         | 1, **Corroborate.**                                                        | Layering scope, boundary enforcement in EF Core, command and event ownership, Conway's Law |
+| `mark-seemann`    | 1, independent, unmarked                                                   | Boundary explicitness, module contracts, coupling, layering                                |
+| `jeremy-miller`   | 1, **Corroborate.**                                                        | Modular monolith criteria, vertical slices, outbox, event sourcing scope                   |
+| `oskar-dudycz`    | 1, **Corroborate.**                                                        | Slices and modules, internal and external events, event sourcing scope, cutting services   |
+| `derek-comartin`  | 1, **Corroborate.**                                                        | Boundary ownership, commands versus events, the cost of decoupling                         |
+| `milan-jovanovic` | 1, conflict of interest noted                                              | Module communication patterns, event sourcing framing (carried from the first pass)        |
+| `andrew-lock`     | 1, independent                                                             | Swept 2026-08-24, nothing on this ground (negative result, recorded below)                 |
 
 `jimmy-bogard` and `kamil-grzybek` remain unvetted and no claim here rests on them. Their status is settled in item 4 at the end.
+
+The `ardalis` id covers three properties and they are not of equal weight. The blog is dated and citable. [DevIQ](https://deviq.com/) is reference-grade on taxonomy but shows no date to a reader at all, which the [Freshness](#freshness) section takes up. The Clean Architecture template documentation shows no date either and is the weakest of the three.
 
 ## 1. Corroboration, opinion by opinion
 
@@ -64,7 +70,13 @@ That is a recommendation to enforce module boundaries physically, at the package
 
 His diagnosis of why old monoliths hurt is worth recording, because it does not blame the monolith: the pain came from "The usage of prescriptive architectures like Clean Architecture or Onion Architecture solution templates". That is an argument for the first opinion by way of contradicting the fourth.
 
-**What to do with it.** The opinion holds. The confidence should come down. The honest form is that a modular monolith is the cheaper default because the process boundary is reversible and the module boundary is not, rather than that the industry has settled on it.
+`ardalis` is the fourth voice and the warmest, but he argues the migration rather than the default. His case is aimed at teams already in trouble: "What do you do when you find yourself in microservice hell?" The answer is to "Migrate to a modular monolith", keeping modularity while avoiding "the fallacies of distributed computing, such as network latency, bandwidth, and failure". ([Ardalis: From Microservices to Modular Monoliths](https://ardalis.com/from-microservices-to-modular-monoliths/), 2024-07-10). The post is three minutes long, carries no migration guidance despite its title, and closes on a course discount code, so it is the argument that is citable rather than the substance.
+
+Where he does address greenfield choice he makes it conditional, listing a small-to-medium team, an early-stage project, a well-understood domain with uncertain future scale, or an escape from a big ball of mud. ([Ardalis: Introducing Modular Monoliths: The Goldilocks Architecture](https://ardalis.com/introducing-modular-monoliths-goldilocks-architecture/), 2024-02-21). The same post names the outcome worth avoiding: the distributed monolith "has all of the disadvantages of microservices (complexity, cost) as well as all the disadvantages of a monolith (many dependencies, difficulty making changes). It's the worst of all worlds and should be avoided if at all possible."
+
+He also supplies the clearest counter-signal in the sweep, and it is not about technology. Reading Conway's Law forward, he argues the decomposition should follow the organisation: microservices "map very well to bounded contexts", and "if these teams aren't aligned with the software modules you're building and shipping, you're going to have problems". ([Ardalis: Conway's Law, DDD, and Microservices](https://ardalis.com/conways-law-ddd-and-microservices/), 2020-08-26). On that reading a single team is the thing that makes a monolith right, and the opinion is a claim about team size wearing architectural clothing.
+
+**What to do with it.** The opinion holds. The confidence should come down. The honest form is that a modular monolith is the cheaper default because the process boundary is reversible and the module boundary is not, rather than that the industry has settled on it. Four of the five sources state it conditionally, and the conditions they give are about team and organisation more than about code.
 
 ### "Organise the inside of a module as vertical slices"
 
@@ -82,7 +94,11 @@ His diagnosis of why old monoliths hurt is worth recording, because it does not 
 
 Two sentences later in the same post he names the structure that code sits in, and it is not slices: "the architecture is Ports and Adapters, or, if you will, Clean Architecture." Across 832 posts he never uses the capitalised term "Vertical Slice Architecture".
 
-**What to do with it.** The opinion holds, on `jeremy-miller` and `oskar-dudycz`, both marked **Corroborate.** and so admissible only together. The file should stop implying the framing is uncontested, because the one unmarked source in the sweep reads the same word as a delivery process.
+`ardalis` treats it as a named architecture style and gives it equal billing with the one he is known for. DevIQ's architecture index lists Clean Architecture and Vertical Slice Architecture as sibling styles, and he ships a template built on the second: the Minimal Clean Architecture template "maintains the core principles of Clean Architecture—separation of concerns, dependency inversion, and testability—while reducing complexity through a single-project Vertical Slice Architecture (VSA)", organised "by feature rather than technical layer". ([Ardalis: Minimal Clean Architecture](https://ardalis.github.io/CleanArchitecture/minimal-clean-architecture/), no date shown)
+
+He is also the earliest voice on the term in this sweep, using it in 2012 for splitting user stories rather than arranging code. ([Ardalis: Stories Too Big — Vertical Slices](https://ardalis.com/stories-too-big--vertical-slices/), 2012-02-01). That is `mark-seemann`'s reading, not `jeremy-miller`'s, which is worth noticing: the delivery sense of the term is the older one and the code-organisation sense grew out of it.
+
+**What to do with it.** The opinion holds, and it now has three marked sources plus a template rather than two marked sources. The file should still stop implying the framing is uncontested, because the one unmarked source in the sweep reads the same word as a delivery process, and because that reading came first.
 
 ### "Vertical slices are not modules"
 
@@ -94,13 +110,21 @@ Two sentences later in the same post he names the structure that code sits in, a
 
 `derek-comartin` supplies the ownership test that makes a module a module: "Logical boundaries are all about ownership. Who owns the data? Who owns the business rules? Who owns the invariants you need to enforce?" ([Comartin: Modular Monolith Boundaries Done Wrong](https://codeopinion.com/modular-monolith-boundaries/), 2026-06-02). His enforcement test is the query log rather than the namespace: "Your code might say Sales and Warehouse. But what do your queries say?" ([Comartin: Stop Joining Tables In Your "Modular" Monolith](https://codeopinion.com/stop-joining-tables-in-your-modular-monolith/), 2026-05-27)
 
-**What to do with it.** Keep the opinion and add the persistence rule. Schema per module, not per slice, is the concrete form of the boundary and it is testable.
+**`ardalis` supplies the enforcement rule, and it is the first thing in this topic that a reviewer can check line by line.** Asked how to map an Entity Framework relationship to an entity in another module, his answer is that you do not: "don't use navigation properties for entities that live outside your module. Instead always just use keys". The reframing he offers is the useful part, because it generalises past EF Core:
+
+> Imagine instead that the data owned by other modules is outside not just that module but outside your organization.
+
+He states the rule for both units the opinion separates: "data that is outside of an aggregate or module should only be referenced using its key or ID, not as a navigation property". Where local access is genuinely needed, the escape is a Materialized View kept as "essentially a read-only cache", synchronised by events, and "If you need to make changes, send a command to the module that owns that data." ([Ardalis: Modeling Navigation Properties Between Aggregates or Modules](https://ardalis.com/navigation-properties-between-aggregates-modules/), 2024-06-19)
+
+This is the same boundary `derek-comartin` polices from the query log, one level earlier: a navigation property is how the cross-module join gets written in the first place. It carries real code, which almost nothing else in this topic does, and the code is a mapping the reader either has or has not written.
+
+**What to do with it.** Keep the opinion and add two rules under it. Schema per module, not per slice, is the concrete form of the boundary and it is testable. Reference other modules by key and never by navigation property is the form a reviewer can enforce in Entity Framework configuration, with the materialised view as the named exception and a command as the only write path back.
 
 ### "Apply Clean Architecture per slice, not per solution"
 
-**Contradicted from both directions. No source in the sweep holds this position.**
+**Partly corroborated, after the second pass reported it contradicted from both directions with no source holding it. The change is `ardalis`, and it comes with a caveat about who was being counted.**
 
-`ms-learn` contradicts it upward, prescribing the layering solution-wide and calling that arrangement "the most appropriate way to structure non-trivial monolithic applications".
+`ms-learn` contradicts it upward, prescribing the layering solution-wide and calling that arrangement "the most appropriate way to structure non-trivial monolithic applications". That page is written by `ardalis`, so it is not a second voice beside him; it is his 2021 position under a Microsoft masthead.
 
 The two new architecture sources contradict it downward, arguing the layering should not be applied at either scale. `mark-seemann` is the more absolute, and this is his most recent statement on layering:
 
@@ -114,7 +138,19 @@ He also denies that the named architectures are distinct things to choose betwee
 
 He also names the runtime cost, which is the strongest form of the argument because it is observable rather than aesthetic: "Big call stacks of a controller calling a mediator tool that calls one service that calls other services that call different repository abstractions that all make database queries is a common source of chattiness because it's hard to even see where all the chattiness is coming from by reading the code." ([Miller: Network Round Trips are Evil](https://jeremydmiller.com/2024/07/08/network-round-trips-are-evil/), 2024-07-08)
 
-**What to do with it.** The headline claim is unsupported and should go. The body of the opinion survives, because what the body actually says is "layering is worth paying for where domain rules must stay independent of infrastructure, and pure ceremony elsewhere". Both sources would accept that; neither would accept "apply Clean Architecture per slice" as the way to say it. Rewrite the opinion to lead with the conditional and drop the pattern name from the headline.
+**`ardalis` is the source that moves this opinion, and he moves it by conceding most of the case against the pattern he is identified with.** His 2021 position is the unqualified one: "there are basically three projects: Core, Infrastructure, and Web", and "Some might argue that this is over-engineered but the end result is typically just 3 projects and I've never found that to be too many for any application of non-trivial complexity." ([Ardalis: Clean Architecture with ASP.NET Core](https://ardalis.com/clean-architecture-asp-net-core/), 2021-11-30). Vertical slices are not mentioned on that page.
+
+By 2024 he has narrowed the claim to almost exactly the conditional this repository's opinion body already contains:
+
+> Clean Architecture, aka Ports-and-Adapters, has a primary goal of reducing tight coupling from the business rules of the system to infrastructure, and in particular, the database. That's it. It's not a panacea and it doesn't offer feature modularity - you need modular monoliths or microservices for that.
+
+He then sets out three tiers by application, not one prescription: applications needing almost no architecture, applications that "benefit from minimal structure and just pipelines and handlers (often referred to as Vertical Slice Architecture)", and applications that "benefit from ports-and-adapters (aka hexagonal, onion, or clean architecture) style architecture, where a significant goal is to shield business logic from persistence and other infrastructure concerns". He closes: "There are no one-size-fits-all architectures". ([Ardalis: Clean Architecture Sucks](https://ardalis.com/clean-architecture-sucks/), 2024-05-23)
+
+Two things follow. First, "aka Ports-and-Adapters" is `mark-seemann`'s identity claim in the mouth of the pattern's leading .NET advocate. The two sources most opposed on whether to apply the layering agree that the named architectures are one thing, which removes the last reason to put a pattern name in a headline. Second, the template line now forks on scale, with the minimal template organising by feature and the full one by layer, and the guidance "Not sure? Start with Minimal Clean and migrate to Full Clean Architecture if your application grows in complexity."
+
+What he does not say is the repository's headline. The fork is one architecture per application chosen by complexity, never layers applied inside each slice of one application. The nearest he comes to the repository's instinct is a concession about services rather than layers: "Ok so if it's literally just CRUD, a service is perhaps overkill." ([Ardalis: Should Controllers Reference Repositories or Services?](https://ardalis.com/should-controllers-reference-repositories-services/), 2021-09-14, updated 2023-10-13)
+
+**What to do with it.** The headline claim is still unsupported and should still go, and the recommendation from the second pass is unchanged. What has changed is its footing. It is no longer a rewrite forced by two critics over the objection of the documentation; it is the position the pattern's own advocate now argues, in his own words, against the documentation page he wrote five years ago. Lead with the conditional, drop the pattern name from the headline, and state the choice as one architecture per application selected by complexity, with the per-slice framing dropped rather than softened.
 
 ### "Let the folder structure name the feature, not the pattern"
 
@@ -124,7 +160,7 @@ He also names the runtime cost, which is the strongest form of the argument beca
 
 `oskar-dudycz` reaches the same rule from the slice definition: "a slice is more a function than an entity" (2026-08-10).
 
-Verbs over nouns and functions over entities are the same claim. Both sources are marked **Corroborate.**, so together they can carry the opinion, subject to the independence problem in item 2 below.
+Verbs over nouns and functions over entities are the same claim. Both sources are marked **Corroborate.**, so they cannot carry the opinion between them: the roster rule wants something unmarked standing beside them, and the second pass recorded this the wrong way round. The problem is compounded by item 2 below, since these two are the pair that co-maintain Marten and so amount to one voice as well as two markings.
 
 ### Negative result worth keeping
 
@@ -193,6 +229,21 @@ The framing that follows is the one worth carrying into an opinion: "Events shou
 
 These are reconcilable and the reconciliation is the useful part. Comartin is arguing against a module telling another module what to do. Dudycz is arguing against dressing a command up as an event to look decoupled while keeping a single known consumer and an expected reply. The shared rule underneath: the message type should match the actual coupling, and publishing an event to one known consumer that must answer is a command with extra steps. See [Where the sources disagree](#where-the-sources-disagree) for how to weigh them.
 
+### Who owns a message, which settles the commands-versus-events split
+
+The second pass recorded `derek-comartin` and `oskar-dudycz` disagreeing about commands across boundaries and noted that both are marked, so neither could carry an opinion. `ardalis` is the third voice, and he does better than break the tie: he supplies the structural rule the other two are each applying from one end.
+
+> Command messages involve one handler, many potential senders.
+> Event messages involve one sender, many potential recipients.
+
+From that he derives ownership: "The owner of the contract is the end of the communication channel that has one, not the side that has many." So handlers own commands and senders own events, and the reason is that no one of many consumers can be allowed to set a format the others depend on. ([Ardalis: Commands, Events, Versions, and Owners](https://ardalis.com/commands-events-versions-and-owners/), 2022-05-04)
+
+DevIQ states the consequence for the receiving end: "Unlike commands, events can have 0 to many handlers, and should not return a result." ([DevIQ: Domain Events Pattern](https://deviq.com/design-patterns/domain-events-pattern/), no date shown)
+
+This adjudicates the split rather than averaging it. `oskar-dudycz`'s audit test, that an event with one known consumer expecting a reply was always a command, is the cardinality rule read backwards: one recipient plus a return value is a command's shape. `derek-comartin`'s rule, publish an event rather than direct another module, is the same rule read forwards. Both were right about their own direction, and the cardinality is what makes them one rule.
+
+**One caveat on reach.** The post is written about distributed systems and explicitly makes each application "its own bounded context". Applying it to modules inside one process is a read across a boundary the source did not write for, the same caution this file already applies to the `ms-learn` microservices e-book. The cardinality argument survives the move because it is about contracts rather than transport, but say so when citing it.
+
 ### The limit of the whole approach
 
 `derek-comartin` supplies the caveat the repository should carry alongside any messaging opinion, because it is the one thing every vendor-adjacent source omits: "Event-driven architecture isn't some magical silver bullet that removes coupling; it doesn't." ([Comartin: Event-Driven Architecture lost its way](https://codeopinion.com/event-driven-architecture-lost-its-way/), 2024-03-07). And on the accounting: "You did not change the amount of complexity in the business process. You moved the complexity somewhere else." ([Comartin: Decoupling in Software Architecture Moves Complexity](https://codeopinion.com/decoupling-in-software-architecture-moves-complexity/), 2026-08-06)
@@ -224,6 +275,10 @@ public async Task<bool> SaveEntitiesAsync(CancellationToken cancellationToken = 
 ```
 
 The sample keeps the eShopOnContainers shape. `DispatchDomainEventsAsync` is a hand-rolled extension method in that repository rather than a MediatR API, and `architecture.md` still treats mediator libraries as unsourced, so the dispatch call is the mechanism to copy rather than the library. `ms-learn` names the cost of the other choice plainly: "if there's an issue and the event handlers cannot commit their side effects, you'll have inconsistencies between aggregates", recoverable only by storing the events and running a reconciliation batch.
+
+**`ardalis` gives the two choices names, and the vocabulary is worth taking even though his default is the riskier one.** He distinguishes pre-persistence from post-persistence domain events, and DevIQ carries the same split as a section: pre-persistence events "are typically triggered and resolved immediately", while post-persistence events "are typically queued up on the triggering entity, and then once the entity has been saved, the events are dispatched. This ensures the events are only handled once the state change has been persisted." ([DevIQ: Domain Events Pattern](https://deviq.com/design-patterns/domain-events-pattern/), no date shown; [Ardalis: Immediate Domain Event Salvation with MediatR](https://ardalis.com/immediate-domain-event-salvation-with-mediatr/), 2020-07-08)
+
+That is the `ms-learn` deferred-versus-after distinction with better names, and the names are the citable part. The implementations are not. His Clean Architecture template dispatches post-persistence, which is the side that owes the system an outbox and does not have one, and the 2020 post's pre-persistence sample reaches for a static `[ThreadStatic]` mediator holder called from inside an entity with `.Wait()` on an async publish. Cite the pre-persistence and post-persistence terms; cite nothing from the sample.
 
 **`jeremy-miller` supplies the objection to this exact pattern, and it is the one the repository needs to hear.** He describes the classic .NET domain-events implementation, an entity base class collecting events dispatched through a mediator on `SaveChangesAsync`, and then says: "I have always hated this Domain Events pattern and much prefer the full 'Critter Stack' approach with the Decider pattern and event sourcing." ([Miller: "Classic" .NET Domain Events with Wolverine and EF Core](https://jeremydmiller.com/2025/12/04/classic-net-domain-events-with-wolverine-and-ef-core/), 2025-12-04)
 
@@ -286,6 +341,10 @@ His planning stance is Citadel and Outpost, which he credits to Glenn Henriksen 
 
 **The cheapest predictor is already within reach.** A module that talks to its neighbours only through asynchronous messages can be extracted without rewriting its communication, which is `milan-jovanovic`'s stated reason for preferring messaging early: such modules are "much easier" to migrate. A module reached by direct interface calls has not been prepared, and extracting it is a rewrite rather than a move. `mark-seemann`'s async-contagion argument is the same point made structurally: if the boundary was never hideable, moving it costs nothing at the call sites.
 
+**From `ardalis`, the criterion none of the other four give, and it is not about the software.** Conway's Law read as a design constraint puts team structure ahead of module structure: "It would be unusual, and probably inefficient, to have a microservice that any number of different teams all share responsibility for maintaining and deploying", and "How you decompose and attach a large problem comes down to how you organize multiple teams of people, and if these teams aren't aligned with the software modules you're building and shipping, you're going to have problems." (2020-08-26)
+
+The practical form is a question no metric answers: does a separate team own this module? A process boundary between two modules one team ships together buys deployment independence nobody will use and costs a network hop everybody pays. This is the criterion most likely to be missing from a repository opinion written from code alone, and it belongs beside the chattiness and co-change tests rather than under them.
+
 `mark-seemann` also supplies the warning about what happens when the boundary is drawn without autonomy: "Many organizations inadvertently create distributed monoliths. I think that this often stems from a failure of heeding the tenet that services are autonomous." ([Seemann: Services are autonomous](https://blog.ploeh.dk/2024/03/25/services-are-autonomous/), 2024-03-25)
 
 ## 5. Event sourcing and event-driven architecture
@@ -325,13 +384,21 @@ Two details are commonly got wrong and worth keeping:
 - **An event store is not a broker.** `ms-learn`: "Message brokers such as Apache Kafka typically lack per-entity stream queries and optimistic concurrency. They work well as a distribution layer [...] but they aren't a substitute for an event store." `oskar-dudycz` says it independently and more bluntly: "It's a common mistake to use tools like Kafka and Pulsar for event stores, but they are not." ([Dudycz: Event Streaming is not Event Sourcing!](https://event-driven.io/en/event_streaming_is_not_event_sourcing/), 2021-12-01). `jeremy-miller` uses the same shape from the other side, framing Kafka as a downstream relay out of an event store rather than an alternative to one. This is corroboration across a real independence line, Microsoft and Dudycz, and it is the safest claim in the section.
 - **Design events for intent, not for resulting state.** `ms-learn`: "an event that records _two seats were reserved_ is more valuable than an event that records _remaining seats changed to 42_." State-shaped events "reduce the event store to a change log that has no business meaning".
 
-**Negative results across the whole sweep, which are load-bearing for what stays unsourced.** No source swept treats sagas as a design question of choreography versus orchestration. Event granularity and event-carried state transfer are covered by `oskar-dudycz` alone, in the internal-and-external post above, and he is marked **Corroborate.** and writing about tooling he maintains, so that material cannot carry an opinion until something corroborates it. `mark-seemann` has no post on domain events, integration events, the outbox, idempotency or event sourcing at all: across 832 posts on the current blog, the only event-store entry is a library of his own from 2014, and the messaging posts date from 2011 to 2013. `jeremy-miller` has no idempotent-consumer essay; his outbox writing is producer-side. `derek-comartin` has no dedicated domain-versus-integration-events post and none on when not to use CQRS.
+**`ardalis` adds a fifth voice to the caution by omission rather than by argument.** DevIQ carries no event sourcing entry. It is absent from the architecture index, the domain-driven-design index and the design-patterns list alike, and the whole of its coverage is one paragraph inside the CQRS entry describing it as an optional companion: "Event Sourcing is often combined with CQRS, though it's certainly not a prerequisite for using CQRS in your application." ([DevIQ: CQRS Pattern](https://deviq.com/design-patterns/cqrs-pattern/), no date shown)
+
+An absence is weak evidence and it is not a claim that he opposes the pattern. It is worth one line because of what DevIQ is: a 255-page taxonomy of patterns, antipatterns and principles that does cover CQRS, domain events and event aggregators. A reference site of that shape omitting event sourcing entirely is consistent with the four sources that do argue it, and with none of the sources that treat it as a default. DevIQ also has no integration events entry and no microservices entry, which weakens it as the map of what to cover on precisely this topic.
+
+**Negative results across the whole sweep, which are load-bearing for what stays unsourced.** No source swept treats sagas as a design question of choreography versus orchestration. Event granularity is covered by `oskar-dudycz` alone, in the internal-and-external post above, and he is marked **Corroborate.** and writing about tooling he maintains, so that material cannot carry an opinion until something corroborates it. Event-carried state transfer is no longer single-sourced: `ardalis` reaches the same mechanism from the data side, recommending a materialised view of another module's data "synchronized using events" as the escape from a cross-module join. That is a second voice on the mechanism, though both are marked and neither names the pattern, so it corroborates the technique without yet supplying the vocabulary. `mark-seemann` has no post on domain events, integration events, the outbox, idempotency or event sourcing at all: across 832 posts on the current blog, the only event-store entry is a library of his own from 2014, and the messaging posts date from 2011 to 2013. `jeremy-miller` has no idempotent-consumer essay; his outbox writing is producer-side. `derek-comartin` has no dedicated domain-versus-integration-events post and none on when not to use CQRS.
 
 ## Where the sources disagree
 
-**Layering: solution-wide, per slice, or not at all.** `ms-learn` prescribes it solution-wide and calls that "the most appropriate way to structure non-trivial monolithic applications". `architecture.md` says per slice. `mark-seemann` and `jeremy-miller` say the distinction between the named layered architectures is not real and the application layer should not exist.
+**Layering: solution-wide, per slice, or not at all. This is the entry the third pass rewrites, because one side of it turned out to be smaller than it was counted.**
 
-Weighing them: the `ms-learn` page is 2021 text descending from a 2018 e-book, authored by the maintainer of the Clean Architecture solution template it links to, and it is describing a monolith that has not been modularised, where layers are the only boundary available. It is not addressing a codebase whose modules already do the encapsulation. **Weigh towards `mark-seemann` and `jeremy-miller`** on the layering question specifically: they are more recent, one is unmarked and independent, and their criticism is of a design neither of them sells. The repository's position should be restated as the conditional it already contains in its body, and should stop naming a pattern in its headline.
+The second pass set `ms-learn` against `mark-seemann` and `jeremy-miller`. With `ardalis` admitted, the `ms-learn` page and the `ardalis` blog are one author, and the disagreement is three people rather than four voices. Worse for the old weighing, the author has since moved: the 2021 version of him prescribes three projects for anything non-trivial, and the 2024 version says Clean Architecture's goal is decoupling from infrastructure, "That's it", denies it delivers modularity, and lists vertical slices as the appropriate style for a whole class of applications.
+
+**Weigh towards `mark-seemann`, `jeremy-miller` and the later `ardalis`, which is now the same direction.** They are more recent, one is unmarked and independent, and on the identity of the named architectures the critic and the advocate agree word for word: Seemann's "Layers, Onions, Ports, Adapters: it's all the same" and Ardalis's "Clean Architecture, aka Ports-and-Adapters" are the same sentence. The `ms-learn` page holds the old position, and it is 2021 text descending from a 2018 e-book describing a monolith that has not been modularised, where layers are the only boundary available.
+
+Where they still part company is scope. Seemann and Miller would remove the application layer at any scale. The later Ardalis keeps it and chooses per application by complexity. Neither side supports applying the layering inside each slice, which is what `architecture.md` currently says, so the repository's headline loses on all three readings.
 
 **Commands across boundaries: avoid them, or insist on them.** `derek-comartin` says generally avoid crossing boundaries with commands. `oskar-dudycz` says an event with one known consumer that expects a reply should have been a command. Neither is wrong and the disagreement is about which failure is more common. Comartin is guarding against modules directing each other; Dudycz is guarding against theatre, where an event is used to look decoupled while the coupling is intact.
 
@@ -339,7 +406,7 @@ Weighing them: the `ms-learn` page is 2021 text descending from a 2018 e-book, a
 
 **Event sourcing: cautionary or enthusiastic.** `ms-learn` leads with cost. `milan-jovanovic`'s introduction leads with benefit: reconstructing state at any point, historical data already present when a feature needs it, and named use cases in e-commerce, finance and IoT. ([Jovanović: Introduction to Event Sourcing for .NET Developers](https://www.milanjovanovic.tech/blog/introduction-to-event-sourcing-for-net-developers), 2024-08-31) **Weigh towards `ms-learn`:** it is independent, its page is genuinely recent at 2026-03-27, and it enumerates the exit costs. `oskar-dudycz` settles it, because he sells the workshops and still says a well-done CRUD beats a poorly done event store.
 
-**Modular monolith: default, or fashion.** `architecture.md` and `milan-jovanovic` state it as a default. `mark-seemann` treats it as a swing of the pendulum and recommends physical package separation for teams without functional-programming discipline. `jeremy-miller` is openly dubious it is a panacea. No source in the sweep contradicts the opinion, and two decline to endorse it as stated. That is not grounds to drop it; it is grounds to state it as the cheaper reversible default rather than as consensus.
+**Modular monolith: default, or fashion.** `architecture.md` and `milan-jovanovic` state it as a default. `mark-seemann` treats it as a swing of the pendulum and recommends physical package separation for teams without functional-programming discipline. `jeremy-miller` is openly dubious it is a panacea. `ardalis` endorses it warmly but conditionally, and elsewhere argues from Conway's Law that team structure decides the question. No source in the sweep contradicts the opinion, and three decline to endorse it as stated. That is not grounds to drop it; it is grounds to state it as the cheaper reversible default rather than as consensus, and to name the team-shaped condition the sources keep reaching for.
 
 ## Freshness
 
@@ -358,19 +425,28 @@ The quoted field is demonstrably a build stamp: Event Sourcing and Idempotent Co
 
 **What follows from the correction.** The microservices e-book material is 2018 and 2021 text, not 2023 and 2024. The first pass's argument that age is not disqualifying still holds, because the reasoning is durable and the DDD citations it rests on are older still, but it now has to hold against 2018. Two consequences carry into any opinion: the e-book is framed for containerised microservices rather than modular monoliths, so every claim above has been read across a boundary the source did not write for; and it predates the modular monolith becoming a named pattern, which is part of why it is silent on slices. Only the two Azure Architecture Center pattern pages are genuinely current.
 
-**On the other sources.** `mark-seemann`'s layering position is 2025-04-01 and his boundary series is 2024, both within tolerance and both C#. His slice remark is 2023-09-18. `jeremy-miller`'s design essays run 2024-04 to 2026-06, all C#. `oskar-dudycz`'s slice post is 2026-08-10 but its examples are TypeScript, which the roster row requires flagging; his event-sourcing posts are 2021 and his internal-and-external-events post is 2023 and uses Marten. `derek-comartin`'s material is 2022 to 2026 and carries no code by design.
+**A second dating problem, on the source admitted this pass.** The `ms-learn` correction above turned on quoting the wrong metadata field. DevIQ has the sharper version of the same trouble: it shows a reader no date at all. Every page sampled carries its dates only in unrendered metadata, and on every one of them the published and modified values are identical, so nothing distinguishes an original from a revision. The domain-events entry stamps 2015-09-20 in all four of its date slots while its body teaches MediatR with `INotification` and `INotificationHandler`; the modular monolith entry stamps 2026-03-01 for both. Neither number can be quoted as a review date the way the roster's `ms-learn` rule now requires, because there is no evidence either was ever reviewed rather than published once and edited silently. Cite DevIQ for definition and taxonomy, and date the claim from a blog post or another source rather than from the entry.
+
+**Authorship overlap, which is a freshness problem as well as an independence one.** `ms-learn`'s architecture e-book pages and the `ardalis` blog are the same author, so the e-book's 2018 and 2021 dates are not a second opinion holding steady across five years. They are one person's older position, still published, beside his newer one. Anywhere this file cites both, it is citing him twice.
+
+**On the other sources.** `ardalis`'s blog material runs 2020 to 2024 and is C# throughout where it carries code, which is rarely; the two properties that matter most to the layering argument, the template documentation and DevIQ, carry no reader-visible date at all. `mark-seemann`'s layering position is 2025-04-01 and his boundary series is 2024, both within tolerance and both C#. His slice remark is 2023-09-18. `jeremy-miller`'s design essays run 2024-04 to 2026-06, all C#. `oskar-dudycz`'s slice post is 2026-08-10 but its examples are TypeScript, which the roster row requires flagging; his event-sourcing posts are 2021 and his internal-and-external-events post is 2023 and uses Marten. `derek-comartin`'s material is 2022 to 2026 and carries no code by design.
 
 Nothing in this topic is preview-gated. All of it is GA guidance.
 
 ## What this reveals about the repository
 
-1. **The TODO in `architecture.md` is now dischargeable, and discharging it changes three opinions rather than citing five.** Opinions one, three and five gain corroboration. Opinion two gains corroboration from two marked sources while the one unmarked source reads its central term differently. Opinion four is contradicted by every source swept, from both directions, and its headline should be replaced by the conditional its own body already states. Route through `resolve-research`; the weaving is `harvest-sources` work that decision-log row 139 already anticipated.
+1. **The TODO in `architecture.md` is now dischargeable, and discharging it changes three opinions rather than citing five.** Opinions one, three and five gain corroboration. Opinion two gains corroboration from three marked sources while the one unmarked source reads its central term differently. Opinion four keeps its verdict but on new footing: its headline is unsupported by every source swept, and that now includes the advocate of the pattern it names. Route through `resolve-research`; the weaving is `harvest-sources` work that decision-log row 139 already anticipated.
 
-2. **Two of the four new sources are not independent of each other, and the roster does not say so.** `jeremy-miller` created Marten; `oskar-dudycz` co-maintains it. Both rows record a conflict of interest with the vendor, and neither records the conflict with the other. Their agreement on the strongest claim in this topic, that event sourcing is a module-level decision, is one voice rather than two. Both are marked **Corroborate.**, so a naive reading would treat them as satisfying each other's marking. They cannot. Worth a roster note on both rows, because the same pair will co-occur on every event-sourcing and messaging topic this repository ever writes.
+2. **The roster can say that a source has a conflict, but not that two sources share one.** This pass found the second instance and it is a different shape from the first, which is what makes it structural rather than incidental.
+   - **One product, two people.** `jeremy-miller` created Marten; `oskar-dudycz` co-maintains it. Their agreement that event sourcing is a module-level decision is one voice.
+   - **One person, two ids.** The `ms-learn` architecture e-book is written by `ardalis`. Citing both on layering cites him twice.
 
-3. **The `ms-learn` row's citation rule names a date without naming a field, and that let a systematic error through undetected for eleven days.** "Quote the page's own review date" was followed in good faith and produced six wrong dates, one of which became the lead claim of the previous pass. The rule should say `ms.date`, and should say that `updated_at` is a build timestamp. This is a cheap fix with a real error already attached to it.
+   The second is the more dangerous, because `scripts/validate-sources.cs` counts ids and nothing else. A file citing `[ms-learn, ardalis]` passes the **Corroborate.** check, since `ms-learn` is unmarked and stands beside the marked `ardalis`, while both citations rest on one author. The check cannot catch this and should not try, since authorship is not in the roster's data. What the roster can do is carry the pairing in Notes on both rows, the way it already carries single-source conflicts. Worth raising with `vet-source` on three rows: `jeremy-miller`, `oskar-dudycz`, and `ardalis` and `ms-learn` together.
+
+3. **The `ms-learn` citation rule is fixed, and DevIQ now needs the same fix for a worse version of the problem.** The rule now names `ms.date` and says what `updated_at` is, which closed the error that put six dates in the previous pass wrong. DevIQ shows a reader no date at all, and its metadata dates are identical for published and modified on every page sampled, so there is no field to name. The honest rule is that DevIQ is citable for definition and taxonomy but cannot date a claim, and anything time-sensitive taken from it needs its date from somewhere else. This is a `vet-source` amendment to the `ardalis` row, and the row's existing "reference-grade on definitions and taxonomy" wording is already most of the way there.
 
 4. **The `vet-source` candidate list from the first pass is now resolved, and one item needs correcting.**
+   - **Steve Smith (`ardalis`):** admitted 2026-09-10, swept here. He was not on the candidate list; he arrived through the roster's own vetting and turned out to bear on this topic more than any admission since the first pass.
    - **Mark Seemann, Jeremy D Miller, Derek Comartin:** admitted 2026-09-03. Swept here.
    - **Oskar Dudycz:** admitted 2026-08-24 and left unswept by the first pass. Swept here. One correction to that pass: his "Monolith-First - are you sure?" post is on `architecture-weekly.com`, a Substack, not on the `event-driven.io` domain the roster Source cell names. It is out of scope and no claim here rests on it.
    - **Jimmy Bogard:** activity is now checked, and the answer complicates the candidacy. He is active to 2026-09-01, but the recent output is AutoMapper and MediatR release posts plus promotion of his own commercial Vertical Slice Architecture webinar (2026-09-01 and 2026-07-23). He would therefore carry both the release-notes depth concern that `jeremy-miller`'s marking exists for and a direct commercial interest in precisely the opinion this topic is trying to corroborate. He originated the vertical-slice framing and the deferred domain-events pattern `ms-learn` quotes, so the archive matters; the case for admission is weaker than the first pass assumed.
@@ -379,6 +455,8 @@ Nothing in this topic is preview-gated. All of it is GA guidance.
 
 5. **`derek-comartin`'s sponsorship is broader than his roster row describes.** The row says to "flag the sponsorship on anything touching message queues". In this sweep the Particular Software block appeared in the body of every post fetched, including the modular-monolith and coupling posts that have nothing to do with queues. The flag should be unconditional on that source rather than topic-scoped.
 
-6. **The roster gap has moved and shrunk, and what is left of it is a single-source problem.** Saga style, choreography versus orchestration, returned nothing across four sources and the documentation set. Event granularity and event-carried state transfer returned exactly one source, `oskar-dudycz`, who is marked **Corroborate.** and cannot carry them alone. So the gap is no longer "nothing independent covers the inside of a module", which is what the first pass recorded and which is now closed. It is that the messaging vocabulary this repository will need has one voice behind it, and that voice maintains the tooling.
+6. **The roster gap has shrunk again and is now down to one item.** Saga style, choreography versus orchestration, still returns nothing across five sources and the documentation set, and that is the gap. Commands versus events is closed: `ardalis` supplied the cardinality rule that adjudicates it, and the three voices on it are all marked, so an opinion needs one unmarked source beside them, which `ms-learn` supplies on the distributed side. Event-carried state transfer moved from one source to two. Event granularity remains `oskar-dudycz` alone.
 
-7. **Cross-links to add when these become opinions:** the outbox interaction in [data-access.md](../opinions/data-access.md) and the context-propagation note in [aspnet-core.md](../opinions/aspnet-core.md) both already exist and should be linked rather than restated.
+7. **This topic has now paid for itself twice over as a roster instrument, which is worth noticing on its own.** Three passes have produced four roster changes: `oskar-dudycz` admitted and the `ms-learn` scope widened after the first, the `ms.date` rule named after the second, and this pass raising the pairwise-independence gap and the DevIQ dating rule. That is a research topic finding defects in the trust boundary rather than only consuming it. The pattern is worth keeping in mind when a topic looks like it is taking too many passes.
+
+8. **Cross-links to add when these become opinions:** the outbox interaction in [data-access.md](../opinions/data-access.md) and the context-propagation note in [aspnet-core.md](../opinions/aspnet-core.md) both already exist and should be linked rather than restated. The navigation-property rule from `ardalis` belongs in [data-access.md](../opinions/data-access.md) as much as in `architecture.md`, since it is an Entity Framework configuration rule, and `resolve-research` should decide which file owns it rather than duplicating it into both.
