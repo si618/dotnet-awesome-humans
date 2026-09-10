@@ -24,7 +24,7 @@ Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
 
 Rows in every roster table below are sorted alphabetically by `id`, and so are the sections under [Source notes](#source-notes) — insert new sources in order rather than appending them.
 
-The tables carry only what identifies a source: its id, where to read it, what it covers, and how far back it goes. The evidence behind a row lives in its notes section, written one sentence per line. That split is what keeps the roster reviewable, since a table row stays a short line and a reworded sentence shows up as that sentence rather than as a rewritten row. Both tables and notes are exempt from Prettier's table alignment, marked with `<!-- prettier-ignore -->`, so widening one cell no longer repads every other row in the table.
+The tables carry only what identifies a source: its id, where to read it, what it covers, and how far back it goes. The evidence behind a row lives in its notes section, written one sentence per line. That split is what keeps the roster reviewable, since a table row stays a short line and a reworded sentence shows up as that sentence rather than as a rewritten row. The decision log below is the one table exempt from Prettier's alignment, marked with `<!-- prettier-ignore -->`: its Detail column has no natural width, so realigning it rewrote all 55 entries whenever one grew.
 
 **Reserved id: `house`.** The repository owner's own opinions carry the `house` source id — see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is repository ownership, not track record, so it is exempt from the admission criteria; in exchange, every house opinion must be visibly marked. The marking literal, conflict precedence, and contributor adoption are defined canonically in [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works). The `house` id never appears in the roster tables below.
 
@@ -34,58 +34,55 @@ The tables carry only what identifies a source: its id, where to read it, what i
 
 ## Tier 1 — established (5+ years)
 
-<!-- prettier-ignore -->
-| id | Source | Focus | Since |
-| --- | --- | --- | --- |
-| `andrew-lock` | [Andrew Lock: .NET Escapades](https://andrewlock.net/) | ASP.NET Core internals, "Exploring .NET" per-release series | 2016 |
-| `ardalis` | [Steve Smith: ardalis.com](https://ardalis.com/) and [DevIQ](https://deviq.com/) | Application architecture, Clean Architecture and DDD, design patterns and principles | 2003 |
-| `aspnet-blog` | [ASP.NET Core category, .NET Blog](https://devblogs.microsoft.com/dotnet/category/aspnetcore/) | ASP.NET Core announcements & deep-dives | ~2004 |
-| `awesome-avalonia` | [awesome-avalonia](https://github.com/AvaloniaCommunity/awesome-avalonia) | Curated Avalonia library/resource list | 2020 |
-| `awesome-blazor` | [awesome-blazor](https://github.com/AdrienTorris/awesome-blazor) | Curated Blazor library/resource list | 2018 |
-| `awesome-dotnet` | [awesome-dotnet](https://github.com/quozd/awesome-dotnet) | Curated library/tool list | 2014 |
-| `code-with-mukesh` | [CodeWithMukesh](https://codewithmukesh.com/) | Best-practice roundups, EF Core, benchmarks | 2020 |
-| `csharp-digest` | [C# Digest](https://csharpdigest.net/) | Weekly newsletter aggregation | ~2017 |
-| `derek-comartin` | [Derek Comartin: CodeOpinion](https://codeopinion.com/) | Event-driven architecture, messaging, CQRS, DDD, modular monoliths | 2012 |
-| `dotnet-blog` | [.NET Blog](https://devblogs.microsoft.com/dotnet/) | Everything .NET; canonical announcements | ~2004 |
-| `fsharp-weekly` | [Sergey Tihon: F# Weekly](https://sergeytihon.com/category/f-weekly/) | Weekly F# link aggregation | 2011 |
-| `jeremy-miller` | [Jeremy D. Miller: The Shade Tree Developer](https://jeremydmiller.com/) | Messaging, event sourcing, persistence, dependency injection, testing long-lived codebases | 2007 |
-| `jetbrains-dotnet` | [JetBrains .NET Blog](https://blog.jetbrains.com/dotnet/) | C# language features, tooling | ~2010s |
-| `jon-skeet` | [Jon Skeet's coding blog](https://codeblog.jonskeet.uk/) | C# language semantics (records, generics, equality), date/time correctness, API design | 2005 |
-| `khalid` | [Khalid Abuhakmeh](https://khalidabuhakmeh.com/) | Practical .NET, tooling | ~2012 |
-| `mark-seemann` | [Mark Seemann: ploeh blog](https://blog.ploeh.dk/) | Unit testing and TDD, dependency injection, type-driven and functional design in C#, code quality | 2006 |
-| `meziantou` | [Gérald Barré: Meziantou's blog](https://www.meziantou.net/) | C# language, analyzers, practical best practices | ~2015 |
-| `milan-jovanovic` | [Milan Jovanović](https://www.milanjovanovic.tech/blog) | Architecture, EF Core, CQRS, modular monoliths | ~2020 |
-| `ms-learn` | [Microsoft Learn: .NET docs](https://learn.microsoft.com/dotnet/) and [Azure Architecture Center](https://learn.microsoft.com/azure/architecture/) | Official documentation, breaking changes, architecture e-books, cloud design patterns | ~2016 (docs.microsoft.com era; MSDN before) |
-| `nicholas-blumhardt` | [Nicholas Blumhardt](https://nblumhardt.com/) | Structured logging (Serilog), DI/IoC (Autofac), tracing and diagnostics | 2007 |
-| `oskar-dudycz` | [Oskar Dudycz: Event-Driven.io](https://event-driven.io/) | Event sourcing, event-driven architecture, CQRS, vertical slices | 2011 |
-| `scott-wlaschin` | [Scott Wlaschin: F# for Fun and Profit](https://fsharpforfunandprofit.com/) | F#, functional design, domain modelling | 2012 |
-| `stephen-toub` | [Stephen Toub (author page)](https://devblogs.microsoft.com/dotnet/author/toub/) | Runtime/BCL performance, async internals | ~2005 |
-| `steve-gordon` | [Steve Gordon](https://www.stevejgordon.co.uk/) | High-performance .NET, HttpClient, Span/ArrayPool | ~2016 |
+| id                   | Source                                                                                                                                             | Focus                                                                                             | Since                                       |
+| -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------- |
+| `andrew-lock`        | [Andrew Lock: .NET Escapades](https://andrewlock.net/)                                                                                             | ASP.NET Core internals, "Exploring .NET" per-release series                                       | 2016                                        |
+| `ardalis`            | [Steve Smith: ardalis.com](https://ardalis.com/) and [DevIQ](https://deviq.com/)                                                                   | Application architecture, Clean Architecture and DDD, design patterns and principles              | 2003                                        |
+| `aspnet-blog`        | [ASP.NET Core category, .NET Blog](https://devblogs.microsoft.com/dotnet/category/aspnetcore/)                                                     | ASP.NET Core announcements & deep-dives                                                           | ~2004                                       |
+| `awesome-avalonia`   | [awesome-avalonia](https://github.com/AvaloniaCommunity/awesome-avalonia)                                                                          | Curated Avalonia library/resource list                                                            | 2020                                        |
+| `awesome-blazor`     | [awesome-blazor](https://github.com/AdrienTorris/awesome-blazor)                                                                                   | Curated Blazor library/resource list                                                              | 2018                                        |
+| `awesome-dotnet`     | [awesome-dotnet](https://github.com/quozd/awesome-dotnet)                                                                                          | Curated library/tool list                                                                         | 2014                                        |
+| `code-with-mukesh`   | [CodeWithMukesh](https://codewithmukesh.com/)                                                                                                      | Best-practice roundups, EF Core, benchmarks                                                       | 2020                                        |
+| `csharp-digest`      | [C# Digest](https://csharpdigest.net/)                                                                                                             | Weekly newsletter aggregation                                                                     | ~2017                                       |
+| `derek-comartin`     | [Derek Comartin: CodeOpinion](https://codeopinion.com/)                                                                                            | Event-driven architecture, messaging, CQRS, DDD, modular monoliths                                | 2012                                        |
+| `dotnet-blog`        | [.NET Blog](https://devblogs.microsoft.com/dotnet/)                                                                                                | Everything .NET; canonical announcements                                                          | ~2004                                       |
+| `fsharp-weekly`      | [Sergey Tihon: F# Weekly](https://sergeytihon.com/category/f-weekly/)                                                                              | Weekly F# link aggregation                                                                        | 2011                                        |
+| `jeremy-miller`      | [Jeremy D. Miller: The Shade Tree Developer](https://jeremydmiller.com/)                                                                           | Messaging, event sourcing, persistence, dependency injection, testing long-lived codebases        | 2007                                        |
+| `jetbrains-dotnet`   | [JetBrains .NET Blog](https://blog.jetbrains.com/dotnet/)                                                                                          | C# language features, tooling                                                                     | ~2010s                                      |
+| `jon-skeet`          | [Jon Skeet's coding blog](https://codeblog.jonskeet.uk/)                                                                                           | C# language semantics (records, generics, equality), date/time correctness, API design            | 2005                                        |
+| `khalid`             | [Khalid Abuhakmeh](https://khalidabuhakmeh.com/)                                                                                                   | Practical .NET, tooling                                                                           | ~2012                                       |
+| `mark-seemann`       | [Mark Seemann: ploeh blog](https://blog.ploeh.dk/)                                                                                                 | Unit testing and TDD, dependency injection, type-driven and functional design in C#, code quality | 2006                                        |
+| `meziantou`          | [Gérald Barré: Meziantou's blog](https://www.meziantou.net/)                                                                                       | C# language, analyzers, practical best practices                                                  | ~2015                                       |
+| `milan-jovanovic`    | [Milan Jovanović](https://www.milanjovanovic.tech/blog)                                                                                            | Architecture, EF Core, CQRS, modular monoliths                                                    | ~2020                                       |
+| `ms-learn`           | [Microsoft Learn: .NET docs](https://learn.microsoft.com/dotnet/) and [Azure Architecture Center](https://learn.microsoft.com/azure/architecture/) | Official documentation, breaking changes, architecture e-books, cloud design patterns             | ~2016 (docs.microsoft.com era; MSDN before) |
+| `nicholas-blumhardt` | [Nicholas Blumhardt](https://nblumhardt.com/)                                                                                                      | Structured logging (Serilog), DI/IoC (Autofac), tracing and diagnostics                           | 2007                                        |
+| `oskar-dudycz`       | [Oskar Dudycz: Event-Driven.io](https://event-driven.io/)                                                                                          | Event sourcing, event-driven architecture, CQRS, vertical slices                                  | 2011                                        |
+| `scott-wlaschin`     | [Scott Wlaschin: F# for Fun and Profit](https://fsharpforfunandprofit.com/)                                                                        | F#, functional design, domain modelling                                                           | 2012                                        |
+| `stephen-toub`       | [Stephen Toub (author page)](https://devblogs.microsoft.com/dotnet/author/toub/)                                                                   | Runtime/BCL performance, async internals                                                          | ~2005                                       |
+| `steve-gordon`       | [Steve Gordon](https://www.stevejgordon.co.uk/)                                                                                                    | High-performance .NET, HttpClient, Span/ArrayPool                                                 | ~2016                                       |
 
 ## Tier 2 — emerging (2–5 years), plus sources capped down from Tier 1 on independence
 
-<!-- prettier-ignore -->
-| id | Source | Focus | Since |
-| --- | --- | --- | --- |
-| `avalonia-blog` | [Avalonia UI blog](https://avaloniaui.net/blog) and [docs](https://docs.avaloniaui.net/) | Cross-platform desktop UI, rendering | ~2022 |
-| `gerald-versluis` | [Gerald Versluis](https://blog.verslu.is/) | .NET MAUI, Xamarin, Blazor Hybrid | 2015 |
-| `james-montemagno` | [James Montemagno](https://montemagno.com/) | Xamarin/.NET MAUI, cross-platform mobile | ~2012 |
-| `shay-rojansky` | [Shay Rojansky](https://www.roji.org/) | .NET ↔ PostgreSQL mapping (Npgsql), EF Core internals | 2014 |
+| id                 | Source                                                                                   | Focus                                                 | Since |
+| ------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----- |
+| `avalonia-blog`    | [Avalonia UI blog](https://avaloniaui.net/blog) and [docs](https://docs.avaloniaui.net/) | Cross-platform desktop UI, rendering                  | ~2022 |
+| `gerald-versluis`  | [Gerald Versluis](https://blog.verslu.is/)                                               | .NET MAUI, Xamarin, Blazor Hybrid                     | 2015  |
+| `james-montemagno` | [James Montemagno](https://montemagno.com/)                                              | Xamarin/.NET MAUI, cross-platform mobile              | ~2012 |
+| `shay-rojansky`    | [Shay Rojansky](https://www.roji.org/)                                                   | .NET ↔ PostgreSQL mapping (Npgsql), EF Core internals | 2014  |
 
 ## Watch list — track record still forming, or previously strong but now dormant
 
 Never quotable as primary sources for opinions — `scripts/validate-sources.cs` rejects a watch-list id in any `sources:` list, whatever the age or quality of the source's back catalogue. Usable for discovery and cross-checking: follow a claim found here to a Tier 1/2 source and cite that one. Re-evaluate periodically.
 
-<!-- prettier-ignore -->
-| id | Source | Focus | Since |
-| --- | --- | --- | --- |
-| `chris-sainty` | [Chris Sainty](https://chrissainty.com/) | Blazor components, routing, auth | 2018 |
-| `mikesdotnetting` | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/) | ASP.NET web dev, Razor Pages | 2007 |
-| `morning-brew` | [The Morning Brew](https://blog.cwa.me.uk/) | Daily .NET link aggregation | 2008 |
-| `nick-polyak` | [Nick Polyak (Dev.to)](https://dev.to/npolyak) | Avalonia/WPF/XAML architecture, reactive patterns | 2008 |
-| `syncfusion-blog` | [Syncfusion Blogs](https://www.syncfusion.com/blogs/) | Release summaries, performance roundups | — |
-| `telerik-blog` | [Telerik Blogs: .NET](https://www.telerik.com/blogs) | Release summaries | — |
-| `udi-dahan` | [Udi Dahan: The Software Simplist](https://udidahan.com/) | SOA, messaging, service boundaries, domain events | ~2007 |
+| id                | Source                                                          | Focus                                             | Since |
+| ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
+| `chris-sainty`    | [Chris Sainty](https://chrissainty.com/)                        | Blazor components, routing, auth                  | 2018  |
+| `mikesdotnetting` | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/) | ASP.NET web dev, Razor Pages                      | 2007  |
+| `morning-brew`    | [The Morning Brew](https://blog.cwa.me.uk/)                     | Daily .NET link aggregation                       | 2008  |
+| `nick-polyak`     | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                  | Avalonia/WPF/XAML architecture, reactive patterns | 2008  |
+| `syncfusion-blog` | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)           | Release summaries, performance roundups           | —     |
+| `telerik-blog`    | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
+| `udi-dahan`       | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
 
 ## Source notes
 
