@@ -65,8 +65,21 @@ HashSet<string> reserved = ["house"];
     (WatchBucket, ["## Watch list"]),
 ];
 
-// Parse the roster: source id -> (bucket, the row's Notes/Blocker cell).
+// The tier tables carry only id, Source, Focus and Since. The evidence behind each row —
+// and with it the two markings — lives under '## Source notes', one '### `id`' section per
+// source. Splitting them is what keeps a diff readable: a table row is a short line, and a
+// reworded sentence in a note touches that sentence rather than a 4,000-character row.
+const string NotesHeading = "## Source notes";
+
+// Parse the roster: source id -> (bucket, the source's notes section, heading included).
+// A source with nothing to record has no section, which reads as unmarked, exactly as an
+// empty Notes cell did before.
 Dictionary<string, (string Bucket, string Notes)> roster = new(StringComparer.Ordinal);
+
+// Notes sections in file order, for the same alphabetical check the tables get.
+List<string> noteIds = [];
+Dictionary<string, string> notes = new(StringComparer.Ordinal);
+string? notesFor = null;
 
 // Ids in the order they appear, one entry per table. Order is checked per table rather
 // than across the file, because Tier 2 legitimately starts over at 'a' where Tier 1 left
@@ -79,8 +92,27 @@ string? bucket = null;
 
 foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Split('\n'))
 {
+    if (line.StartsWith("### ", StringComparison.Ordinal) && notesFor is not null)
+    {
+        Match noteId = Patterns.NotesHeadingId().Match(line);
+        if (noteId.Success)
+        {
+            notesFor = noteId.Groups[1].Value;
+            noteIds.Add(notesFor);
+            if (!notes.TryAdd(notesFor, line))
+            {
+                errors.Add(
+                    $"{RosterPath}: source id '{notesFor}' has more than one notes section");
+            }
+        }
+
+        continue;
+    }
+
     if (line.StartsWith("## ", StringComparison.Ordinal))
     {
+        // An empty string means inside '## Source notes' but before the first '### `id`'.
+        notesFor = line.StartsWith(NotesHeading, StringComparison.Ordinal) ? "" : null;
         bucket = null;
         foreach ((string name, string[] prefixes) in sections)
         {
@@ -99,13 +131,19 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
         continue;
     }
 
+    if (notesFor is { Length: > 0 })
+    {
+        notes[notesFor] += "\n" + line;
+        continue;
+    }
+
     if (bucket is null || !line.StartsWith('|'))
     {
         continue;
     }
 
     string[] cells = [.. line.Trim().Trim('|').Split('|').Select(cell => cell.Trim())];
-    if (cells.Length < 5)
+    if (cells.Length < 4)
     {
         continue;
     }
@@ -121,7 +159,7 @@ foreach (string line in File.ReadAllText(RosterPath).ReplaceLineEndings("\n").Sp
 
     // TryAdd rather than the indexer: two rows sharing an id would otherwise leave the
     // roster holding whichever came last, deciding a source's bucket by row order.
-    if (!roster.TryAdd(rowId, (bucket, cells[^1])))
+    if (!roster.TryAdd(rowId, (bucket, string.Empty)))
     {
         errors.Add($"{RosterPath}: source id '{rowId}' appears on more than one row — ids are unique");
     }
@@ -146,6 +184,40 @@ foreach ((string heading, List<string> tableIds) in tables)
                 $"{RosterPath}: '{heading}' is not sorted by id "
                     + $"— '{tableIds[index]}' follows '{tableIds[index - 1]}'");
         }
+    }
+}
+
+// A notes section for an id that no table row declares is a leftover from a demotion or a
+// typo, and would sit there looking authoritative while feeding nothing. The reverse is
+// allowed: a source with nothing worth recording has no section.
+foreach (string noteId in noteIds)
+{
+    if (!roster.ContainsKey(noteId))
+    {
+        errors.Add(
+            $"{RosterPath}: '{NotesHeading}' has a section for '{noteId}', "
+            + "which is on no roster table");
+    }
+}
+
+// Sorted for the same reason the tables are: so a new section lands in one predictable
+// place rather than wherever the admitting pull request happened to put it.
+for (int index = 1; index < noteIds.Count; index++)
+{
+    if (StringComparer.Ordinal.Compare(noteIds[index - 1], noteIds[index]) > 0)
+    {
+        errors.Add(
+            $"{RosterPath}: '{NotesHeading}' is not sorted by id "
+                + $"— '{noteIds[index]}' follows '{noteIds[index - 1]}'");
+    }
+}
+
+// The markings are read off the section, so fold it in before looking for them.
+foreach ((string noteId, string body) in notes)
+{
+    if (roster.TryGetValue(noteId, out (string Bucket, string Notes) entry))
+    {
+        roster[noteId] = (entry.Bucket, body);
     }
 }
 
@@ -281,9 +353,9 @@ if (errors.Count > 0)
 
 Console.WriteLine(
     $"All sources in {citing.Count} opinions and templates resolve to the roster "
-    + $"({roster.Count} sources across {tables.Count} tables, {discovery.Count} discovery-only, "
-    + $"{corroborate.Count} corroborate-only), "
-    + "and every table is sorted by id.");
+    + $"({roster.Count} sources across {tables.Count} tables, {noteIds.Count} with notes, "
+    + $"{discovery.Count} discovery-only, {corroborate.Count} corroborate-only), "
+    + "and every table and the notes are sorted by id.");
 return 0;
 
 internal static partial class Patterns
@@ -291,4 +363,9 @@ internal static partial class Patterns
     // A roster row's first cell is a bare source id in backticks: `andrew-lock`.
     [GeneratedRegex(@"\A`([a-z0-9-]+)`\z")]
     internal static partial Regex SourceId();
+
+    // A notes heading opens with the id and then says where the source stands:
+    // '### `ardalis` — Tier 1, **Corroborate.**'.
+    [GeneratedRegex(@"\A### `([a-z0-9-]+)`")]
+    internal static partial Regex NotesHeadingId();
 }

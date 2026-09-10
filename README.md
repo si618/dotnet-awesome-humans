@@ -67,7 +67,7 @@ flowchart TD
     vet -->|"otherwise"| declined["Declined: off the roster"]
 ```
 
-Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. Two markings in a roster row's Notes narrow citation at either tier: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at.
+Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. Two markings in a source's notes section narrow citation at either tier: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at.
 
 ### House opinions
 
@@ -154,11 +154,11 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
-| Script                                                         | Checks                                                                                                                                                                        |
-| -------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates    |
-| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables are sorted by id, with no id used twice |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions                                                                                                               |
+| Script                                                         | Checks                                                                                                                                                                                                                                      |
+| -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates                                                                  |
+| [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables and the notes sections are sorted by id, with no id used twice, and every notes section matches a row |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions                                                                                                                                                                             |
 
 Run them from the repository root, exactly as CI does:
 
