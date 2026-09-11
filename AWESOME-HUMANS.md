@@ -96,29 +96,21 @@ The de facto reference for ASP.NET Core internals outside Microsoft; author of _
 
 ### `ardalis` — Tier 1, **Corroborate.**
 
-Writing since [2003-02-04](https://ardalis.com/first-post/), with dated ASP tutorials back to 2000-09-25, carried across four earlier blogs (`stevesmithblog.com` among them) onto the current domain.
-Live rather than dormant: most recent post 2026-08-19, and no gap over three months in the last three years.
-Cadence has settled to roughly monthly, and he reports [14 articles in 2025](https://ardalis.com/2025-year-in-review/) against 20 in 2023 as effort moves to video and courses, which this repository's scope excludes.
-Marked **Corroborate.** on depth, which is mixed rather than absent.
-["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle, whereas ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
+Writing since [2003-02-04](https://ardalis.com/first-post/), carried across four earlier blogs onto the current domain, and live rather than dormant: latest post 2026-08-19, cadence settled to roughly monthly as effort moves to video and courses.
+The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases do not.
+Marked because depth is mixed rather than absent: ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle, whereas ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
+DevIQ is reference-grade on definitions and taxonomy — 255 pages, strongest on [design patterns](https://deviq.com/design-patterns/) — but its entries argue in prose and diagrams rather than code or measurements, so cite a measured source alongside it for anything load-bearing.
 In ["Avoid Using C# Events"](https://ardalis.com/avoid-using-csharp-events-in-aspnetcore-apps/) the logged memory figures are non-monotonic with no control loop, so cite the argument and not the measurements.
-Accuracy is sound: no claim was found reversed or left standing wrong, and his in-place amendments are clarifications.
+Accuracy is sound: no claim was found reversed or left standing wrong.
 Co-founder of NimblePros and a Microsoft MVP rather than an employee, so no independence cap.
-He does sell training, mentoring, Dometrain and Pluralsight courses and devbetter.com coaching, and maintains Ardalis.Specification, GuardClauses, Result, SmartEnum and the Clean Architecture template, so the conflict is live on the architecture and data-access topics he would be cited for.
-Ardalis.Specification is contested on design grounds, its `Include`/`AsNoTracking` surface being a query object rather than a Specification in Evans's sense, so never present that pattern as settled. Scope covers [DevIQ](https://deviq.com/), published by NimblePros and co-authored with Sarah Dutkiewicz.
-It is substantial: 255 pages across twelve sections, the largest being [design patterns](https://deviq.com/design-patterns/) and [code smells](https://deviq.com/code-smells/) at 39 each, [antipatterns](https://deviq.com/antipatterns/) at 37, [practices](https://deviq.com/practices/) at 33 and [principles](https://deviq.com/principles/) at 26, with [laws](https://deviq.com/laws/) and [domain-driven design](https://deviq.com/domain-driven-design/) behind them.
-Depth varies by section rather than page by page.
-The design-pattern entries are the strongest, [Repository pattern](https://deviq.com/design-patterns/repository-pattern/) weighing generic against per-entity designs with full listings and [Anemic model](https://deviq.com/domain-driven-design/anemic-model/) reasoning from Fowler and Seemann.
-The [architecture](https://deviq.com/architecture/) and [testing](https://deviq.com/testing/) entries run 300 to 950 words with diagrams and usually no code, though the section indexes are written rather than bare link lists: the architecture one sets out styles as strategic against patterns as tactical. So it is reference-grade on definitions and taxonomy and the best map here of what to cover, which is a further reason for the marking rather than against it.
-Cite a measured source alongside it for anything load-bearing, and note that the entries closest to data access recommend his own Ardalis.Specification package.
-It also covers the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions and ADRs](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases do not.
+**Conflict of interest:** he sells training, mentoring and courses and maintains Ardalis.Specification, GuardClauses, Result, SmartEnum and the Clean Architecture template, so the conflict is live on the architecture and data-access topics he would be cited for — the DevIQ entries closest to data access recommend Ardalis.Specification, whose `Include`/`AsNoTracking` surface is a query object rather than a Specification in Evans's sense, so never present that pattern as settled.
 Two currency traps: GuardClauses, Result and SmartEnum have shipped no release in about two years, and his Microsoft e-book [Architect modern web applications](https://learn.microsoft.com/dotnet/architecture/modern-web-apps-azure/) is still edition v8.0, so neither is current guidance for `net10.0`.
 **Cite the .NET posts** — the 2026 run is mostly AI and agent tooling.
 
 ### `avalonia-blog` — Tier 2
 
-~4 years, so Tier 2 on longevity alone, and it would be capped there anyway: product-team blog, release-driven and marketing-adjacent, so the independence concern holds whatever the longevity becomes.
-Scope widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not; same cap applies — cite docs for how a thing works, not for whether to adopt it
+~4 years, so Tier 2 on longevity alone, and capped there anyway: a product-team blog, release-driven and marketing-adjacent, so the independence concern holds whatever the longevity becomes.
+Scope widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not; same cap — cite the docs for how a thing works, not for whether to adopt it
 
 ### `awesome-avalonia` — Tier 1, **Discovery-only.**
 
@@ -134,14 +126,13 @@ Scope widened 2026-08-20 to the project's first-party documentation, which carri
 
 ### `chris-sainty` — Watch list
 
-Dormancy, not longevity — no posts since 2023-08 and no verified continuing channel, so the dormancy rule still blocks admission.
-The 2018–2023 catalogue is strong, and usable for cross-checking on the terms above — citing it needs admission first
+Dormancy, not longevity — no posts since 2023-08 and no verified continuing channel.
+The 2018–2023 catalogue is strong and usable for cross-checking on the terms above; citing it needs admission first
 
 ### `code-with-mukesh` — Tier 1, **Corroborate.**
 
-**Corroborate.** Blog since 2020 (6 years), 200+ articles, 2026 output carries real benchmarks.
-Depth is the weak axis: SEO/roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics are not.
-Never the only citation on a claim
+**Corroborate.** Blog since 2020, 200+ articles, 2026 output carries real benchmarks.
+Depth is the weak axis: SEO/roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics are not — never the only citation on a claim
 
 ### `csharp-digest` — Tier 1, **Discovery-only.**
 
@@ -149,11 +140,10 @@ Never the only citation on a claim
 
 ### `derek-comartin` — Tier 1, **Corroborate.**
 
-**Corroborate.** Writing since 2012-12-11, slowly at first and then at roughly 40–50 posts a year from 2016 through 2025, active 2026-08-19.
-Better known for the YouTube channel, but the blog clears the writing scope on its own: recent posts are 2,000–2,500-word standalone articles that argue their case in prose, with the companion video embedded rather than standing in for the text.
-Marked for two reasons that point the same way.
-The arguments are conceptual — the sampled posts carry no code and no measurements, so nothing in them is a claim a reader can compile or reproduce.
-And Particular Software's NServiceBus is a paid sponsor **inside the article body**, on a tracked link, in posts whose subject is the sponsor's own product category (verified 2026-09-03 on ["Decoupling in Software Architecture Moves Complexity"](https://codeopinion.com/decoupling-in-software-architecture-moves-complexity/), 2026-08-06); he is also a Particular "NServiceBus Champ" and a Microsoft MVP.
+**Corroborate.** Writing since 2012-12-11, at roughly 40–50 posts a year from 2016 through 2025, active 2026-08-19.
+Better known for the YouTube channel, but the blog clears the writing scope on its own: 2,000–2,500-word standalone articles that argue their case in prose, with the companion video embedded rather than standing in for the text.
+Marked for two reasons that point the same way: the arguments are conceptual, carrying no code and no measurements a reader could compile or reproduce, and Particular Software's NServiceBus is a paid sponsor **inside the article body**, on a tracked link, in posts whose subject is the sponsor's own product category (verified 2026-09-03 on ["Decoupling in Software Architecture Moves Complexity"](https://codeopinion.com/decoupling-in-software-architecture-moves-complexity/), 2026-08-06).
+He is also a Particular "NServiceBus Champ" and a Microsoft MVP.
 Cite him for the shape of an argument, never alone, and flag the sponsorship on anything touching message queues
 
 ### `dotnet-blog` — Tier 1
@@ -172,17 +162,16 @@ On the MAUI team — same independence caveat as `james-montemagno`
 ### `james-montemagno` — Tier 2
 
 Blogging since ~2012 (motzcod.es → montemagno.com); Tier 1 longevity, capped for independence — Microsoft DevRel, adoption-focused, little critical distance, so weigh independence per piece.
-Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: montemagno.com is still publishing (latest 2025-12-31), so he is not dormant, but the current writing is Copilot and tooling and the last .NET post is dated 2024-01-19.
+Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he is not dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
 Cite the pre-2024 Xamarin/MAUI catalogue only, and expect nothing new from harvests
 
 ### `jeremy-miller` — Tier 1, **Corroborate.**
 
-**Corroborate.** Writing since at least 2007-10-18 at codebetter.com; that host no longer resolves, so an earlier start is likely but not verifiable.
-Continued on jeremydmiller.com, posting near-daily and active 2026-09-02.
+**Corroborate.** Writing since at least 2007-10-18 at codebetter.com, which no longer resolves, so an earlier start is likely but not verifiable; continued on jeremydmiller.com near-daily and active 2026-09-02.
 Created StructureMap, Marten, Wolverine, Lamar and Alba.
-**Conflict of interest:** he founded JasperFx Software, which sells licences, support plans and CritterWatch around the same open-source stack, and his writing is almost entirely about it — eight of the nine posts on the front page as of 2026-09-03 were Critter Stack material, five of them release announcements.
+**Conflict of interest:** he founded JasperFx Software, which sells licences, support plans and CritterWatch around that same stack, and his writing is almost entirely about it — eight of the nine posts on the front page as of 2026-09-03, five of them release announcements.
 Recorded rather than capped, per the `nicholas-blumhardt` and `oskar-dudycz` precedent.
-The [JasperFx news feed](https://jasperfx.net/news/) is his other live channel and is almost all release announcements; it is deliberately kept out of the Source cell.
+The [JasperFx news feed](https://jasperfx.net/news/) is deliberately out of scope, being almost all release announcements.
 Cite the design essays and never the release notes, and never cite him alone on whether to adopt Marten or Wolverine
 
 ### `jetbrains-dotnet` — Tier 1
@@ -193,23 +182,22 @@ Institutional; tool-flavoured but strong language explainers keep critical dista
 
 Created Noda Time; author of _C# in Depth_; Stack Overflow's top contributor.
 Low cadence (~4–5 posts a year) and much of the recent output is general data modelling from a personal election-data project — cite the C#/BCL posts.
-Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence cap. _C# in Depth_ 4th ed. (2019) pre-dates records and is not current guidance
+Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence cap.
+_C# in Depth_ 4th ed. (2019) pre-dates records and is not current guidance
 
 ### `khalid` — Tier 1
 
 Now at Duende Software (JetBrains authorship ended 2024).
-Blog quiet since 2025-04; kept Tier 1 via the dormancy exception, re-verified 2026-08-18 — 570 GitHub contributions in the preceding 12 months (160 commits, 43 PRs), mostly authoring Duende's documentation.
+Blog quiet since 2025-04; kept Tier 1 via the dormancy exception, re-verified 2026-08-18 on the Duende documentation he authors.
 Only the pre-2025 blog is citable; nothing new to harvest while the writing stays paused
 
 ### `mark-seemann` — Tier 1
 
-Writing since 2006-01-05 on [MSDN blogs](https://learn.microsoft.com/archive/blogs/ploeh/) and on the current blog since 2009-01-28 — over 800 posts on the current blog alone, still going on 2026-08-13.
-Per-year counts on the archive page did not extract reliably, so the run is recorded as a total rather than a cadence band; it thins in the mid-2010s.
+Writing since 2006-01-05 on [MSDN blogs](https://learn.microsoft.com/archive/blogs/ploeh/) and on the current blog since 2009-01-28 — over 800 posts there alone, thinning in the mid-2010s, still going on 2026-08-13.
 Depth verified on worked examples with compiling code and real measurements.
 Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he does not own, so no independence cap; he does sell books and video courses and created AutoFixture, which is a mild conflict worth noting on testing and DI.
-Two usage notes.
-A consistent third of the technical posts are Haskell or F#, and the 2026 output turns away from code after March: technical up to ["TDD as induction"](https://blog.ploeh.dk/2026/02/23/tdd-as-induction/) (2026-02-23), then language-agnostic essays on AI and software philosophy — so **cite the C#/.NET posts**.
-Separately, _Dependency Injection in .NET_ (2011) is superseded by _Dependency Injection Principles, Practices, and Patterns_ (2019)
+**Cite the C#/.NET posts:** a consistent third of the technical output is Haskell or F#, and the 2026 run turns from code to language-agnostic essays on AI and software philosophy after ["TDD as induction"](https://blog.ploeh.dk/2026/02/23/tdd-as-induction/) (2026-02-23).
+_Dependency Injection in .NET_ (2011) is superseded by _Dependency Injection Principles, Practices, and Patterns_ (2019)
 
 ### `meziantou` — Tier 1
 
@@ -228,14 +216,13 @@ Commercial funnel (courses, templates, sponsored newsletter) — conflict of int
 ### `morning-brew` — Watch list
 
 Dormancy — demoted from Tier 1 on 2026-08-18.
-Last issue #3995 (2024-08-02) announced a summer break and publication never resumed; the site is up, the RSS feed ends there.
+Last issue #3995 (2024-08-02) announced a summer break and publication never resumed: the site is up, the RSS feed ends there.
 The 2008–2024 archive remains usable for discovery
 
 ### `ms-learn` — Tier 1
 
 "What's new" and "Breaking changes" pages per release.
-Scope widened 2026-08-24 from the .NET docs to first-party technical documentation across `learn.microsoft.com`, taking in the .NET architecture e-books and the Azure Architecture Center pattern catalogue.
-Same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
+Scope widened 2026-08-24 from the .NET docs to first-party technical documentation across `learn.microsoft.com`, taking in the .NET architecture e-books and the Azure Architecture Center pattern catalogue — same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
 Two rules follow from the breadth: cite for mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption, and quote the page's own review date, because these age unevenly — the microservices e-book is 2018 content reviewed in 2023 and 2024, while the pattern catalogue is revised on a rolling basis
 
 ### `nicholas-blumhardt` — Tier 1
@@ -247,13 +234,12 @@ Personal blog dormant since 2024-10 — kept Tier 1 via the dormancy exception o
 ### `nick-polyak` — Watch list
 
 Dormancy — demoted from Tier 1 on 2026-08-23.
-Last post 2025-05-04 on Dev.to, and the CodeProject archive (2008–2024) is read-only.
-The 2025–26 GitHub output is code and version bumps, with no documentation among it, so the exception does not reach him.
+Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception does not reach him.
 Back catalogue not citable while watch-listed; re-vet if the writing resumes
 
 ### `oskar-dudycz` — Tier 1, **Corroborate.**
 
-**Corroborate.** Writing since 2011-09-21 (Polish-language blog, migrated into the current site) with a sustained run from 2020: 53 posts in 2021, 52 in each of 2022 and 2023, active through 2026-08-10.
+**Corroborate.** Writing since 2011-09-21 (Polish-language blog, migrated into the current site) with a sustained run from 2020 — roughly 50 posts a year through 2023, active 2026-08-10.
 Depth verified on worked examples with traced scenarios and typed code.
 **Conflict of interest:** co-maintains Marten and Emmett and sells Event Sourcing workshops, so he writes about patterns he builds tooling for.
 Recorded rather than capped, per the `milan-jovanovic` and `nicholas-blumhardt` precedent, and the marking carries the usage rule instead.
@@ -267,8 +253,8 @@ The definitive independent F# resource; author of _Domain Modeling Made Function
 
 Lead maintainer of Npgsql and on Microsoft's EF Core team — the deepest writing on .NET↔PostgreSQL type mapping, which no other roster source covers.
 Tier 1 longevity (blogging 2014–2023), capped for independence: the citable body is first-party design rationale about products he maintains — cite him for mechanism (how Npgsql/EF Core behave and why they were designed that way), corroborate adoption judgments elsewhere.
-Long-form writing dormant since 2023 on both roji.org and the .NET Blog; held on the dormancy exception by the documentation he authors, re-verified 2026-08-23: 59 commits to `dotnet/EntityFramework.Docs` since 2025-08, latest 2026-05-12, writing the EF Core 11 what's-new and breaking-change pages that publish to Microsoft Learn.
-That is published writing, not the maintainer activity and conference circuit the row previously leaned on. 2014–2023 blog catalogue citable; expect nothing new from blog harvests
+Long-form writing dormant since 2023 on both roji.org and the .NET Blog; held on the dormancy exception by the documentation he authors, re-verified 2026-08-23 — the EF Core 11 what's-new and breaking-change pages in `dotnet/EntityFramework.Docs`, latest commit 2026-05-12, which publish to Microsoft Learn and so count as writing.
+The 2014–2023 blog catalogue is citable; expect nothing new from blog harvests
 
 ### `stephen-toub` — Tier 1
 
@@ -290,10 +276,9 @@ The lower longevity bars do not touch this blocker
 
 ### `udi-dahan` — Watch list
 
-Dormancy — last post 2016-02-19, a decade silent, and no continuing written channel: the NDC talks and the Particular training courses are out of scope under the 2026-08-23 narrowing.
+Dormancy — last post 2016-02-19, a decade silent, and no continuing written channel: the talks and the Particular training courses are out of scope under the 2026-08-23 narrowing.
 Founder and CEO of Particular Software, which sells NServiceBus, so an independence concern would also apply.
-The 2005–2016 archive stays usable for discovery and cross-checking, and `ms-learn` already cites him second-hand on domain events.
-Start year is an estimate from a testimonial referring to the blog in 2007
+The 2005–2016 archive stays usable for discovery and cross-checking, and `ms-learn` already cites him second-hand on domain events; the start year is an estimate from a testimonial referring to the blog in 2007
 
 ## Decision log
 
