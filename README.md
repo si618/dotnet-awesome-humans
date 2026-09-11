@@ -14,22 +14,22 @@ How to use this project:
 
 The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one topic per file:
 
-- **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
-- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, source generators
-- **[C#](opinions/csharp.md):** the latest released language version, and idiomatic use of what it added
-- **[F#](opinions/fsharp.md):** domain modelling, mixed C#/F# solutions, testing
 - **[Application architecture](opinions/architecture.md):** modular monolith, vertical slices, and when layering earns its keep
 - **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, auth, OpenAPI, performance
+- **[C#](opinions/csharp.md):** the latest released language version, and idiomatic use of what it added
+- **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain hygiene
 - **[Data access](opinions/data-access.md):** EF Core defaults, set-based work, when to drop to SQL
 - **[Dates, times & time zones](opinions/datetime.md):** type choice, UTC vs local storage, `TimeProvider`, testing time
+- **[F#](opinions/fsharp.md):** domain modelling, mixed C#/F# solutions, testing
 - **[Globalization & localization](opinions/globalization.md):** culture vs ordinal, ICU and invariant mode, `IStringLocalizer`, and the data containers drop
 - **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, OpenTelemetry over OTLP
-- **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
+- **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, source generators
+- **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
 - **[Testing](opinions/testing.md):** framework choice, naming and structure, integration tests, coverage
-- **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain hygiene
+- **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
 - **Libraries:** what to reach for and what to avoid, spread across the files above
 
-A new opinion file must appear both here and in [Repository layout](#repository-layout) — CI fails the pull request otherwise.
+A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order — CI fails the pull request otherwise.
 
 ## Freshness policy
 
@@ -158,7 +158,7 @@ The checks that gate a pull request are written in the stack this repository has
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates                                                                  |
 | [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables and the notes sections are sorted by id, with no id used twice, and every notes section matches a row |
-| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions                                                                                                                                                                             |
+| [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions, with Scope sorted by title and the layout tree by file name                                                                                                                |
 
 Run them from the repository root, exactly as CI does:
 
