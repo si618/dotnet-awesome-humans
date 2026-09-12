@@ -44,13 +44,14 @@ The tables carry only what identifies a source: its id, where to read it, what i
 | `awesome-dotnet`     | [awesome-dotnet](https://github.com/quozd/awesome-dotnet)                                                                                          | Curated library/tool list                                                                         | 2014                                        |
 | `code-with-mukesh`   | [CodeWithMukesh](https://codewithmukesh.com/)                                                                                                      | Best-practice roundups, EF Core, benchmarks                                                       | 2020                                        |
 | `csharp-digest`      | [C# Digest](https://csharpdigest.net/)                                                                                                             | Weekly newsletter aggregation                                                                     | ~2017                                       |
+| `damien-bowden`      | [Damien Bowden: damienbod](https://damienbod.com/)                                                                                                 | ASP.NET Core security, OpenID Connect, BFF, passkeys                                              | 2013                                        |
 | `derek-comartin`     | [Derek Comartin: CodeOpinion](https://codeopinion.com/)                                                                                            | Event-driven architecture, messaging, CQRS, DDD, modular monoliths                                | 2012                                        |
 | `dotnet-blog`        | [.NET Blog](https://devblogs.microsoft.com/dotnet/)                                                                                                | Everything .NET; canonical announcements                                                          | ~2004                                       |
 | `fsharp-weekly`      | [Sergey Tihon: F# Weekly](https://sergeytihon.com/category/f-weekly/)                                                                              | Weekly F# link aggregation                                                                        | 2011                                        |
 | `jeremy-miller`      | [Jeremy D. Miller: The Shade Tree Developer](https://jeremydmiller.com/)                                                                           | Messaging, event sourcing, persistence, dependency injection, testing long-lived codebases        | 2007                                        |
 | `jetbrains-dotnet`   | [JetBrains .NET Blog](https://blog.jetbrains.com/dotnet/)                                                                                          | C# language features, tooling                                                                     | ~2010s                                      |
 | `jon-skeet`          | [Jon Skeet's coding blog](https://codeblog.jonskeet.uk/)                                                                                           | C# language semantics (records, generics, equality), date/time correctness, API design            | 2005                                        |
-| `khalid`             | [Khalid Abuhakmeh](https://khalidabuhakmeh.com/)                                                                                                   | Practical .NET, tooling                                                                           | ~2012                                       |
+| `khalid`             | [Khalid Abuhakmeh](https://khalidabuhakmeh.com/) and his posts on the [Duende blog](https://duendesoftware.com/blog)                               | Practical .NET, tooling; identity and OpenID Connect since 2025                                   | ~2012                                       |
 | `mark-seemann`       | [Mark Seemann: ploeh blog](https://blog.ploeh.dk/)                                                                                                 | Unit testing and TDD, dependency injection, type-driven and functional design in C#, code quality | 2006                                        |
 | `meziantou`          | [Gérald Barré: Meziantou's blog](https://www.meziantou.net/)                                                                                       | C# language, analyzers, practical best practices                                                  | ~2015                                       |
 | `milan-jovanovic`    | [Milan Jovanović](https://www.milanjovanovic.tech/blog)                                                                                            | Architecture, EF Core, CQRS, modular monoliths                                                    | ~2020                                       |
@@ -76,10 +77,13 @@ Never quotable as primary sources for opinions — `scripts/validate-sources.cs`
 
 | id                | Source                                                          | Focus                                             | Since |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
+| `barry-dorrans`   | [Barry Dorrans: idunno.org](https://idunno.org/)                | .NET security, CVE triage, supply chain           | 2025  |
 | `chris-sainty`    | [Chris Sainty](https://chrissainty.com/)                        | Blazor components, routing, auth                  | 2018  |
+| `duende-blog`     | [Duende Software blog](https://duendesoftware.com/blog)         | IdentityServer, BFF, OpenID Connect and SAML      | 2020  |
 | `mikesdotnetting` | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/) | ASP.NET web dev, Razor Pages                      | 2007  |
 | `morning-brew`    | [The Morning Brew](https://blog.cwa.me.uk/)                     | Daily .NET link aggregation                       | 2008  |
 | `nick-polyak`     | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                  | Avalonia/WPF/XAML architecture, reactive patterns | 2008  |
+| `scott-brady`     | [Scott Brady](https://www.scottbrady.io/)                       | OAuth, OpenID Connect, identity, cryptography     | —     |
 | `syncfusion-blog` | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)           | Release summaries, performance roundups           | —     |
 | `telerik-blog`    | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
 | `udi-dahan`       | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
@@ -132,6 +136,18 @@ Scope widened 2026-08-20 to the project's first-party documentation, which carri
 
 **Discovery-only.** Library discovery; verify recommendations independently
 
+### `barry-dorrans` — Watch list
+
+Longevity, and nothing else.
+[idunno.org](https://idunno.org/) has been a blog only since 2025-11-18 and carries ten posts, the most recent 2026-08-03.
+The domain is old and Wayback captures reach back to 2003-06-04, but from at least 2015 until 2025-11-17 the site was a static conference and biography page, still advertising a September 2020 talk as upcoming in a December 2024 capture.
+What filled the decade between was talks, which the published-writing scope excludes, so the run that counts is under a year rather than the long record the domain suggests.
+Depth and accuracy are not the blocker and are recorded here so a promotion is quick.
+["The year in .NET Security"](https://idunno.org/the-year-in-net-security/) takes CVE-2025-55248, CVE-2025-55247 and CVE-2025-30399 from root cause to the API that replaced the vulnerable one, ["Protecting your .NET app from Server-Side Request Forgery"](https://idunno.org/protecting-your-net-app-from-server-side-request-forgery-ssrf-vulnerabilities/) reasons from the Capital One breach and the cloud metadata endpoint through to mitigation code, and the code-signing post runs about three thousand words of workflow configuration.
+He issues dated in-post updates when Microsoft renames a product.
+He is Microsoft's .NET security lead, and the writing is CVE mechanism from the inside rather than adoption copy, so the independence cap would not reach him once the longevity bar is met.
+Re-evaluate from 2027-11, when the blog turns two
+
 ### `chris-sainty` — Watch list
 
 Dormancy, not longevity — no posts since 2023-08 and no verified continuing channel, so the dormancy rule still blocks admission.
@@ -147,6 +163,18 @@ Never the only citation on a claim
 
 **Discovery-only.** Discovery channel, not an opinion source itself; archive verified back to 2017-12
 
+### `damien-bowden` — Tier 1
+
+Writing since [2013-01-31](https://damienbod.com/2013/01/31/welcome-to-my-blog/), technical from the first week, and still publishing on 2026-09-01.
+Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 were not counted directly, and the years either side of each leave no room for a gap.
+Depth verified on posts that build the arrangement rather than describe it.
+[The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) carries the OpenID Connect setup, a YARP transform and a token cache, and explains why the downstream API refuses the user's delegated token.
+[The passkey post](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/) diagnoses an ASP.NET Core defect, links the runtime issue, and gives the re-sign-in workaround against RFC 8176.
+Accuracy is maintained in the open: posts carry dated History sections recording what each framework version changed, and when Duende's co-founder objected in the comments that a 2023 post resembled Duende's own sample, he added the attribution and said so in the thread.
+Independent, a consultant in Switzerland with no vendor attachment, and he covers Duende, OpenIddict, Entra ID and ASP.NET Core Identity in turn rather than one of them, so no independence cap.
+Two conflicts to record: he maintains `angular-auth-oidc-client` and writes tutorials that use it, and he sells application-security workshops through isolutions.
+Much of the catalogue pairs ASP.NET Core with an Angular front end, so check what a sample is actually configuring before citing it
+
 ### `derek-comartin` — Tier 1, **Corroborate.**
 
 **Corroborate.** Writing since 2012-12-11, slowly at first and then at roughly 40–50 posts a year from 2016 through 2025, active 2026-08-19.
@@ -159,6 +187,18 @@ Cite him for the shape of an argument, never alone, and flag the sponsorship on 
 ### `dotnet-blog` — Tier 1
 
 Includes Stephen Toub's annual "Performance Improvements in .NET" posts and the "What's new" series
+
+### `duende-blog` — Watch list
+
+Independence, not longevity.
+Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so the six-year record would clear the Tier 1 bar on its own.
+All four posts read in full for this pass end at the paid product the company sells, in the category the post is about, and none carried a caveat against it.
+The depth is what makes that a blocker rather than a footnote: a four-thousand-word piece with code and diagrams still arrives at Duende BFF as the recommendation.
+It is multi-author, so independence and quality vary by byline, which is the `telerik-blog` and `syncfusion-blog` blocker rather than the `avalonia-blog` cap.
+Admitting the publication would admit five bylines nobody has vetted; where one of them has a track record, vet the human instead.
+That is done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
+Usable for discovery and cross-checking on the usual terms.
+Dominick Baier's personal blog is a separate channel and is itself dormant, last posting 2024-10-01; it is named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check
 
 ### `fsharp-weekly` — Tier 1, **Discovery-only.**
 
@@ -198,8 +238,13 @@ Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07
 ### `khalid` — Tier 1
 
 Now at Duende Software (JetBrains authorship ended 2024).
-Blog quiet since 2025-04; kept Tier 1 via the dormancy exception, re-verified 2026-08-18 — 570 GitHub contributions in the preceding 12 months (160 commits, 43 PRs), mostly authoring Duende's documentation.
-Only the pre-2025 blog is citable; nothing new to harvest while the writing stays paused
+[khalidabuhakmeh.com](https://khalidabuhakmeh.com/) has been quiet since 2025-04-22, and the writing itself never paused.
+Scope widened 2026-09-12 to his posts on the [Duende blog](https://duendesoftware.com/blog), which carry his byline and run at roughly two a month from 2025-03 through 2026-09-08.
+The documentation stays evidence rather than citable material, per `shay-rojansky`: 387 commits to the docs repository, the most recent 2026-09-03, are page authorship rather than typo fixes, but the published pages name no author for a citation to rest on.
+The widening follows the `avalonia-blog` precedent and carries the same limit in a sharper form.
+Each of the three Duende posts read in full for this pass closes on Duende BFF or IdentityServer, so cite him there for platform mechanism and never alone on whether to adopt a Duende product.
+["Understanding .NET 11 Automatic CSRF Protection"](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection) (2026-09-01) is the shape that works: the subject is what the framework middleware does to OpenID Connect flows, and the product recommendation sits at the end where a reader can see it coming.
+The personal blog is citable in full, and the publication is watch-listed separately, so this id reaches his byline and nobody else's
 
 ### `mark-seemann` — Tier 1
 
@@ -258,6 +303,14 @@ Depth verified on worked examples with traced scenarios and typed code.
 **Conflict of interest:** co-maintains Marten and Emmett and sells Event Sourcing workshops, so he writes about patterns he builds tooling for.
 Recorded rather than capped, per the `milan-jovanovic` and `nicholas-blumhardt` precedent, and the marking carries the usage rule instead.
 He publishes across .NET and Node, so prefer the .NET material and check the language of any example before citing it
+
+### `scott-brady` — Watch list
+
+Dormancy, by his own statement on the site: "While I am no longer actively blogging since moving away from individual contributor roles, this website includes an archive of material for those looking to learn OAuth and web security."
+The last substantial article is "Understanding WS-Federation: A modern primer for an obsolete protocol" from 2024-04, and the 2026-03 entry above it in [the article index](https://www.scottbrady.io/articles) is a conference write-up.
+Nothing carries the dormancy exception: the Substack newsletter last issued 2023-03-23, and the most recent live Pluralsight course is from 2022-08.
+Start year not established, the blocker having settled the question before longevity was reached.
+The OAuth and identity archive stays usable for cross-checking, and citing it needs admission first
 
 ### `scott-wlaschin` — Tier 1
 
@@ -353,3 +406,9 @@ Start year is an estimate from a testimonial referring to the blog in 2007
 | 2026-09-03 | Admitted `derek-comartin` (Tier 1, marked **Corroborate.**) | Best known for video, but the blog is a genuine written body of work: 2,000-word articles since 2012 that stand up without watching anything, so the writing scope is satisfied on the text alone. Marked because the arguments carry no code or measurements and because Particular Software sponsors the posts from inside the body, in its own product category |
 | 2026-09-03 | Admission pass aimed at `opinions/architecture.md` | The file rested on `milan-jovanovic` plus a marked `code-with-mukesh`, the thinnest sourcing in the repository, and `oskar-dudycz` had been admitted for the same gap but never woven. `mark-seemann` is the unmarked design source that was missing; weaving all four is `harvest-sources` work, not this pass |
 | 2026-09-10 | Admitted `ardalis` (Tier 1, marked **Corroborate.**) | Twenty-three years of continuous writing, still active on 2026-08-19, clears the longevity bar outright, and the id covers DevIQ and the Clean Architecture and Specification documentation alongside the blog. Marked because the sample runs from worked failure analysis through to a course funnel and release paraphrase; NimblePros, the courses and the libraries he maintains are recorded as a conflict rather than a cap, per the `jeremy-miller` precedent |
+| 2026-09-12 | Admitted `damien-bowden` (Tier 1) | Writing since 2013-01-31 and still publishing on 2026-09-01, with depth verified on posts that build the whole arrangement in code rather than describing it. Independent of every identity vendor he covers, so no cap; the OIDC client library he maintains and the workshops he sells are recorded as conflicts. Admitted to give BFF and browser-app authentication the depth source the `security` research topic could not find on the roster |
+| 2026-09-12 | Watch-listed `barry-dorrans` | The research topic called him the strongest candidate, on a twenty-year-old domain; the blog behind it is ten posts old, running 2025-11-18 to 2026-08-03, and from 2015 to 2025 the site was a static conference page whose output was talks. Longevity blocks admission however good the writing is, and the writing is very good, so the evidence is recorded in Notes rather than discarded. Re-evaluate from 2027-11 |
+| 2026-09-12 | Widened `khalid` scope to his Duende writing (no tier change) | His row made only pre-2025 posts citable while the dormancy exception rested on documentation work nobody had inspected. His Duende blog posts run at two a month through 2026-09-08 and carry his byline, so they come into scope per the `avalonia-blog` precedent, while the 387 documentation commits stay evidence that the writing continues rather than citable material, per `shay-rojansky`. New limit: every Duende post closes on a Duende product, so cite him there for mechanism and never alone on adopting one |
+| 2026-09-12 | Watch-listed `duende-blog` | Six years of posting and real technical depth, blocked on independence: every post read in full arrives at the paid product the company sells, in that product's own category. Multi-author too, so admitting the publication would admit five unvetted bylines — the `telerik-blog` blocker rather than the `avalonia-blog` cap. Khalid's posts there are citable under his own id instead |
+| 2026-09-12 | Watch-listed `scott-brady` | Dormant by his own statement on the site, with the last substantial article in 2024-04. The newsletter and the Pluralsight courses that might have carried the exception are staler still, so nothing keeps the writing live. The OAuth and identity archive stays available for cross-checking |
+| 2026-09-12 | `vet-source` pass on the `security` research topic's candidates | All seven candidates in the topic's item 7 were checked, and the topic's ranking did not survive: its strongest name is watch-listed and its second is the admission. OWASP's Cheat Sheet Series and Philippe De Ryck were declined, with reasons in the PR. The topic itself is unchanged and stays with `resolve-research` |
