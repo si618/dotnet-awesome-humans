@@ -6,7 +6,8 @@
 // Verifies that README.md indexes the repository in both directions: every file
 // under opinions/ has a linked Scope bullet and a Repository layout entry, every
 // directory under skills/ has a row in the Maintenance via skills table, and none
-// of those three places points at something that no longer exists.
+// of those three places points at something that no longer exists. Scope and the
+// layout tree are also held to their order: Scope by title, the tree by file name.
 //
 // A .NET 10 file-based app: no project, no build step, sharing its helpers with the
 // other checks via #:include. Run it from the repository root:
@@ -80,11 +81,40 @@ if (scope is not null)
     {
         errors.Add($"README.md: Scope links to {stale}, which no longer exists — drop or repoint the bullet");
     }
+
+    // Scope is kept alphabetical so a new bullet lands in one predictable place. By title,
+    // not file name — "Application architecture" is architecture.md — and ignoring case, so
+    // "ASP.NET Core" sorts as a reader expects. An unlinked bullet (Libraries) is a summary
+    // across the files above it rather than a topic of its own, so it stays last.
+    string? previous = null;
+    string? unlinked = null;
+
+    foreach ((string title, bool isLink) in ScopeBullets(scope))
+    {
+        if (!isLink)
+        {
+            unlinked ??= title;
+            continue;
+        }
+
+        if (unlinked is not null)
+        {
+            errors.Add(
+                $"README.md: Scope bullet '{title}' follows the unlinked '{unlinked}' bullet "
+                    + "— unlinked bullets stay last");
+        }
+        else if (previous is not null && StringComparer.OrdinalIgnoreCase.Compare(previous, title) > 0)
+        {
+            errors.Add($"README.md: Scope is not sorted by title — '{title}' follows '{previous}'");
+        }
+
+        previous = title;
+    }
 }
 
 if (layout is not null)
 {
-    HashSet<string> listed = TreeOpinions(layout);
+    List<string> listed = TreeOpinions(layout);
 
     if (listed.Count == 0)
     {
@@ -101,6 +131,17 @@ if (layout is not null)
     {
         errors.Add(
             $"README.md: Repository layout tree lists {Opinions.PathOf(stale)}, which no longer exists");
+    }
+
+    // Sorted by file name, the order Opinions.Names() and a directory listing both use.
+    for (int index = 1; index < listed.Count; index++)
+    {
+        if (StringComparer.Ordinal.Compare(listed[index - 1], listed[index]) > 0)
+        {
+            errors.Add(
+                $"README.md: Repository layout tree is not sorted under `{Opinions.DirectoryName}/` "
+                    + $"— {listed[index]} follows {listed[index - 1]}");
+        }
     }
 }
 
@@ -147,7 +188,8 @@ if (errors.Count > 0)
     return 1;
 }
 
-Console.WriteLine($"README indexes all {opinions.Length} opinion files and {skills.Count} skills, with no stale entries.");
+Console.WriteLine(
+    $"README indexes all {opinions.Length} opinion files and {skills.Count} skills, in order, with no stale entries.");
 return 0;
 
 // The body of a level-2 section, up to the next level-2 heading.
@@ -175,10 +217,18 @@ static string? Section(string text, string heading)
     return null;
 }
 
-// Files listed under the `opinions/` node of the repository layout tree.
-static HashSet<string> TreeOpinions(string layout)
+// Scope bullets in file order: each bullet's bold title, and whether that title is a link.
+static List<(string Title, bool Linked)> ScopeBullets(string scope) =>
+[
+    .. Patterns.ScopeBullet().Matches(scope).Select(match => match.Groups[1].Success
+        ? (match.Groups[1].Value, true)
+        : (match.Groups[2].Value, false)),
+];
+
+// Files listed under the `opinions/` node of the repository layout tree, in tree order.
+static List<string> TreeOpinions(string layout)
 {
-    HashSet<string> listed = [];
+    List<string> listed = [];
     bool inside = false;
 
     foreach (string line in layout.Split('\n'))
@@ -245,6 +295,11 @@ internal static partial class Patterns
     // Reference-style link definition: [label]: opinions/x.md
     [GeneratedRegex(@"^\s*\[[^\]]+]:\s*(opinions/[\w.-]+\.md)", RegexOptions.Multiline)]
     internal static partial Regex ReferenceOpinionLink();
+
+    // A Scope bullet's bold title: group 1 when it is a link — **[Title](...):** — and
+    // group 2 when it is plain text — **Libraries:**.
+    [GeneratedRegex(@"^- \*\*(?:\[([^\]]+)]|([^*]+?):?\*\*)", RegexOptions.Multiline)]
+    internal static partial Regex ScopeBullet();
 
     [GeneratedRegex(@"^[├└]── opinions/")]
     internal static partial Regex TreeOpinionsNode();
