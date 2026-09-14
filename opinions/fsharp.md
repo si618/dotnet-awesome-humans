@@ -1,8 +1,8 @@
 ---
 targets: [net10.0, fsharp-10]
-last-reviewed: 2026-08-12
-last-used: 2026-08-12
-sources: [dotnet-blog, ms-learn, scott-wlaschin]
+last-reviewed: 2026-09-14
+last-used: 2026-09-14
+sources: [dotnet-blog, ms-learn, scott-wlaschin, mark-seemann]
 ---
 
 # F#
@@ -88,6 +88,7 @@ let describe payment =
 ## Mixed C#/F# solutions
 
 - **Put the domain model and core business logic in F# projects; hosts and framework-heavy edges (ASP.NET Core startup, UI shells) can stay C#.** The type-driven modelling above is where F# pays for itself; project references work in both directions, so the C# host consumes the F# domain like any other assembly. ([F# component design guidelines](https://learn.microsoft.com/dotnet/fsharp/style-guide/component-design-guidelines))
+- **Part of what the F# projects buy you is the ban on cycles.** F# compiles files in declaration order and disallows circular dependencies between them, so a layering violation fails the build instead of waiting for a reviewer to notice it. Seemann rates this the strongest architectural argument for the language: what C# asks you to hold to by convention, F# enforces by construction. He is even-handed about the cost, giving C# the Razor integration, the editor tooling, and the mature complexity, coverage and mutation-testing support. ([Seemann: Worse is better: C# versus F#](https://blog.ploeh.dk/2026/09/08/worse-is-better-c-versus-f/))
 - **Keep F#-specific types off public API boundaries consumed by C#.** Inside F# projects, use `Option`, F# lists, and curried functions freely; on the boundary, expose namespaces with classes and tupled methods, and prefer `ValueOption`/nullable and `IReadOnlyList<'T>`/`seq` over `FSharpOption`/`FSharpList` leaking into C# signatures. ([F# component design guidelines: Guidelines for libraries for use from other .NET languages](https://learn.microsoft.com/dotnet/fsharp/style-guide/component-design-guidelines))
 - **Share the repository-standard `Directory.Build.props` / `Directory.Packages.props` across both languages** (see `templates/`); F# projects get the same TFM, CPM, and CI treatment — no parallel build conventions.
 
@@ -114,4 +115,4 @@ let ``Create_StringWithoutAtSign_ReturnsNone`` () =
 
 ## Source-redundancy note
 
-The independent F# bench is thin right now: F# for Fun and Profit published only a two-part design series in the 2025-11 → 2026-08 window (December 2025; its back catalogue on domain modelling and functional design remains the canonical reference), and F# Weekly's window surfaced mostly ecosystem news. F# opinions therefore lean more heavily on official sources than the C# opinions do.
+The independent F# bench is thin, and thinner than at the last review. F# for Fun and Profit has published nothing since its two-part design series of December 2025, over eight months as of 2026-09-14; its back catalogue on domain modelling and functional design remains the canonical reference, and the silence is recorded against `scott-wlaschin` for the next `vet-source` pass. F# Weekly keeps surfacing ecosystem news rather than argument. `mark-seemann` is the one addition here, independent and unmarked, though he argues about the language more than he writes in it. F# opinions therefore still lean more heavily on official sources than the C# opinions do.

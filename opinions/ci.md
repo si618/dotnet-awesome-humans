@@ -1,7 +1,7 @@
 ---
 targets: [net10.0]
-last-reviewed: 2026-08-20
-last-used: 2026-09-11
+last-reviewed: 2026-09-14
+last-used: 2026-09-14
 sources: [meziantou, ms-learn, house]
 ---
 
@@ -14,6 +14,7 @@ Supply-chain hygiene is not optional in the agentic era.
 - **Pin GitHub Actions to commit SHAs, not mutable tags:** tags move silently; SHAs don't. Automate the sweep across repositories. ([Meziantou: SHA pinning](https://www.meziantou.net/enable-sha-pinning-for-github-actions-across-personal-repositories.htm))
 - **Never interpolate user-provided input into workflow scripts:** pass it via environment variables and parse deliberately (script-injection is the top Actions vulnerability). ([Meziantou: Safely passing extra arguments](https://www.meziantou.net/safely-passing-extra-arguments-in-github-actions-workflows-using-powershell.htm))
 - **CI builds are pinned and reproducible:** `global.json` decides the SDK, lock files or CPM decide packages — a CI run must not float versions the repo didn't choose.
+- **Restrict what a package may run, not only which version restores.** A `PackageReference` can carry MSBuild props and targets, analyzers and source generators, all of which execute during restore, design-time build and compile. Pinning the version says which code you get; it does not say that none of it runs. Name the asset types a package actually needs and leave the rest out: `IncludeAssets="compile;runtime"` for a library you only call, and `PrivateAssets="all"` on build-only tooling so it never reaches your consumers. Some packages are their build logic, so expect to loosen this per package and to re-test when you tighten it. ([Meziantou: Limit what NuGet packages can do in your project](https://www.meziantou.net/limit-what-nuget-packages-can-do-in-your-project.htm))
 - **House:** Warnings are treated as errors everywhere, not only in CI — a warning discovered on the build machine and not the workstation is one that shipped a day late. Suppressing a warning — `#pragma warning disable`, `[SuppressMessage]`, or a `<NoWarn>` entry — always carries an inline comment stating why; an unexplained suppression is reverted on sight, since the reviewer should never have to reconstruct the reason.
 
 ## Pipeline shape
