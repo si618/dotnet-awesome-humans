@@ -1,8 +1,9 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-12
+last-reviewed: 2026-09-14
 last-used: 2026-09-14
-sources: [dotnet-blog, aspnet-blog, ms-learn, meziantou, andrew-lock]
+sources:
+  [dotnet-blog, aspnet-blog, ms-learn, meziantou, andrew-lock, milan-jovanovic]
 ---
 
 # ASP.NET Core
@@ -90,6 +91,29 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 **Use ASP.NET Core Identity's built-in passkey (WebAuthn/FIDO2) support for user sign-in instead of passwords or a third-party FIDO library.** Passkey management and login ship in Identity and the Blazor Web App template in .NET 10 — phishing-resistant, nothing server-side to leak, and no extra dependency to vet. Keep a second factor or recovery path for account recovery, but new apps should not be growing a password table in 2026. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0), [Passkeys in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/authentication/passkeys/))
 
 **Return 401/403 from API endpoints, never login redirects:** ASP.NET Core 10 avoids cookie redirects for known API endpoints; align custom auth handlers with that. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+
+### Request timeouts
+
+**Give every endpoint a deadline, and flow the cancellation token into the work it starts.** ASP.NET Core applies no application timeout of its own, so a stalled query or dependency keeps consuming resources long after the response stops being useful, and whatever sits in front of you ends up owning both the deadline and the response body. `AddRequestTimeouts` only registers the services; the limit comes from a named policy or `WithRequestTimeout` on the endpoint. The middleware is cooperative, which is the part that catches people out: it cancels `HttpContext.RequestAborted` and then waits. A handler that never passes the token on runs to completion and returns 200, and no 504 appears, because nothing threw. So a 504 tells you cancellation reached the middleware, not that the database stopped working. Give reads and exports separate policies rather than one global number, and opt streaming responses out with `DisableRequestTimeout()`, since a response that has already begun cannot be replaced with a clean 504. ([Microsoft Learn: Request timeouts middleware](https://learn.microsoft.com/aspnet/core/performance/timeouts), [Jovanović: Your ASP.NET Core endpoints don't have a timeout](https://www.milanjovanovic.tech/blog/your-aspnetcore-endpoints-dont-have-a-timeout))
+
+```csharp
+builder.Services.AddRequestTimeouts(options =>
+{
+    options.AddPolicy("api-read", TimeSpan.FromSeconds(3));
+    options.AddPolicy("report-export", TimeSpan.FromSeconds(30));
+});
+
+app.UseRequestTimeouts();
+
+// The token reaches EF Core, so the timeout actually stops the query.
+app.MapGet("/orders/{id:guid}", async (Guid id, AppDbContext db, CancellationToken cancellationToken) =>
+        await db.Orders.AsNoTracking().SingleOrDefaultAsync(o => o.Id == id, cancellationToken))
+    .WithRequestTimeout("api-read");
+
+app.MapGet("/events", StreamEvents).DisableRequestTimeout();
+```
+
+Timeouts do not fire while a debugger is attached, so verify this one without.
 
 ### Rate limiting
 

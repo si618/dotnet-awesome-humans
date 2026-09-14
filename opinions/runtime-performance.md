@@ -11,6 +11,7 @@ sources:
     jetbrains-dotnet,
     jon-skeet,
     andrew-lock,
+    ardalis,
   ]
 ---
 
@@ -100,6 +101,8 @@ Never use a rented buffer after returning it, and never assume `Rent` gives exac
 - **A CPU-bound batch/worker app that isn't ASP.NET Core**: opt _in_ to server GC for throughput.
 
 ([Microsoft Learn: Workstation and server GC](https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc), [Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
+
+**Set GC knobs in `runtimeconfig.json` or MSBuild, because the environment-variable form is hexadecimal and gets this wrong silently.** `DOTNET_GCHeapHardLimitPercent=60` does not cap the heap at 60%. The value is parsed as hex, so it reads as 0x60, which is 96%, and the cap you thought you set is barely a cap at all. Written as `System.GC.HeapHardLimitPercent` in `runtimeconfig.json` the same number is decimal and means what it says. The rule covers the numeric GC settings generally, heap count and LOH threshold and high-memory percent among them. Usually there is nothing to switch on in the first place: under a container memory limit the GC already treats that limit as total physical memory and defaults the hard limit to 75% of it, so a value of your own tightens a default rather than enabling one. ([Microsoft Learn: Garbage collector config settings](https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector) — reviewed 2026-02-09; [Smith: Top 10 ways to reduce .NET memory usage in Kubernetes](https://ardalis.com/top-10-ways-to-reduce-net-memory-usage-in-kubernetes/))
 
 **`Environment.ProcessorCount` tells you what this process may use, not what the machine has.** Since .NET 6 it honours process affinity and container CPU limits, so under a cgroup quota it reports the quota. That is the number you want for sizing a thread pool or a `Parallel` loop, and the wrong one for reporting host capacity or counting cores for a licence. The BCL exposes no host total, so the platform call is the only route: `GetActiveProcessorCount` on Windows, `sysctlbyname("hw.logicalcpu")` on macOS, and parsing `/sys/devices/system/cpu/online` on Linux. Cache it behind a singleton, since it cannot change while the process lives, and declare the import with `[LibraryImport]` so the marshalling is source-generated and survives trimming. ([Lock: Finding the total number of processors on a machine with .NET](https://andrewlock.net/finding-the-total-number-of-processors-on-a-machine-with-dotnet/))
 
