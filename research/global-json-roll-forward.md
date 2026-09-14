@@ -11,8 +11,9 @@ For .NET 10 that means `10.0.1xx` or `10.0.4xx` and nothing in between, because 
 Narrowing to a band that has aged out trades a hypothetical build break for a real one: no more security patches.
 
 Two things follow, and they are the practical heart of this topic.
-`latestPatch` does **not** cost you security fixes, as long as the floor is on a serviced band.
-And when a band update does break a build, the first lever is `SdkAnalysisLevel`, which tells a newer SDK to behave like an older band for a documented set of diagnostics.
+`latestPatch` costs you no security fixes **provided** the floor sits on a band that is still serviced and a current patch is published in that band for the policy to resolve to; the policy on its own carries no such promise.
+And when a band update does break a build, `SdkAnalysisLevel` is the first lever only where the behaviour that broke is one the property documents — it is not a general "make this SDK behave like the older band" switch.
+Outside that set, the lever is whatever compatibility switch governs the specific behaviour, and narrowing `rollForward` is what is left when there is no such switch.
 
 ## Why the feature band is where compatibility stops
 
@@ -77,9 +78,9 @@ That is the mechanism behind "green yesterday, red today", and it is worth being
 One reported case, useful as a shape rather than as a settled fact: SDK 10.0.300 was reported to roughly double `.slnx` build times against 10.0.204, and the reporter's mitigation was a narrower `global.json` pin.
 ([dotnet/sdk#54344](https://github.com/dotnet/sdk/issues/54344) — **unvetted**, an unresolved issue report, not verified here)
 
-## The better lever: `SdkAnalysisLevel`
+## The better lever, where it applies: `SdkAnalysisLevel`
 
-Introduced in .NET 9, `SdkAnalysisLevel` takes a feature band as its value and tells a newer SDK to behave as an older one for a documented set of behaviours.
+Introduced in .NET 9, `SdkAnalysisLevel` takes a feature band as its value and reverts a newer SDK to older behaviour **only for those behaviours its documentation lists**, not for the band as a whole.
 Its design document names the exact scenario this topic is about: users "are often not in control of the versions of the SDK used to build their code".
 
 ```xml
@@ -93,8 +94,9 @@ Two limits matter. The property covers only the behaviours in the documented tab
 And a value ages out after three major releases.
 ([Microsoft Learn: MSBuild properties for .NET SDK projects](https://learn.microsoft.com/dotnet/core/project-sdk/msbuild-props#sdkanalysislevel), [dotnet/designs: SDK Analysis Level Property and Usage](https://github.com/dotnet/designs/blob/main/proposed/sdk-analysis-level.md) — the design document is **unvetted**)
 
-Prefer it to a narrower `rollForward` because it is scoped and reviewable.
+Where the incompatibility is in that table, prefer it to a narrower `rollForward` because it is scoped and reviewable.
 It names the behaviour you are declining in the project file, where the next reader will find it, and it leaves the SDK free to roll forward for everything else.
+Where it is not, the same preference for the scoped, reviewable option gives the order: the compatibility switch that governs the specific behaviour if one exists — setting `NuGetAuditMode` explicitly, for instance, rather than inheriting a default that moved in a patch — and only then a narrower `rollForward`.
 
 ## The one case where `disable` is the documented answer
 
@@ -123,13 +125,17 @@ Two .NET 10 fields make a narrow pin survivable, and both are worth pairing with
 
 ## Decision table
 
-| Situation                                                          | Policy                               | Floor                              |
-| ------------------------------------------------------------------ | ------------------------------------ | ---------------------------------- |
-| Default, including this repository                                 | `latestFeature`                      | Lowest band that has what you need |
-| A band update broke the build                                      | `latestFeature` + `SdkAnalysisLevel` | Unchanged                          |
-| Build tooling must not move during a release, audit or attestation | `latestPatch`                        | `1xx` or the final band only       |
-| Committed `packages.lock.json` with locked-mode restore            | `disable`, ideally with `sdk.paths`  | Exact patch                        |
-| Reproducing a regression locally                                   | `disable`, temporarily               | The known-good patch               |
+| Situation                                                          | Policy                                                                                            | Floor                                                 |
+| ------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------- | ----------------------------------------------------- |
+| Default, including this repository                                 | `latestFeature`                                                                                   | Lowest band that has what you need                    |
+| A band update broke a behaviour `SdkAnalysisLevel` documents       | `latestFeature` + `SdkAnalysisLevel`                                                              | Unchanged                                             |
+| A band update broke anything else                                  | `latestFeature` + that behaviour's own switch, or a narrower `rollForward` where no switch exists | Unchanged, unless narrowing                           |
+| Build tooling must not move during a release, audit or attestation | `latestPatch`                                                                                     | A band still serviced today — `1xx` or the final band |
+| Committed `packages.lock.json` with locked-mode restore            | `disable`, ideally with `sdk.paths`                                                               | Exact patch                                           |
+| Reproducing a regression locally                                   | `disable`, temporarily                                                                            | The known-good patch                                  |
+
+The `latestPatch` row is safe only under both halves of its floor condition: the band is still in support, **and** the band has a current patch published for the policy to resolve to.
+`latestPatch` is a resolution policy, not a servicing guarantee — on a band that has aged out it resolves to the newest patch that band will ever get, which is exactly the pin to unpatched tooling it looks like it avoids.
 
 ## A disagreement worth recording
 
