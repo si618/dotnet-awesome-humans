@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14, fsharp-10]
-last-reviewed: 2026-08-24
+last-reviewed: 2026-09-14
 sources: [ms-learn]
 ---
 
@@ -46,7 +46,7 @@ This is the part most write-ups skip, and it decides the whole question.
 
 Feature bands do not all get the same support window.
 The `1xx` band is serviced for the life of the major version, the final band of a major version is serviced for the life of the matching runtime, and the bands in between are supported only until roughly the next band ships.
-As of 2026-08-24 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio versioning](https://learn.microsoft.com/dotnet/core/porting/versioning-sdk-msbuild-vs)):
+As of 2026-09-14 ([Microsoft Learn: .NET SDK, MSBuild, and Visual Studio versioning](https://learn.microsoft.com/dotnet/core/porting/versioning-sdk-msbuild-vs)):
 
 | SDK band   | Ship date | Supported until |
 | ---------- | --------- | --------------- |
@@ -62,6 +62,12 @@ Where the floor is on a serviced band, the security objection disappears entirel
 The 10.0.11 servicing release on 2026-08-11 shipped **three** SDKs at once: 10.0.400, 10.0.303 and 10.0.111, carrying the same ten CVE fixes.
 A repository pinned `latestPatch` at `10.0.100` took 10.0.111 and got every fix while declining the MSBuild and NuGet changes in the 4xx band.
 ([.NET 10 release notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.11/10.0.11.md) — **unvetted**, as above)
+
+The next servicing release makes the same point from the other side.
+10.0.12 on 2026-09-08 shipped only **two** SDKs, 10.0.401 and 10.0.112.
+The 3xx band, which the table above gives as supported until August, had aged out and got nothing, so a repository pinned `latestPatch` at `10.0.300` went from fully patched to frozen in the space of one month without changing a line.
+That is the support cliff as an observed event rather than a projection, and it is the reason the floor's band matters more than the policy on it.
+([.NET 10.0.12 release notes](https://github.com/dotnet/core/blob/main/release-notes/10.0/10.0.12/10.0.12.md) — **unvetted**, as above)
 
 Note what this rules out. `rollForward: disable` pins a single patch, and a servicing update **removes the patch it supersedes** within the same band.
 The pinned SDK stops existing on the machine that updates, while band installs do sit side by side.
