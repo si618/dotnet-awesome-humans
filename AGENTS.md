@@ -37,6 +37,18 @@ Maintenance skills involve wide, shallow work (sweeping sources, fetching pages,
 - **Reserve the strongest available model as the "editor".** Only the editor (the orchestrating model) synthesizes worker-agent findings, resolves conflicts between sources, and actually updates `opinions/` and `templates/`. Opinion-shaping judgment is exactly where model quality matters; never delegate the final edit to a cheap model.
 - This split is a recommendation, not a requirement — a single-model host can run everything itself, but should still keep the gather/decide separation.
 
+### Writing in the author's name
+
+An agent working with the author's credentials speaks in the author's name: a review comment it posts appears under the author's account, with nothing to show a reader that a person did not write it. So whenever an agent writes something that could be taken for the author's own words, it identifies itself on the closing line, naming the agent and its model:
+
+```text
+[Comment added by <agent> - <model>]
+```
+
+- **What gets signed:** prose published under the author's identity. That covers a pull request review and its inline comments, a reply in a review thread, and a comment on an issue or a discussion, on this repository or any other the agent acts on for the author. The sign-off is the last line, on its own, in the form `[Comment added by <agent> - <model>]`.
+- **What does not:** administrative and housekeeping actions that publish no prose, such as applying a label, requesting a reviewer, merging, closing or reopening, resolving a thread, re-running a check or deleting a branch. An approval with an empty body is housekeeping. The moment one of these carries written text, the text is signed.
+- **Already attributed:** a commit's `Co-Authored-By` trailer and a "Generated with" line the host appends to a pull request description already name the agent, and satisfy this rule without a second sign-off. Where the host adds nothing, add the closing line.
+
 ## Metadata
 
 Three kinds of resource carry this metadata, in the two syntaxes their file formats allow. `opinions/` and `templates/` carry four fields — `targets`, `last-reviewed`, `last-used`, `sources`. `research/` carries three: no `last-used`.
