@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-14
-last-used: 2026-09-14
+last-reviewed: 2026-09-15
+last-used: 2026-09-15
 sources: [ms-learn, meziantou, andrew-lock, house, dotnet-blog]
 ---
 
@@ -40,7 +40,7 @@ Tests are first-class code: same review bar, same conventions.
 
 - **Getting off VSTest buys more than switching framework.** Meziantou benchmarked xUnit v3 4.0.0, NUnit 4.6.1, MSTest 4.4.0 and TUnit 1.65.68 on the .NET 10 SDK at up to 10,000 tests. The legacy VSTest path ran 4.9× slower than the MTP executable for xUnit v3, 5.1× slower for MSTest and 1.5× slower for NUnit, a gap he puts at three to four times what the choice of framework is worth. Per-test marginal cost separates the frameworks far less: 15µs for MSTest, 42µs for TUnit, 56µs for xUnit v3, 85µs for NUnit. Read those figures as a reason to keep the `global.json` opt-in above honest, not as a reason to leave xUnit. ([Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
-- **Publish the test project the way you publish the app: if the app ships Native AOT, run its tests as a Native AOT build too.** Trimming and the reflection-free serialization that comes with it change behaviour the managed test run cannot observe, so a green suite can still fail once published. `System.Text.Json` is the usual first casualty, throwing `InvalidOperationException` because reflection-based serialization is disabled; the fix is a `[JsonSerializable]` context on the app side rather than anything wrong with the test. This narrows framework choice too, because NUnit has no Native AOT support at all. ([Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
+- **If the app ships Native AOT, add a representative native test lane beside the managed suite.** The managed run stays the fast-feedback lane on every change. The native lane publishes one C# test project with `<PublishAot>true</PublishAot>` and runs the resulting executable, because trimming and the reflection-free serialization that comes with it change behaviour a managed run cannot observe, so a green suite can still fail once published. `System.Text.Json` is the usual first casualty, throwing `InvalidOperationException` because reflection-based serialization is disabled; the fix is a `[JsonSerializable]` context on the app side rather than anything wrong with the test. That project references `xunit.v3.aot.mtp-v2` in place of `xunit.v3`: the AOT variant replaces the reflection-based package, so it cannot share a project with the managed suite, and F# test projects stay on the managed lane. NUnit has no Native AOT support at all. ([xUnit.net: Testing with Native AOT](https://xunit.net/docs/getting-started/v3/native-aot), [.NET Blog: Test what you ship: MSTest and Native AOT](https://devblogs.microsoft.com/dotnet/mstest-source-generation/), [Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
 ## Naming and structure
 
