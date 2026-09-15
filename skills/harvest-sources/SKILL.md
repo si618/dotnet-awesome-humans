@@ -25,7 +25,7 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
    - **Changes an existing opinion:** the guidance supersedes or refines something in `opinions/`. Queue an edit.
    - **Suggests a new opinion:** a recurring theme with no home yet. Create a stub opinion with frontmatter, the source link, and a `TODO`, then index it in `README.md` (a linked Scope bullet and a Repository layout entry) in the same commit — CI fails the PR otherwise.
    - **Noise:** release chatter, product marketing, one-off tips that don't generalise. Skip.
-5. **Apply the edits on a working branch** (never the default branch; follow the host environment's branch-naming convention):
+5. **Apply the edits on a working branch** (never the default branch) named `harvest/<YYYY-MM-DD>`, dated the day the sweep window ends, per the branch names in [AGENTS.md](../../AGENTS.md):
    - Keep opinions opinionated — one recommendation. If a new post contradicts the current opinion, prefer the stronger-sourced or better-evidenced position and note the supersession in one line.
    - **Never remove, dilute, or un-mark house content** (`house` source id, `**House:**` marking — canonical rules in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). If a source contradicts a house opinion, the house opinion stands per those rules; if a source newly agrees, add the citation alongside the marking — the marking stays.
    - Add the post's source id to the opinion's `sources:` frontmatter and update `last-reviewed:`.
