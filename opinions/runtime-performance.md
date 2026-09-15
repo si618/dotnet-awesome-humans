@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-08-18
-last-used: 2026-08-20
+last-reviewed: 2026-09-14
+last-used: 2026-09-14
 sources:
   [
     stephen-toub,
@@ -10,6 +10,8 @@ sources:
     steve-gordon,
     jetbrains-dotnet,
     jon-skeet,
+    andrew-lock,
+    ardalis,
   ]
 ---
 
@@ -100,8 +102,12 @@ Never use a rented buffer after returning it, and never assume `Rent` gives exac
 
 ([Microsoft Learn: Workstation and server GC](https://learn.microsoft.com/dotnet/standard/garbage-collection/workstation-server-gc), [Toub: Performance Improvements in .NET 10](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-10/))
 
+**Set GC knobs in `runtimeconfig.json` or MSBuild, because the environment-variable form is hexadecimal and gets this wrong silently.** `DOTNET_GCHeapHardLimitPercent=60` does not cap the heap at 60%. The value is parsed as hex, so it reads as 0x60, which is 96%, and the cap you thought you set is barely a cap at all. Written as `System.GC.HeapHardLimitPercent` in `runtimeconfig.json` the same number is decimal and means what it says. The rule covers the numeric GC settings generally, heap count and LOH threshold and high-memory percent among them. Usually there is nothing to switch on in the first place: under a container memory limit the GC already treats that limit as total physical memory and defaults the hard limit to 75% of it, so a value of your own tightens a default rather than enabling one. ([Microsoft Learn: Garbage collector config settings](https://learn.microsoft.com/dotnet/core/runtime-config/garbage-collector) — reviewed 2026-02-09; [Smith: Top 10 ways to reduce .NET memory usage in Kubernetes](https://ardalis.com/top-10-ways-to-reduce-net-memory-usage-in-kubernetes/))
+
+**`Environment.ProcessorCount` tells you what this process may use, not what the machine has.** Since .NET 6 it honours process affinity and container CPU limits, so under a cgroup quota it reports the quota. That is the number you want for sizing a thread pool or a `Parallel` loop, and the wrong one for reporting host capacity or counting cores for a licence. The BCL exposes no host total, so the platform call is the only route: `GetActiveProcessorCount` on Windows, `sysctlbyname("hw.logicalcpu")` on macOS, and parsing `/sys/devices/system/cpu/online` on Linux. Cache it behind a singleton, since it cannot change while the process lives, and declare the import with `[LibraryImport]` so the marshalling is source-generated and survives trimming. ([Lock: Finding the total number of processors on a machine with .NET](https://andrewlock.net/finding-the-total-number-of-processors-on-a-machine-with-dotnet/))
+
 ## Native AOT
 
-**Use Native AOT for short-lived and size-sensitive workloads — CLI tools, serverless functions, sidecars; keep the JIT for long-running services.** AOT wins startup (milliseconds, no JIT warmup) and disk/memory footprint; the JIT wins steady-state throughput via tiered compilation and dynamic PGO, and tolerates reflection-heavy libraries that AOT's trimming breaks. Going AOT means the whole dependency graph must be trim/AOT-safe (source-generated JSON, no runtime codegen) — audit `IsAotCompatible` warnings before committing. .NET 10 file-based apps make the CLI-tool case trivial: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps))
+**Use Native AOT for short-lived and size-sensitive workloads — CLI tools, serverless functions, sidecars; keep the JIT for long-running services.** AOT wins startup (milliseconds, no JIT warmup) and disk/memory footprint; the JIT wins steady-state throughput via tiered compilation and dynamic PGO, and tolerates reflection-heavy libraries that AOT's trimming breaks. Going AOT means the whole dependency graph must be trim/AOT-safe (source-generated JSON, no runtime codegen) — audit `IsAotCompatible` warnings before committing, and run the test suite as an AOT build too, because the reflection failures this causes appear nowhere else (see [testing.md](testing.md#framework-and-platform)). .NET 10 file-based apps make the CLI-tool case trivial: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps))
 
 **Decide invariant globalization separately from AOT.** `dotnet new webapiaot` sets `<InvariantGlobalization>true</InvariantGlobalization>` next to `<PublishAot>true</PublishAot>`, so the property tends to enter a codebase attached to a decision that has nothing to do with it — and it changes what every `ToString` and `Compare` in the app does. Keep it only if you meant it (see [globalization.md](globalization.md)).
