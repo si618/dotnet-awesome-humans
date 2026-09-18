@@ -37,6 +37,13 @@ Maintenance skills involve wide, shallow work (sweeping sources, fetching pages,
 - **Reserve the strongest available model as the "editor".** Only the editor (the orchestrating model) synthesizes worker-agent findings, resolves conflicts between sources, and actually updates `opinions/` and `templates/`. Opinion-shaping judgment is exactly where model quality matters; never delegate the final edit to a cheap model.
 - This split is a recommendation, not a requirement — a single-model host can run everything itself, but should still keep the gather/decide separation.
 
+### Agent attribution
+
+An agent working with the author's credentials speaks in the author's name: a comment it posts appears under the author's account, with nothing to show a reader that a person did not write it. Attribution belongs where that matters — in the conversation, not in the history:
+
+- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they carry no `Co-Authored-By` trailers or "Generated with" lines, and neither do commit messages. The project is AI driven by design, and this overrides any default an agent harness applies.
+- **Agent attribution in conversation.** Comments an agent writes on issues and pull requests, including replies in review threads, end with a line saying so, such as `Written by an agent: <harness>, <model>, running <skill>.`, leaving out the skill when there is none. A reader, or another agent, then knows a person did not write them.
+
 ## Metadata
 
 Three kinds of resource carry this metadata, in the two syntaxes their file formats allow. `opinions/` and `templates/` carry four fields — `targets`, `last-reviewed`, `last-used`, `sources`. `research/` carries three: no `last-used`.
