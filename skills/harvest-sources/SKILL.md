@@ -30,11 +30,11 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
    - **Never remove, dilute, or un-mark house content** (`house` source id, `**House:**` marking — canonical rules in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). If a source contradicts a house opinion, the house opinion stands per those rules; if a source newly agrees, add the citation alongside the marking — the marking stays.
    - Add the post's source id to the opinion's `sources:` frontmatter and update `last-reviewed:`.
 6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: date, window covered, and what was folded in, at the length of the entries already there. Per-source findings go in the PR (step 7), not the table cell.
-7. **Open a PR** to the default branch summarising per-source findings and per-opinion changes. A human reviews before it becomes "the opinion".
+7. **Open a PR** to the default branch summarising per-source findings and per-opinion changes. A human reviews before it becomes "the opinion". If an open `Harvest due: <Month> <Year>` issue asked for this sweep, put `Closes #<number>` in the PR body so merging retires it. The `Harvest reminder` workflow opens that issue on the 1st and skips the month when an open one already carries the title, so an issue left behind swallows the next reminder rather than merely looking untidy. If the PR is ever replaced by another, carry the keyword across to the replacement — the reference does not survive on its own.
 
 ## Edge cases
 
 - **Conflicting guidance between vetted sources:** present both in the PR description and pick one for the opinion, stating why. Never leave a menu in the opinion file.
 - **A source has gone quiet or its content quality has dropped:** note it in the PR; propose demotion via `vet-source` rather than editing the roster inline.
 - **Preview-version content:** may be captured in a "coming next" aside but never becomes the opinion (see repository freshness policy).
-- **Nothing notable found:** still record the sweep in the decision log (on the default branch or via a trivial PR) so the window tracking stays honest.
+- **Nothing notable found:** still record the sweep in the decision log (on the default branch or via a trivial PR) so the window tracking stays honest, and close the reminder issue either way. A sweep that found nothing is still a sweep, and an open issue costs the following month its reminder.
