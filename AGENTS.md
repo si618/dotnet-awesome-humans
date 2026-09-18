@@ -46,7 +46,7 @@ Maintenance skills involve wide, shallow work (sweeping sources, fetching pages,
 
 An agent working with the author's credentials speaks in the author's name: a comment it posts appears under the author's account, with nothing to show a reader that a person did not write it. Attribution belongs where that matters — in the conversation, not in the history:
 
-- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they carry no `Co-Authored-By` trailers or "Generated with" lines, and neither do commit messages. The project is AI driven by design, and this overrides any default an agent harness applies.
+- **No agent attribution in history.** Pull request titles and descriptions become squash commits, so they carry no `Co-Authored-By` trailers or "Generated with" lines, and neither do commit messages. The project is AI driven by design, and this overrides any default an agent harness applies. It covers every commit on a branch, not only the pull request: squashing appends a `Co-authored-by` line to the merged commit for each co-author trailer and each author other than the merger on the branch's commits, whatever the pull request description says. So commit as the author's git identity, never as an identity the agent harness supplies, and leave the trailer out of branch commits too.
 - **Agent attribution in conversation.** Comments an agent writes on issues and pull requests, including replies in review threads, end with a line saying so, such as `Written by an agent: <harness>, <model>, running <skill>.`, leaving out the skill when there is none. A reader, or another agent, then knows a person did not write them.
 
 ## Metadata
