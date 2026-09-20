@@ -24,7 +24,7 @@ Start with a modular monolith. Organise the code inside each module as vertical 
 
 ## Source redundancy
 
-The file opened on two sources admitted the same day under the lowered longevity bars (`milan-jovanovic` Tier 1 with a conflict-of-interest note, `code-with-mukesh` Tier 1 marked **Corroborate.**), both of which sell templates and courses built on exactly these patterns. `mark-seemann` and `ms-learn` now stand beside them, unmarked and with nothing to sell on this topic, so the load-bearing claims no longer rest on commercially interested sources alone. `derek-comartin` is marked **Corroborate.** and takes NServiceBus sponsorship inside the article body, which is why the event bullet leads on Microsoft Learn and flags the sponsorship where a reader will see it.
+The file opened on two sources admitted the same day under the lowered longevity bars (`milan-jovanovic` with a conflict-of-interest note, `code-with-mukesh` marked **Corroborate.**), both of which sell templates and courses built on exactly these patterns. `mark-seemann` and `ms-learn` now stand beside them, unmarked and with nothing to sell on this topic, so the load-bearing claims no longer rest on commercially interested sources alone. `derek-comartin` is marked **Corroborate.** and takes NServiceBus sponsorship inside the article body, which is why the event bullet leads on Microsoft Learn and flags the sponsorship where a reader will see it.
 
 Treat anything stronger than the above as still unsourced: prescribed folder names, mediator libraries, per-slice project counts.
 

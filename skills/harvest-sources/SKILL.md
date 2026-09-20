@@ -18,7 +18,7 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
 
 ## Steps
 
-1. **Load the roster** from [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md). Only Tier 1 and Tier 2 sources feed opinions. Watch-list sources are for discovery and cross-checking only — anything found there needs a Tier 1/2 corroboration or a `vet-source` admission before it can shape an opinion.
+1. **Load the roster** from [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md). Only sources in the **Citable** table feed opinions. Watch-list sources are for discovery and cross-checking only — anything found there needs a citable corroboration or a `vet-source` admission before it can shape an opinion.
 2. **Determine the sweep window.** Use the most recent harvest entry in the decision log of `AWESOME-HUMANS.md` (or the newest `last-reviewed` date across `opinions/` if none). Sweep from then to today.
 3. **Sweep each source** for posts in the window. Sources whose notes section carries the `**Discovery-only.**` marking (currently `awesome-dotnet`, `fsharp-weekly`, `csharp-digest`, `awesome-blazor`, `awesome-avalonia`) are leads to primary posts — follow the links; never cite the discovery source itself in `sources:`, which CI rejects.
 4. **Triage each notable post** into one of:

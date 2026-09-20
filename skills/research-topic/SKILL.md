@@ -22,12 +22,12 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-types`. One branch per topic, created before the first write, so the research topic and the `last-used` bumps land together and stay reviewable. The slug is the topic kebab-cased as the repository already names it — `union-types`, not `union-type` — so branch, research topic, and opinions stay searchable by one term. The branch names in [AGENTS.md](../../AGENTS.md) outrank the host environment's convention; where the host will only push under its own prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
 3. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
 4. **Sweep the roster in precedence order:**
-   - **Tier 1/2 sources** weighted by focus match (check the roster's Focus column) — these are quotable.
+   - **Citable sources** weighted by focus match (check the roster's Focus column) — these are quotable.
    - **Watch-list sources** for discovery and cross-checking — label them.
    - **Non-roster material is welcome in research:** recent topics are often covered first by newer, not-yet-vetted voices, and research is where they prove useful. Flag every such citation as **unvetted**, keep unvetted claims visually distinct from roster-sourced ones, and record promising sources as `vet-source` candidates in the closing section. A named package's own documentation, release notes and issues are references rather than unvetted sources, so they need no flag ([AWESOME-HUMANS.md: Admission criteria](../../AWESOME-HUMANS.md#admission-criteria)). Research is permissive; **promotion is the strict gate** (see Lifecycle).
 5. **Assemble the research topic:**
    - Answer-first: the recommendation or state-of-play in the opening sentences, depth after.
-   - Every claim cites its source id (and tier); dates on anything time-sensitive.
+   - Every claim cites its source id, and says where it stands when that narrows it (`**Corroborate.**`, or a limit its notes record); dates on anything time-sensitive.
    - **Preview features are labelled per the freshness policy:** "in preview as of `<date>`, not yet an opinion" — and clearly separated from GA guidance.
    - Where sources disagree, say so and weigh them; don't average them into mush.
 6. **Converse.** Follow-up questions reuse the gathered material — re-sweep only when the follow-up leaves the researched ground. Stay in the same precedence order.
