@@ -61,11 +61,11 @@ HashSet<string> reserved = ["house"];
 // criteria, the decision log — carries no source rows.
 (string Bucket, string[] Prefixes)[] sections =
 [
-    ("citable", ["## Tier 1", "## Tier 2"]),
+    ("citable", ["## Citable"]),
     (WatchBucket, ["## Watch list"]),
 ];
 
-// The tier tables carry only id, Source, Focus and Since. The evidence behind each row —
+// The roster tables carry only id, Source, Focus and Since. The evidence behind each row —
 // and with it the two markings — lives under '## Source notes', one '### `id`' section per
 // source. Splitting them is what keeps a diff readable: a table row is a short line, and a
 // reworded sentence in a note touches that sentence rather than a 4,000-character row.
@@ -82,8 +82,8 @@ Dictionary<string, string> notes = new(StringComparer.Ordinal);
 string? notesFor = null;
 
 // Ids in the order they appear, one entry per table. Order is checked per table rather
-// than across the file, because Tier 2 legitimately starts over at 'a' where Tier 1 left
-// off at 's'. Replaced at each heading; the initial list is never filled.
+// than across the file, because the watch list legitimately starts over at 'a' where the
+// citable table left off at 's'. Replaced at each heading; the initial list is never filled.
 List<(string Heading, List<string> Ids)> tables = [];
 List<string> ids = [];
 
@@ -305,7 +305,7 @@ foreach ((string path, List<string> sourceIds) in citing)
         {
             errors.Add(
                 $"{path}: source '{sourceId}' is on the watch list and may not feed opinions or templates "
-                    + "— corroborate with a Tier 1/2 source or admit it via vet-source");
+                    + "— corroborate with a citable source or admit it via vet-source");
         }
         else if (discovery.Contains(sourceId))
         {
@@ -336,7 +336,7 @@ foreach ((string path, List<string> sourceIds) in citing)
     {
         errors.Add(
             $"{path}: every citable source here is marked '{CorroborateMarker}' "
-                + "— add a Tier 1/2 source that is not, or drop the claim");
+                + "— add a citable source that is not, or drop the claim");
     }
 }
 
@@ -365,7 +365,7 @@ internal static partial class Patterns
     internal static partial Regex SourceId();
 
     // A notes heading opens with the id and then says where the source stands:
-    // '### `ardalis` — Tier 1, **Corroborate.**'.
+    // '### `ardalis` — Citable, **Corroborate.**'.
     [GeneratedRegex(@"\A### `([a-z0-9-]+)`")]
     internal static partial Regex NotesHeadingId();
 }

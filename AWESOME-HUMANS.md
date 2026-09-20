@@ -8,14 +8,14 @@ The vetted sources behind every opinion in this repository. Content only enters 
 
 A **source** is the published work of an awesome human — an individual or a publication. Admission requires an **established, proven track record**:
 
-1. **Longevity:** sustained, consistent publishing. Tier 1 requires 5+ years; Tier 2 covers 2–5 years. Under two years is the watch list, however good the writing is. Tier 2 is a band, not only a floor: a source with Tier 1 longevity that the independence rule below caps one tier lower also sits in Tier 2, and its Notes say so. Depth is handled by the `**Corroborate.**` marking instead, so a thin-but-long-lived source keeps the tier its record earns.
+1. **Longevity:** sustained, consistent publishing, for at least two years. Under two years is the watch list, however good the writing is. Beyond the bar there is no second band: the `Since` column carries how far back a record goes, which is more than a bucket could say. Depth is handled by the `**Corroborate.**` marking instead, so a thin-but-long-lived source stays citable with a usage limit rather than being filed below a shorter-lived one.
 2. **Depth:** original insight (internals, measurements, worked reasoning), not paraphrased release notes.
 3. **Accuracy:** a history of being right; corrections issued when wrong.
 4. **Independence of signal:** the content stands on its own merit, not on marketing reach or algorithm-chasing.
 
 Two qualifying rules:
 
-- **Independence caps tier.** A source that meets the Tier 1 longevity bar but carries a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) is admitted one tier lower, with the concern recorded in Notes. Vendor employment alone is not a cap — depth with critical distance (e.g. `stephen-toub`, `khalid`) keeps full tier.
+- **Independence is recorded as a usage limit, not a rank.** A source carrying a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) is admitted, and its section under `## Source notes` says what a citation may rest on — typically mechanism rather than adoption, as `avalonia-blog`, `james-montemagno` and `shay-rojansky` each spell out. Vendor employment alone is not a concern: depth with critical distance (`stephen-toub`, `khalid`) needs no limit. A concern grave enough that no limit would contain it is a decline or a watch-listing, as `duende-blog` and `telerik-blog` were.
 - **Dormancy blocks admission, with one exception.** A candidate whose publishing has stopped for over a year is watch-listed, not admitted — unless their **writing** demonstrably continues elsewhere (official documentation, another publication, a book), in which case the track record follows the human and the dormant channel is noted. Repository activity is not evidence: commits, releases and issue threads are not what an opinion cites, so a busy GitHub profile beside a silent blog is a dormant source rather than a live one. Documentation authored in a repository does count — what was published is the test, not where the commits landed. The same rule drives re-evaluation of admitted sources (see `vet-source`).
 
 Candidates that don't yet qualify are tracked under [Watch list](#watch-list--track-record-still-forming-or-previously-strong-but-now-dormant) and re-evaluated by the `vet-source` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
@@ -30,17 +30,20 @@ The tables carry only what identifies a source: its id, where to read it, what i
 
 **Reserved marking: `**Discovery-only.**`.** Aggregators (link roundups, newsletters, curated lists) are admitted for discovery but never cited: they lead you to a primary source, and that primary source is what an opinion cites. A roster row whose Notes carry this literal is rejected by CI if its id appears in any `sources:` list under `opinions/` or `templates/`. The literal mirrors `**House:**` deliberately — a marking a check can match, not prose a reader has to interpret.
 
-**Reserved marking: `**Corroborate.**`.** A source whose track record is real but whose depth is thin — SEO-shaped roundups, course funnels, release paraphrase with occasional substance — is admitted at the tier its longevity earns and marked, not capped a tier lower. The marking is a usage constraint rather than a track-record claim: an opinion may cite it, but never alone, so every claim it carries also rests on an unmarked Tier 1/2 source. `scripts/validate-sources.cs` rejects any opinion or template whose every citable source is marked — neither `house` nor a Discovery-only id counts as the unmarked one.
+**Reserved marking: `**Corroborate.**`.** A source whose track record is real but whose depth is thin — SEO-shaped roundups, course funnels, release paraphrase with occasional substance — is admitted on that track record and marked. The marking is a usage constraint rather than a track-record claim: an opinion may cite it, but never alone, so every claim it carries also rests on an unmarked citable source. `scripts/validate-sources.cs` rejects any opinion or template whose every citable source is marked — neither `house` nor a Discovery-only id counts as the unmarked one.
 
 **References: a named package's own material.** When an opinion or template names a package, the project behind it may be linked inline as a reference: its documentation site and in-repository docs, release notes and changelogs, issues and pull requests, and its nuget.org page. The standard or specification behind a named format or protocol qualifies on the same terms, such as an RFC or the IANA time zone database. A reference corroborates and never carries. It can confirm how a thing is set up, what it supports and where it falls short, but the claim it sits beside still rests on a roster source, and a package's own material never decides whether to adopt that package. A reference needs no `vet-source` pass and never appears in `sources:`, so `scripts/validate-sources.cs` does not see it. Cite it in the same `Source: Title` shape as anything else, as in `[xUnit.net: Testing with Native AOT]`.
 
-## Tier 1 — established (5+ years)
+## Citable — quotable in opinions and templates
+
+Every row here has cleared all four criteria. What separates them is recorded per source rather than by bucket: the `Since` column carries the length of the record, and any independence concern, conflict of interest or usage limit lives in that source's section under [Source notes](#source-notes).
 
 | id                   | Source                                                                                                                                             | Focus                                                                                             | Since                                       |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------- | ------------------------------------------- |
 | `andrew-lock`        | [Andrew Lock: .NET Escapades](https://andrewlock.net/)                                                                                             | ASP.NET Core internals, "Exploring .NET" per-release series                                       | 2016                                        |
 | `ardalis`            | [Steve Smith: ardalis.com](https://ardalis.com/) and [DevIQ](https://deviq.com/)                                                                   | Application architecture, Clean Architecture and DDD, design patterns and principles              | 2003                                        |
 | `aspnet-blog`        | [ASP.NET Core category, .NET Blog](https://devblogs.microsoft.com/dotnet/category/aspnetcore/)                                                     | ASP.NET Core announcements & deep-dives                                                           | ~2004                                       |
+| `avalonia-blog`      | [Avalonia UI blog](https://avaloniaui.net/blog) and [docs](https://docs.avaloniaui.net/)                                                           | Cross-platform desktop UI, rendering                                                              | ~2022                                       |
 | `awesome-avalonia`   | [awesome-avalonia](https://github.com/AvaloniaCommunity/awesome-avalonia)                                                                          | Curated Avalonia library/resource list                                                            | 2020                                        |
 | `awesome-blazor`     | [awesome-blazor](https://github.com/AdrienTorris/awesome-blazor)                                                                                   | Curated Blazor library/resource list                                                              | 2018                                        |
 | `awesome-dotnet`     | [awesome-dotnet](https://github.com/quozd/awesome-dotnet)                                                                                          | Curated library/tool list                                                                         | 2014                                        |
@@ -50,6 +53,8 @@ The tables carry only what identifies a source: its id, where to read it, what i
 | `derek-comartin`     | [Derek Comartin: CodeOpinion](https://codeopinion.com/)                                                                                            | Event-driven architecture, messaging, CQRS, DDD, modular monoliths                                | 2012                                        |
 | `dotnet-blog`        | [.NET Blog](https://devblogs.microsoft.com/dotnet/)                                                                                                | Everything .NET; canonical announcements                                                          | ~2004                                       |
 | `fsharp-weekly`      | [Sergey Tihon: F# Weekly](https://sergeytihon.com/category/f-weekly/)                                                                              | Weekly F# link aggregation                                                                        | 2011                                        |
+| `gerald-versluis`    | [Gerald Versluis](https://blog.verslu.is/)                                                                                                         | .NET MAUI, Xamarin, Blazor Hybrid                                                                 | 2015                                        |
+| `james-montemagno`   | [James Montemagno](https://montemagno.com/)                                                                                                        | Xamarin/.NET MAUI, cross-platform mobile                                                          | ~2012                                       |
 | `jeremy-miller`      | [Jeremy D. Miller: The Shade Tree Developer](https://jeremydmiller.com/)                                                                           | Messaging, event sourcing, persistence, dependency injection, testing long-lived codebases        | 2007                                        |
 | `jetbrains-dotnet`   | [JetBrains .NET Blog](https://blog.jetbrains.com/dotnet/)                                                                                          | C# language features, tooling                                                                     | ~2010s                                      |
 | `jon-skeet`          | [Jon Skeet's coding blog](https://codeblog.jonskeet.uk/)                                                                                           | C# language semantics (records, generics, equality), date/time correctness, API design            | 2005                                        |
@@ -61,21 +66,13 @@ The tables carry only what identifies a source: its id, where to read it, what i
 | `nicholas-blumhardt` | [Nicholas Blumhardt](https://nblumhardt.com/)                                                                                                      | Structured logging (Serilog), DI/IoC (Autofac), tracing and diagnostics                           | 2007                                        |
 | `oskar-dudycz`       | [Oskar Dudycz: Event-Driven.io](https://event-driven.io/)                                                                                          | Event sourcing, event-driven architecture, CQRS, vertical slices                                  | 2011                                        |
 | `scott-wlaschin`     | [Scott Wlaschin: F# for Fun and Profit](https://fsharpforfunandprofit.com/)                                                                        | F#, functional design, domain modelling                                                           | 2012                                        |
+| `shay-rojansky`      | [Shay Rojansky](https://www.roji.org/)                                                                                                             | .NET ↔ PostgreSQL mapping (Npgsql), EF Core internals                                             | 2014                                        |
 | `stephen-toub`       | [Stephen Toub (author page)](https://devblogs.microsoft.com/dotnet/author/toub/)                                                                   | Runtime/BCL performance, async internals                                                          | ~2005                                       |
 | `steve-gordon`       | [Steve Gordon](https://www.stevejgordon.co.uk/)                                                                                                    | High-performance .NET, HttpClient, Span/ArrayPool                                                 | ~2016                                       |
 
-## Tier 2 — emerging (2–5 years), plus sources capped down from Tier 1 on independence
-
-| id                 | Source                                                                                   | Focus                                                 | Since |
-| ------------------ | ---------------------------------------------------------------------------------------- | ----------------------------------------------------- | ----- |
-| `avalonia-blog`    | [Avalonia UI blog](https://avaloniaui.net/blog) and [docs](https://docs.avaloniaui.net/) | Cross-platform desktop UI, rendering                  | ~2022 |
-| `gerald-versluis`  | [Gerald Versluis](https://blog.verslu.is/)                                               | .NET MAUI, Xamarin, Blazor Hybrid                     | 2015  |
-| `james-montemagno` | [James Montemagno](https://montemagno.com/)                                              | Xamarin/.NET MAUI, cross-platform mobile              | ~2012 |
-| `shay-rojansky`    | [Shay Rojansky](https://www.roji.org/)                                                   | .NET ↔ PostgreSQL mapping (Npgsql), EF Core internals | 2014  |
-
 ## Watch list — track record still forming, or previously strong but now dormant
 
-Never quotable as primary sources for opinions — `scripts/validate-sources.cs` rejects a watch-list id in any `sources:` list, whatever the age or quality of the source's back catalogue. Usable for discovery and cross-checking: follow a claim found here to a Tier 1/2 source and cite that one. Re-evaluate periodically.
+Never quotable as primary sources for opinions — `scripts/validate-sources.cs` rejects a watch-list id in any `sources:` list, whatever the age or quality of the source's back catalogue. Usable for discovery and cross-checking: follow a claim found here to a citable source and cite that one. Re-evaluate periodically.
 
 | id                | Source                                                          | Focus                                             | Since |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
@@ -96,11 +93,11 @@ The evidence behind each row: what the track record is, what a citation may rest
 
 Markings are read from the whole section, heading included, so `**Discovery-only.**` or `**Corroborate.**` in either place marks the source.
 
-### `andrew-lock` — Tier 1
+### `andrew-lock` — Citable
 
 The de facto reference for ASP.NET Core internals outside Microsoft; author of _ASP.NET Core in Action_
 
-### `ardalis` — Tier 1, **Corroborate.**
+### `ardalis` — Citable, **Corroborate.**
 
 Writing since [2003-02-04](https://ardalis.com/first-post/), carried across four earlier blogs onto the current domain, and live rather than dormant: latest post 2026-08-19, cadence settled to roughly monthly as effort moves to video and courses.
 The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases do not.
@@ -108,25 +105,25 @@ Marked because depth is mixed rather than absent: ["Domain Modeling - Anemic Mod
 DevIQ is reference-grade on definitions and taxonomy — 255 pages, strongest on [design patterns](https://deviq.com/design-patterns/) — but its entries argue in prose and diagrams rather than code or measurements, so cite a measured source alongside it for anything load-bearing.
 In ["Avoid Using C# Events"](https://ardalis.com/avoid-using-csharp-events-in-aspnetcore-apps/) the logged memory figures are non-monotonic with no control loop, so cite the argument and not the measurements.
 Accuracy is sound: no claim was found reversed or left standing wrong.
-Co-founder of NimblePros and a Microsoft MVP rather than an employee, so no independence cap.
+Co-founder of NimblePros and a Microsoft MVP rather than an employee, so no independence limit.
 **Conflict of interest:** he sells training, mentoring and courses and maintains Ardalis.Specification, GuardClauses, Result, SmartEnum and the Clean Architecture template, so the conflict is live on the architecture and data-access topics he would be cited for — the DevIQ entries closest to data access recommend Ardalis.Specification, whose `Include`/`AsNoTracking` surface is a query object rather than a Specification in Evans's sense, so never present that pattern as settled.
 Two currency traps: GuardClauses, Result and SmartEnum have shipped no release in about two years, and his Microsoft e-book [Architect modern web applications](https://learn.microsoft.com/dotnet/architecture/modern-web-apps-azure/) is still edition v8.0, so neither is current guidance for `net10.0`.
 **Cite the .NET posts** — the 2026 run is mostly AI and agent tooling.
 
-### `avalonia-blog` — Tier 2
+### `avalonia-blog` — Citable
 
-~4 years, so Tier 2 on longevity alone, and capped there anyway: a product-team blog, release-driven and marketing-adjacent, so the independence concern holds whatever the longevity becomes.
-Scope widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not; same cap — cite the docs for how a thing works, not for whether to adopt it
+~4 years, which clears the longevity bar; a product-team blog, release-driven and marketing-adjacent, so the independence concern holds whatever the longevity becomes.
+Scope widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not; same limit — cite the docs for how a thing works, not for whether to adopt it
 
-### `awesome-avalonia` — Tier 1, **Discovery-only.**
+### `awesome-avalonia` — Citable, **Discovery-only.**
 
 **Discovery-only.** Discovery channel, not an opinion source itself; ~250–300 entries, org-backed, actively maintained
 
-### `awesome-blazor` — Tier 1, **Discovery-only.**
+### `awesome-blazor` — Citable, **Discovery-only.**
 
 **Discovery-only.** Discovery channel, not an opinion source itself
 
-### `awesome-dotnet` — Tier 1, **Discovery-only.**
+### `awesome-dotnet` — Citable, **Discovery-only.**
 
 **Discovery-only.** Library discovery; verify recommendations independently
 
@@ -139,7 +136,7 @@ What filled the decade between was talks, which the published-writing scope excl
 Depth and accuracy are not the blocker and are recorded here so a promotion is quick.
 ["The year in .NET Security"](https://idunno.org/the-year-in-net-security/) takes CVE-2025-55248, CVE-2025-55247 and CVE-2025-30399 from root cause to the API that replaced the vulnerable one, ["Protecting your .NET app from Server-Side Request Forgery"](https://idunno.org/protecting-your-net-app-from-server-side-request-forgery-ssrf-vulnerabilities/) reasons from the Capital One breach and the cloud metadata endpoint through to mitigation code, and the code-signing post runs about three thousand words of workflow configuration.
 He issues dated in-post updates when Microsoft renames a product.
-He is Microsoft's .NET security lead, and the writing is CVE mechanism from the inside rather than adoption copy, so the independence cap would not reach him once the longevity bar is met.
+He is Microsoft's .NET security lead, and the writing is CVE mechanism from the inside rather than adoption copy, so no independence limit would attach to him once the longevity bar is met.
 Re-evaluate from 2027-11, when the blog turns two
 
 ### `chris-sainty` — Watch list
@@ -147,16 +144,16 @@ Re-evaluate from 2027-11, when the blog turns two
 Dormancy, not longevity — no posts since 2023-08 and no verified continuing channel.
 The 2018–2023 catalogue is strong and usable for cross-checking on the terms above; citing it needs admission first
 
-### `code-with-mukesh` — Tier 1, **Corroborate.**
+### `code-with-mukesh` — Citable, **Corroborate.**
 
 **Corroborate.** Blog since 2020, 200+ articles, 2026 output carries real benchmarks.
 Depth is the weak axis: SEO/roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics are not — never the only citation on a claim
 
-### `csharp-digest` — Tier 1, **Discovery-only.**
+### `csharp-digest` — Citable, **Discovery-only.**
 
 **Discovery-only.** Discovery channel, not an opinion source itself; archive verified back to 2017-12
 
-### `damien-bowden` — Tier 1
+### `damien-bowden` — Citable
 
 Writing since [2013-01-31](https://damienbod.com/2013/01/31/welcome-to-my-blog/), technical from the first week, and still publishing on 2026-09-01.
 Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 were not counted directly, and the years either side of each leave no room for a gap.
@@ -164,11 +161,11 @@ Depth verified on posts that build the arrangement rather than describe it.
 [The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) carries the OpenID Connect setup, a YARP transform and a token cache, and explains why the downstream API refuses the user's delegated token.
 [The passkey post](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/) diagnoses an ASP.NET Core defect, links the runtime issue, and gives the re-sign-in workaround against RFC 8176.
 Accuracy is maintained in the open: posts carry dated History sections recording what each framework version changed, and when Duende's co-founder objected in the comments that a 2023 post resembled Duende's own sample, he added the attribution and said so in the thread.
-Independent, a consultant in Switzerland with no vendor attachment, and he covers Duende, OpenIddict, Entra ID and ASP.NET Core Identity in turn rather than one of them, so no independence cap.
+Independent, a consultant in Switzerland with no vendor attachment, and he covers Duende, OpenIddict, Entra ID and ASP.NET Core Identity in turn rather than one of them, so no independence limit.
 Two conflicts to record: he maintains `angular-auth-oidc-client` and writes tutorials that use it, and he sells application-security workshops through isolutions.
 Much of the catalogue pairs ASP.NET Core with an Angular front end, so check what a sample is actually configuring before citing it
 
-### `derek-comartin` — Tier 1, **Corroborate.**
+### `derek-comartin` — Citable, **Corroborate.**
 
 **Corroborate.** Writing since 2012-12-11, at roughly 40–50 posts a year from 2016 through 2025, active 2026-08-19.
 Better known for the YouTube channel, but the blog clears the writing scope on its own: 2,000–2,500-word standalone articles that argue their case in prose, with the companion video embedded rather than standing in for the text.
@@ -176,58 +173,58 @@ Marked for two reasons that point the same way: the arguments are conceptual, ca
 He is also a Particular "NServiceBus Champ" and a Microsoft MVP.
 Cite him for the shape of an argument, never alone, and flag the sponsorship on anything touching message queues
 
-### `dotnet-blog` — Tier 1
+### `dotnet-blog` — Citable
 
 Includes Stephen Toub's annual "Performance Improvements in .NET" posts and the "What's new" series
 
 ### `duende-blog` — Watch list
 
 Independence, not longevity.
-Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so the six-year record would clear the Tier 1 bar on its own.
+Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so the six-year record would clear the longevity bar several times over.
 All four posts read in full for this pass end at the paid product the company sells, in the category the post is about, and none carried a caveat against it.
 The depth is what makes that a blocker rather than a footnote: a four-thousand-word piece with code and diagrams still arrives at Duende BFF as the recommendation.
-It is multi-author, so independence and quality vary by byline, which is the `telerik-blog` and `syncfusion-blog` blocker rather than the `avalonia-blog` cap.
+It is multi-author, so independence and quality vary by byline, which is the `telerik-blog` and `syncfusion-blog` blocker rather than the `avalonia-blog` limit.
 Admitting the publication would admit five bylines nobody has vetted; where one of them has a track record, vet the human instead.
 That is done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
 Usable for discovery and cross-checking on the usual terms.
 Dominick Baier's personal blog is a separate channel and is itself dormant, last posting 2024-10-01; it is named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check
 
-### `fsharp-weekly` — Tier 1, **Discovery-only.**
+### `fsharp-weekly` — Citable, **Discovery-only.**
 
 **Discovery-only.** Discovery channel for the F# ecosystem, not an opinion source itself
 
-### `gerald-versluis` — Tier 2
+### `gerald-versluis` — Citable
 
 Five books, Pluralsight, active on blog and .NET Blog through 2026.
 On the MAUI team — same independence caveat as `james-montemagno`
 
-### `james-montemagno` — Tier 2
+### `james-montemagno` — Citable
 
-Blogging since ~2012 (motzcod.es → montemagno.com); Tier 1 longevity, capped for independence — Microsoft DevRel, adoption-focused, little critical distance, so weigh independence per piece.
+Blogging since ~2012 (motzcod.es → montemagno.com); over a decade of writing, carrying a live independence concern — Microsoft DevRel, adoption-focused, little critical distance, so weigh independence per piece.
 Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he is not dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
 Cite the pre-2024 Xamarin/MAUI catalogue only, and expect nothing new from harvests
 
-### `jeremy-miller` — Tier 1, **Corroborate.**
+### `jeremy-miller` — Citable, **Corroborate.**
 
 **Corroborate.** Writing since at least 2007-10-18 at codebetter.com, which no longer resolves, so an earlier start is likely but not verifiable; continued on jeremydmiller.com near-daily and active 2026-09-02.
 Created StructureMap, Marten, Wolverine, Lamar and Alba.
 **Conflict of interest:** he founded JasperFx Software, which sells licences, support plans and CritterWatch around that same stack, and his writing is almost entirely about it — eight of the nine posts on the front page as of 2026-09-03, five of them release announcements.
-Recorded rather than capped, per the `nicholas-blumhardt` and `oskar-dudycz` precedent.
+Recorded rather than limited, per the `nicholas-blumhardt` and `oskar-dudycz` precedent.
 The [JasperFx news feed](https://jasperfx.net/news/) is deliberately out of scope, being almost all release announcements.
 Cite the design essays and never the release notes, and never cite him alone on whether to adopt Marten or Wolverine
 
-### `jetbrains-dotnet` — Tier 1
+### `jetbrains-dotnet` — Citable
 
-Institutional; tool-flavoured but strong language explainers keep critical distance, so no independence cap
+Institutional; tool-flavoured but strong language explainers keep critical distance, so no independence limit
 
-### `jon-skeet` — Tier 1
+### `jon-skeet` — Citable
 
 Created Noda Time; author of _C# in Depth_; Stack Overflow's top contributor.
 Low cadence (~4–5 posts a year) and much of the recent output is general data modelling from a personal election-data project — cite the C#/BCL posts.
-Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence cap.
+Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence limit.
 _C# in Depth_ 4th ed. (2019) pre-dates records and is not current guidance
 
-### `khalid` — Tier 1
+### `khalid` — Citable
 
 Now at Duende Software (JetBrains authorship ended 2024).
 [khalidabuhakmeh.com](https://khalidabuhakmeh.com/) has been quiet since 2025-04-22, and the writing itself never paused.
@@ -238,15 +235,15 @@ Each of the three Duende posts read in full for this pass closes on Duende BFF o
 ["Understanding .NET 11 Automatic CSRF Protection"](https://duendesoftware.com/blog/20260901-understanding-dotnet-11-automatic-csrf-protection) (2026-09-01) is the shape that works: the subject is what the framework middleware does to OpenID Connect flows, and the product recommendation sits at the end where a reader can see it coming.
 The personal blog is citable in full, and the publication is watch-listed separately, so this id reaches his byline and nobody else's
 
-### `mark-seemann` — Tier 1
+### `mark-seemann` — Citable
 
 Writing since 2006-01-05 on [MSDN blogs](https://learn.microsoft.com/archive/blogs/ploeh/) and on the current blog since 2009-01-28 — over 800 posts there alone, thinning in the mid-2010s, still going on 2026-08-13.
 Depth verified on worked examples with compiling code and real measurements.
-Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he does not own, so no independence cap; he does sell books and video courses and created AutoFixture, which is a mild conflict worth noting on testing and DI.
+Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he does not own, so no independence limit; he does sell books and video courses and created AutoFixture, which is a mild conflict worth noting on testing and DI.
 **Cite the C#/.NET posts:** a consistent third of the technical output is Haskell or F#, and the 2026 run turns from code to language-agnostic essays on AI and software philosophy after ["TDD as induction"](https://blog.ploeh.dk/2026/02/23/tdd-as-induction/) (2026-02-23).
 _Dependency Injection in .NET_ (2011) is superseded by _Dependency Injection Principles, Practices, and Patterns_ (2019)
 
-### `meziantou` — Tier 1
+### `meziantou` — Citable
 
 Very high volume and consistency
 
@@ -255,41 +252,41 @@ Very high volume and consistency
 Dormancy — dormant since 2023-04, GitHub quiet since 2024-08, no continuing channels.
 The 2007–2023 archive and _Razor Pages in Action_ stay usable for cross-checking on the same terms
 
-### `milan-jovanovic` — Tier 1
+### `milan-jovanovic` — Citable
 
-Promoted from the watch list when the longevity bars dropped; ~6 years clears the 5-year bar.
-Commercial funnel (courses, templates, sponsored newsletter) — conflict of interest noted, not a tier cap; start year is a roster estimate
+Promoted from the watch list when the longevity bars dropped; ~6 years clears the two-year bar comfortably.
+Commercial funnel (courses, templates, sponsored newsletter) — conflict of interest recorded, and not grave enough for a usage limit; start year is a roster estimate
 
 ### `morning-brew` — Watch list
 
-Dormancy — demoted from Tier 1 on 2026-08-18.
+Dormancy — demoted from the citable roster on 2026-08-18.
 Last issue #3995 (2024-08-02) announced a summer break and publication never resumed: the site is up, the RSS feed ends there.
 The 2008–2024 archive remains usable for discovery
 
-### `ms-learn` — Tier 1
+### `ms-learn` — Citable
 
 "What's new" and "Breaking changes" pages per release.
 Scope widened 2026-08-24 from the .NET docs to first-party technical documentation across `learn.microsoft.com`, taking in the .NET architecture e-books and the Azure Architecture Center pattern catalogue — same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
 Two rules follow from the breadth: cite for mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption, and quote the page's own review date, because these age unevenly — the microservices e-book is 2018 content reviewed in 2023 and 2024, while the pattern catalogue is revised on a rolling basis
 
-### `nicholas-blumhardt` — Tier 1
+### `nicholas-blumhardt` — Citable
 
 Created Autofac and Serilog; founder of Datalust, which sells Seq.
-Personal blog dormant since 2024-10 — kept Tier 1 via the dormancy exception on published writing, not on repository activity: the engineering deep-dives on the [Datalust blog](https://datalust.co/blog/) continue, verified 2026-08-23 through a post dated 2026-07-20 and a January 2026 engineering update.
+Personal blog dormant since 2024-10 — kept citable via the dormancy exception on published writing, not on repository activity: the engineering deep-dives on the [Datalust blog](https://datalust.co/blog/) continue, verified 2026-08-23 through a post dated 2026-07-20 and a January 2026 engineering update.
 **Conflict of interest:** opinions citing him on logging, tracing or DI must flag that he authors and sells the tools in question; cite the personal blog and the engineering write-ups, never Seq release announcements
 
 ### `nick-polyak` — Watch list
 
-Dormancy — demoted from Tier 1 on 2026-08-23.
+Dormancy — demoted from the citable roster on 2026-08-23.
 Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception does not reach him.
 Back catalogue not citable while watch-listed; re-vet if the writing resumes
 
-### `oskar-dudycz` — Tier 1, **Corroborate.**
+### `oskar-dudycz` — Citable, **Corroborate.**
 
 **Corroborate.** Writing since 2011-09-21 (Polish-language blog, migrated into the current site) with a sustained run from 2020 — roughly 50 posts a year through 2023, active 2026-08-10.
 Depth verified on worked examples with traced scenarios and typed code.
 **Conflict of interest:** co-maintains Marten and Emmett and sells Event Sourcing workshops, so he writes about patterns he builds tooling for.
-Recorded rather than capped, per the `milan-jovanovic` and `nicholas-blumhardt` precedent, and the marking carries the usage rule instead.
+Recorded rather than limited, per the `milan-jovanovic` and `nicholas-blumhardt` precedent, and the marking carries the usage rule instead.
 He publishes across .NET and Node, so prefer the .NET material and check the language of any example before citing it
 
 ### `scott-brady` — Watch list
@@ -300,22 +297,22 @@ Nothing carries the dormancy exception: the Substack newsletter last issued 2023
 Start year not established, the blocker having settled the question before longevity was reached.
 The OAuth and identity archive stays usable for cross-checking, and citing it needs admission first
 
-### `scott-wlaschin` — Tier 1
+### `scott-wlaschin` — Citable
 
 The definitive independent F# resource; author of _Domain Modeling Made Functional_
 
-### `shay-rojansky` — Tier 2
+### `shay-rojansky` — Citable
 
 Lead maintainer of Npgsql and on Microsoft's EF Core team — the deepest writing on .NET↔PostgreSQL type mapping, which no other roster source covers.
-Tier 1 longevity (blogging 2014–2023), capped for independence: the citable body is first-party design rationale about products he maintains — cite him for mechanism (how Npgsql/EF Core behave and why they were designed that way), corroborate adoption judgments elsewhere.
+Nine years of writing (2014–2023), carrying a live independence concern: the citable body is first-party design rationale about products he maintains — cite him for mechanism (how Npgsql/EF Core behave and why they were designed that way), corroborate adoption judgments elsewhere.
 Long-form writing dormant since 2023 on both roji.org and the .NET Blog; held on the dormancy exception by the documentation he authors, re-verified 2026-08-23 — the EF Core 11 what's-new and breaking-change pages in `dotnet/EntityFramework.Docs`, latest commit 2026-05-12, which publish to Microsoft Learn and so count as writing.
 The 2014–2023 blog catalogue is citable; expect nothing new from blog harvests
 
-### `stephen-toub` — Tier 1
+### `stephen-toub` — Citable
 
 Publishes via `dotnet-blog`; also the "Deep .NET" video series with Scott Hanselman
 
-### `steve-gordon` — Tier 1
+### `steve-gordon` — Citable
 
 Cadence variable (heavy 2024, quiet 2025, active again 2026); at Elastic.
 Back catalogue authoritative
@@ -327,7 +324,7 @@ Independence and depth, not longevity — marketing-adjacent, quality varies by 
 ### `telerik-blog` — Watch list
 
 Independence and depth, not longevity — marketing-adjacent, quality varies by author.
-The lower longevity bars do not touch this blocker
+The lowered longevity bar does not touch this blocker
 
 ### `udi-dahan` — Watch list
 
@@ -401,3 +398,4 @@ The 2005–2016 archive stays usable for discovery and cross-checking, and `ms-l
 | 2026-09-12 | `vet-source` pass on the `security` research topic's candidates | All seven candidates in the topic's item 7 were checked, and the topic's ranking did not survive: its strongest name is watch-listed and its second is the admission. OWASP's Cheat Sheet Series and Philippe De Ryck were declined, with reasons in the PR. The topic itself is unchanged and stays with `resolve-research` |
 | 2026-09-14 | Harvest (2026-08-19 → 2026-09-14) | Swept every citable Tier 1/2 source and the five discovery channels. Folded in: the VSTest-versus-MTP measurement and Native AOT test publishing (`testing.md`), package asset restriction (`ci.md`), `Environment.ProcessorCount` under cgroup limits (`runtime-performance.md`), Blazor WebAssembly response streaming and Avalonia hot reload (`ui-frameworks.md`), and F#'s ban on circular dependencies (`fsharp.md`). `architecture.md` gained the unmarked corroboration its TODO asked for from `mark-seemann` and `ms-learn`, which closes the weaving item the 2026-09-03 admission pass left open. `milan-jovanovic` and `ardalis` were both unreachable on the first pass and swept on a second: request timeouts (`aspnet-core.md`), index design and row-level security under EF Core query filters (`data-access.md`), and the hexadecimal GC environment variables (`runtime-performance.md`). `ardalis` had never been harvested since its 2026-09-10 admission, so its sweep reaches one day behind the window, per the 2026-08-14 newly-admitted precedent. Flagged for `vet-source`: `scott-wlaschin`, `steve-gordon`, `nicholas-blumhardt`. Per-source detail in the PR |
 | 2026-09-15 | Defined references (no roster change) | A package an opinion or template names may have its own documentation, release notes, issues and nuget.org page linked inline to corroborate a roster-sourced claim, and so may the standard behind a named format; none of it enters `sources:` or needs vetting. Raised in review of #74, where the xUnit Native AOT configuration and its C#-only limit were documented only at xunit.net |
+| 2026-09-20 | Collapsed Tier 1 and Tier 2 into one **Citable** table | The two tiers were operationally identical: `validate-sources.cs` bucketed them together, and no skill, check or rule read one differently from the other. Longevity now needs two years and is carried precisely by the `Since` column, and the independence cap becomes a usage limit recorded in a source's notes, which is where all four capped sources already kept the real constraint. No source's citability changed |

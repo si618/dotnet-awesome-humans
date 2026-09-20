@@ -169,4 +169,4 @@ No new opinion file is needed.
 **Source sweep note:** direct fetching of `learn.microsoft.com`, `andrewlock.net` and other roster domains was blocked by this environment's network policy.
 Everything cited above was read from first-party sources reachable over `raw.githubusercontent.com`, which is where the Microsoft Learn pages are authored, so the `ms-learn` citations are the documentation itself.
 The community sweep ran through search summaries only, so no roster blog is quoted here.
-Andrew Lock's "Exploring the new rollForward and allowPrerelease settings in global.json" is the obvious Tier 1 cross-check and should be read before this is promoted.
+Andrew Lock's "Exploring the new rollForward and allowPrerelease settings in global.json" is the obvious citable cross-check and should be read before this is promoted.

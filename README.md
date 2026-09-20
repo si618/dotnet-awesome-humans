@@ -54,20 +54,19 @@ Template files carry the same fields in a first-line comment header instead — 
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: five years of sustained writing for Tier 1, two to five for Tier 2, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: two years of sustained writing at minimum, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 How a source gets in, and what its standing lets it do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
 ```mermaid
 flowchart TD
     candidate["Candidate source"] --> vet{"vet-source"}
-    vet -->|"5+ years, all four criteria"| tier1["Tier 1: citable"]
-    vet -->|"2–5 years, or independence cap"| tier2["Tier 2: citable"]
+    vet -->|"2+ years, all four criteria"| citable["Citable: quotable in opinions"]
     vet -->|"under 2 years, or dormant"| watch["Watch list: leads only"]
     vet -->|"otherwise"| declined["Declined: off the roster"]
 ```
 
-Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. Two markings in a source's notes section narrow citation at either tier: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at.
+Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. There is one citable tier, and two markings in a source's notes section narrow what a citation may rest on: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at. Anything else that limits a source, such as an independence concern or a back catalogue that has aged out, is written into its notes as prose rather than encoded in its standing.
 
 ### House opinions
 
