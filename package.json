@@ -12,7 +12,6 @@
     "markdownlint-cli2": "0.23.2",
     "prettier": "3.9.6"
   },
-  "//": "overrides: smol-toml is forced to 1.7.1 only for GHSA-7w5x-hrqm-74c2 (parse() infinite loop on malformed TOML, fixed in 1.7.1). markdownlint-cli2 0.23.2 exact-pins smol-toml 1.7.0. Remove this override once markdownlint-cli2 depends on smol-toml >= 1.7.1.",
   "overrides": {
     "smol-toml": "1.8.0"
   }
