@@ -20,7 +20,7 @@
     "MD041": false,
   },
   "globs": ["**/*.md"],
-  // .claude/skills is a local symlink to skills/ (see CLAUDE.md) — linting it
-  // reports every finding twice.
+  // .claude/skills is a local symlink to skills/ (see AGENTS.md: Skills), and
+  // markdownlint follows symlinks, so linting it reports every finding twice.
   "ignores": ["node_modules", ".claude"],
 }

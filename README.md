@@ -77,7 +77,6 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 ```text
 ├── README.md                 ← you are here
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
-├── CLAUDE.md                 ← pointer to AGENTS.md
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
