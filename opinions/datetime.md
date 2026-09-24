@@ -24,8 +24,8 @@ Four rules carry most of the weight: `DateTimeOffset` is the default type, not `
 
 Two caveats the documentation states explicitly:
 
-- **`DateTimeOffset` does not know its time zone.** It records the offset that applied at one moment, and the same offset belongs to many zones — it "can't reflect a time zone's transition to and from daylight saving time". Adding 24 hours is not the same as adding one day; for DST-sensitive arithmetic, convert to the zone with `TimeZoneInfo`, do the arithmetic in local terms, convert back.
-- **`DateTime` with `Kind = Unspecified` is ambiguous even on the machine that produced it.** If a `DateTime` must cross a boundary, it is UTC with `Kind = Utc` or it is a bug.
+- **`DateTimeOffset` does not know its time zone.** It records the offset that applied at one moment, and the same offset belongs to many zones — it "can't reflect a time zone's transition to and from daylight saving time". For arithmetic across a DST transition, convert to UTC, do the arithmetic there, and convert the result back to the zone with `TimeZoneInfo`. ([Microsoft Learn: Compare types related to date and time](https://learn.microsoft.com/dotnet/standard/datetime/choosing-between-datetime), [Microsoft Learn: How to use time zones in date and time arithmetic](https://learn.microsoft.com/dotnet/standard/datetime/use-time-zones-in-arithmetic))
+- **`DateTime` with `Kind = Unspecified` is ambiguous even on the machine that produced it.** If a `DateTime` must cross a boundary, it is UTC with `Kind = Utc` or it is a bug. ([Microsoft Learn: Compare types related to date and time](https://learn.microsoft.com/dotnet/standard/datetime/choosing-between-datetime))
 
 And the assumptions to stop making: offsets are not whole hours (Newfoundland is UTC−3:30), DST shifts are not always an hour (Lord Howe is 30 minutes), zones within one country differ on whether they observe DST at all, and abbreviations like "BST" are ambiguous across three real zones. Anything narrower than an IANA id loses information. ([Meziantou: 39 misconceptions about date and time](https://www.meziantou.net/misconceptions-about-date-and-time.htm))
 
@@ -90,7 +90,7 @@ For date-sensitive logic, exercise the awkward instants deliberately: a DST spri
 ## UI and hosts
 
 - **The user's zone lives in the browser, not the server.** In interactive-server Blazor, register a scoped per-circuit `TimeProvider` filled from JS interop — the pattern is in [ui-frameworks.md](ui-frameworks.md#blazor).
-- **Run hosts in UTC and convert at the edges.** Nothing should depend on the server's own local zone: express a scheduled job's schedule in an explicit zone, because a cron-style job pinned to server-local time either runs twice or not at all on DST transition days.
+- **Run hosts in UTC and convert at the edges.** Nothing should depend on the server's own local zone: express a scheduled job's schedule in an explicit zone. Local time repeats an hour when daylight saving time ends and skips one when it starts, so a job pinned to server-local time in that hour runs twice or not at all. ([Microsoft Learn: How to resolve ambiguous times](https://learn.microsoft.com/dotnet/standard/datetime/resolve-ambiguous-times), [Microsoft Learn: TimeZoneInfo.IsInvalidTime](https://learn.microsoft.com/dotnet/api/system.timezoneinfo.isinvalidtime))
 - **Container images must actually carry tzdata and ICU** for any of the zone conversion above to work — image tags, invariant mode, and the failure modes are in [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data), along with the display-side rule: format for humans with their culture, for machines with the invariant one.
 
 ## Smaller traps
