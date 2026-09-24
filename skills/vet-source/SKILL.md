@@ -14,7 +14,7 @@ Apply the admission criteria in [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md) to 
 
 ## Orchestration
 
-Where the host supports worker agents, delegate the evidence gathering (step 2's archive digging and post sampling) to **lower-cost worker agents** — they return dates, links, and extracted observations only. The orchestrating model acts as the **editor**: it alone weighs the evidence, makes the admission decision, and edits the roster.
+Per [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy), delegate the evidence gathering (step 2's archive digging and post sampling) to worker agents; the editor alone weighs the evidence, decides, and edits the roster.
 
 ## Steps
 
@@ -33,7 +33,7 @@ Where the host supports worker agents, delegate the evidence gathering (step 2's
    - Thin on depth but sound on the other three → admit and mark **`**Corroborate.**`**. The table states that a source is citable; the marking states what a citation may rest on.
    - Otherwise → **decline**, with a one-line reason (kept only in the PR, not the roster).
 4. **For re-evaluations:** promote a watch-list source whose blocker has cleared; demote or annotate an admitted source that has gone dormant (no posts in over a year) or declined in quality. With one citable tier, an admitted source that slips has two outcomes rather than three: a tightened usage limit in its notes, or the watch list. A demoted source keeps its row with a note, but **demotion to the watch list revokes citation, including the back catalogue** — `scripts/validate-sources.cs` rejects a watch-list id wherever it appears in `sources:`. So a demotion is not finished until no opinion cites it: in the same PR, re-source each affected claim from a citable source, or drop it. A back catalogue worth keeping citable is an argument for annotating the row rather than demoting it.
-5. **Apply on a working branch** (never the default branch) named `vet/<source-id>`, or a slug naming a multi-source pass, per the branch names in [AGENTS.md](../../AGENTS.md): update the appropriate roster table, assign a stable kebab-case `id` and insert the row alphabetically by that id, add the source's section under `## Source notes` (also alphabetical) carrying the evidence and any marking, and append the decision to the decision log. **Keep the log entry to the decision and the fact that carried it** — two sentences, in the register of the rows already there. The per-criterion evidence belongs in the PR (step 6), which is linked from the commit; a log cell holding a full vetting report is unreadable as a table and duplicates what review already saw.
+5. **Apply in a worktree** on branch `vet/<source-id>`, or a slug naming a multi-source pass, per [AGENTS.md](../../AGENTS.md): update the roster table, assign a stable kebab-case `id` and insert the row alphabetically by it, add the source's section under `## Source notes` (also alphabetical) with the evidence and any marking, and append the decision to the decision log. **Keep the log entry to the decision and the fact behind it**, in two sentences. The per-criterion evidence belongs in the PR (step 6), not the table.
 6. **Open a PR** with the evidence per criterion so a human ratifies the admission. A human reviews before the source can feed opinions.
 
 ## Edge cases

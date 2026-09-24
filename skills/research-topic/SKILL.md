@@ -14,12 +14,12 @@ Answer "what should I know / do about X?" using the trust boundary this reposito
 
 ## Orchestration
 
-Where the host supports worker agents, fan the per-source reading out to **lower-cost worker agents** in parallel — they fetch and return raw findings (claims, dates, URLs) only. The orchestrating model acts as the **editor**: it alone weighs conflicting sources, assembles the research topic, and answers follow-ups.
+Per [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy), fan the per-source reading out to worker agents; the editor alone weighs conflicting sources, assembles the research topic, and answers follow-ups.
 
 ## Steps
 
 1. **Clarify intent in at most one question**, and only when the request forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately.
-2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-types`. One branch per topic, created before the first write, so the research topic and the `last-used` bumps land together and stay reviewable. The slug is the topic kebab-cased as the repository already names it — `union-types`, not `union-type` — so branch, research topic, and opinions stay searchable by one term. The branch names in [AGENTS.md](../../AGENTS.md) outrank the host environment's convention; where the host will only push under its own prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
+2. **Start a worktree** on branch `research/<topic-slug>` (e.g. `research/union-types`), per the worktree and branch-name rules in [AGENTS.md](../../AGENTS.md). One per topic, created before the first write, so the research topic and the `last-used` bumps land together. The slug is the topic kebab-cased as the repository already names it (`union-types`, not `union-type`), so branch, research topic and opinions share one search term.
 3. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
 4. **Sweep the roster in precedence order:**
    - **Citable sources** weighted by focus match (check the roster's Focus column) — these are quotable.
@@ -40,18 +40,13 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 ## Persistence and lifecycle
 
-**Save the research topic by default** to `research/<topic-slug>.md` with the frontmatter a topic carries (`targets`, `last-reviewed`, `sources`) — skip saving only if the user says the question was throwaway. A saved research topic records the state of a moment; `last-reviewed` says when that moment was. There is no `last-used`: building on a topic re-verifies it, so the two dates would never diverge.
+**Save the research topic by default** to `research/<topic-slug>.md` with the frontmatter a topic carries ([AGENTS.md: Metadata](../../AGENTS.md#metadata)). Skip saving only if the user says the question was throwaway.
 
-The research topic and the `last-used` bumps it made to the opinions it consulted are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. Merging that PR is a lifecycle step, not the end of it: the merge puts the research on record and in front of reviewers, and only then does `resolve-research` pick it up, on its own branch and PR. Research and resolution are two PRs by design — never fold the promote-or-discard decision into the still-open research PR. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the file. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
+Commit the topic and its `last-used` bumps on the `research/<topic-slug>` branch and open a PR to the default branch. Merging puts the research on record; only then does `resolve-research` pick it up, on its own branch and PR. Never fold the promote-or-discard decision into the still-open research PR. If the user declined saving, delete the branch and answer in conversation only.
 
-**Commit and title the PR `research: <topic>`, not `docs: research <topic>`.** A research topic is its own kind of change — staged, dated, and destined to be promoted or discarded — and giving it a distinct type makes that visible in `git log` and lets one command list every research topic the repository has ever taken on. Filing them under `docs` buries them among opinion edits, which are the opposite thing: settled, not staged. Use the topic as the subject, matching the slug in the branch and filename, so `research/union-types` carries `research: union types`. Resolution commits are typed by `resolve-research`, not by this rule.
+**Commit and title the PR `research: <topic>`** (e.g. `research: union types`), not `docs: research <topic>`. A distinct type keeps staged research apart from settled opinion edits in `git log`, and lists every topic the repository has taken on. Resolution commits are typed by `resolve-research`.
 
-Every saved research topic must eventually resolve — `research/` is a staging area, not a second opinions directory:
-
-- **Open is the only state there is**, so nothing records it: both resolutions end with the file deleted, which makes a topic on disk unresolved by definition. A `status:` field could only ever read `open`, so the file's existence carries it instead.
-- **Promote**: the recommendation is woven into the matching `opinions/` file(s) and the file deleted — `resolve-research` owns the roster gate and the mechanics.
-- **Discard**: delete the file — research that answered a moment's question owes nothing further. No tombstone needed; git history is the record. `resolve-research` owns this too; the two outcomes are one decision.
-- `audit-freshness` covers `research/` like everything else: a research topic past the tolerance `audit-freshness` applies is reported as promote-or-discard triage, so they cannot silently accumulate as unratified pseudo-opinions.
+Every saved topic must eventually resolve, by promotion or discard. `resolve-research` owns both, and both end with the file deleted, so a topic on disk is unresolved by definition. `audit-freshness` reports one past its tolerance as promote-or-discard triage.
 
 ## Edge cases
 
