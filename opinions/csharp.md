@@ -100,7 +100,7 @@ customer?.LastSeen = DateTimeOffset.UtcNow;
 
 ### Pattern matching
 
-**Use `is null` / `is not null` for all null checks, and a switch expression whenever three or more branches produce a value.** Pattern `is` checks cannot be hijacked by overloaded `==`/`!=` operators, and switch expressions with property, relational, and type patterns collapse chained `if`/`else` into one declarative table the compiler checks for exhaustiveness (CS8509 when an input is unhandled).
+**Use `is null` / `is not null` for all null checks, and a switch expression when each branch produces a value.** Pattern `is` checks cannot be hijacked by overloaded `==`/`!=` operators, and switch expressions with property, relational, and type patterns collapse chained `if`/`else` into one declarative table the compiler checks for exhaustiveness (CS8509 when an input is unhandled).
 
 ```csharp
 public static decimal DiscountFor(Customer customer) => customer switch
@@ -140,7 +140,7 @@ The one cost: the target type must be explicit (`List<int> ids = [...]`, not `va
 
 ### Analyzers
 
-**Turn the built-in .NET analyzers up to `latest-recommended`, enforce code style in build, and add exactly one third-party analyzer: Meziantou.Analyzer.** In `Directory.Build.props`:
+**Turn the built-in .NET analyzers up to `latest-recommended`, enforce code style in build, and add Meziantou.Analyzer.** In `Directory.Build.props`:
 
 ```xml
 <PropertyGroup>
@@ -149,7 +149,7 @@ The one cost: the target type must be explicit (`List<int> ids = [...]`, not `va
 </PropertyGroup>
 ```
 
-The built-in analyzers ship with the SDK and track it; `latest-recommended` keeps rules current across SDK updates without opting into the noisy `all` bucket. `EnforceCodeStyleInBuild` makes `.editorconfig` style rules (IDExxxx) build-time diagnostics instead of IDE-only suggestions, so CI and editors agree. Meziantou.Analyzer adds the correctness rules the SDK set misses (culture-sensitive string operations, `CancellationToken` forwarding, async pitfalls) with a low false-positive rate; StyleCop lost on signal-to-noise — it polices formatting the SDK analyzers and `dotnet format` already cover. Fix or explicitly suppress with justification; never blanket-lower severity. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
+The built-in analyzers ship with the SDK and track it; `latest-recommended` keeps rules current across SDK updates without opting into the noisy `all` bucket. `EnforceCodeStyleInBuild` makes `.editorconfig` style rules (IDExxxx) build-time diagnostics instead of IDE-only suggestions, so CI and editors agree. Meziantou.Analyzer adds the correctness rules the SDK set misses (culture-sensitive string operations, `CancellationToken` forwarding, async pitfalls). Its author runs it beside several other analyzers, so add others where they cover rules you want; StyleCop is the one to skip when `dotnet format` already covers the formatting you care about. Fix or explicitly suppress with justification; never blanket-lower severity. ([Microsoft Learn: Code analysis overview](https://learn.microsoft.com/dotnet/fundamentals/code-analysis/overview), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm), [Meziantou.Analyzer](https://github.com/meziantou/Meziantou.Analyzer))
 
 ### Records
 

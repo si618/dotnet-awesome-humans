@@ -37,7 +37,7 @@ csharp_style_prefer_top_level_statements = true:suggestion
 csharp_style_prefer_method_group_conversion = true:suggestion
 csharp_using_directive_placement = outside_namespace:warning
 
-# C# 14: prefer field-backed properties over hand-written backing fields. Severity is set
+# Prefer auto-implemented properties over trivial hand-written backing fields. Severity is set
 # here rather than on dotnet_style_prefer_auto_properties below, which is the same rule:
 # a dotnet_diagnostic entry wins over the option's trailing severity, so carrying both
 # would leave one of them silently dead.
@@ -80,4 +80,3 @@ dotnet_naming_style.underscore_camel.capitalization = camel_case
 
 [*.fs]
 fsharp_multiline_bracket_style = stroustrup
-fsharp_prefer_computation_expression_name_in_blank_lines = true
