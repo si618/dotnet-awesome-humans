@@ -14,7 +14,7 @@ How to use this project:
 
 The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one topic per file:
 
-- **[Application architecture](opinions/architecture.md):** modular monolith, vertical slices, and when layering earns its keep
+- **[Application architecture](opinions/architecture.md):** modular monolith, vertical slices, and when layering is worth its cost
 - **[ASP.NET Core](opinions/aspnet-core.md):** minimal APIs, hosting, auth, OpenAPI, performance
 - **[C#](opinions/csharp.md):** the latest released language version, and idiomatic use of what it added
 - **[CI & automation](opinions/ci.md):** pinned, reproducible builds and supply-chain hygiene
@@ -27,7 +27,7 @@ The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one
 - **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
 - **[Testing](opinions/testing.md):** framework choice, naming and structure, integration tests, coverage
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
-- **Libraries:** what to reach for and what to avoid, spread across the files above
+- **Libraries:** what to use and what to avoid, spread across the files above
 
 A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order — CI fails the pull request otherwise.
 

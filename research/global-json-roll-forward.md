@@ -6,7 +6,7 @@ sources: [ms-learn]
 
 # global.json roll-forward: when to narrow past `latestFeature`
 
-`latestFeature` stays the default, and `latestPatch` earns its place in exactly one situation: the build must not pick up new SDK tooling mid-release, **and** the floor sits in a feature band that keeps getting serviced.
+`latestFeature` stays the default, and `latestPatch` is the right choice in exactly one situation: the build must not pick up new SDK tooling mid-release, **and** the floor sits in a feature band that keeps getting serviced.
 For .NET 10 that means `10.0.1xx` or `10.0.4xx` and nothing in between, because `10.0.2xx` and `10.0.3xx` are already out of support.
 Narrowing to a band that has aged out trades a hypothetical build break for a real one: no more security patches.
 
@@ -35,7 +35,7 @@ MSBuild's custom-culture resource handling was introduced in SDK 9.0.200 and the
 One `"version": "9.0.100", "rollForward": "latestFeature"` covered both behaviours, so two machines a quarter apart built the same commit differently.
 ([Microsoft Learn: .NET 9 breaking changes](https://learn.microsoft.com/dotnet/core/compatibility/9.0), [Microsoft Learn: MSBuild custom culture resource handling](https://learn.microsoft.com/dotnet/core/compatibility/sdk/10.0/msbuild-custom-culture))
 
-Patches are not perfectly inert either, and the honest version of the rule is that they are lower risk rather than no risk.
+Patches are not perfectly inert either, so the accurate rule is that they are lower risk rather than no risk.
 `NuGetAuditMode` had its default changed to `all` during .NET 9 previews and reverted to `direct` in the **9.0.101 SDK**, a patch-level behavioural change.
 Servicing regressions happen too: .NET 10.0.4 shipped a debugger crash on macOS under VS Code, fixed by an out-of-band 10.0.5 on 2026-03-12.
 ([Microsoft Learn: `dotnet restore` audits transitive packages](https://learn.microsoft.com/dotnet/core/compatibility/sdk/10.0/nugetaudit-transitive-packages), [.NET 10 known issues](https://github.com/dotnet/core/blob/main/release-notes/10.0/known-issues.md) — **unvetted**, first-party release notes on GitHub rather than a roster source)
@@ -74,7 +74,7 @@ The pinned SDK stops existing on the machine that updates, while band installs d
 Visual Studio makes it worse: it keeps one SDK copy and replaces it on upgrade, across bands and even across major versions, unless the SDK was installed stand-alone.
 ([Microsoft Learn: global.json overview](https://learn.microsoft.com/dotnet/core/tools/global-json))
 
-## Where the risk actually bites: CI
+## Where the risk lies: CI
 
 `actions/setup-dotnet` honours the `latest*` policies and installs the SDK the policy resolves to.
 Under `latestFeature`, the version CI builds with changes on the day a new band ships, with no commit and no review.

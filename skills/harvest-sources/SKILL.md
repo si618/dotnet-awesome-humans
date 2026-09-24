@@ -37,4 +37,4 @@ Where the host supports worker agents, fan the per-source sweeps (step 3) out to
 - **Conflicting guidance between vetted sources:** present both in the PR description and pick one for the opinion, stating why. Never leave a menu in the opinion file.
 - **A source has gone quiet or its content quality has dropped:** note it in the PR; propose demotion via `vet-source` rather than editing the roster inline.
 - **Preview-version content:** may be captured in a "coming next" aside but never becomes the opinion (see repository freshness policy).
-- **Nothing notable found:** still record the sweep in the decision log (on the default branch or via a trivial PR) so the window tracking stays honest, and close the reminder issue either way. A sweep that found nothing is still a sweep, and an open issue costs the following month its reminder.
+- **Nothing notable found:** still record the sweep in the decision log (on the default branch or via a trivial PR) so the window tracking stays accurate, and close the reminder issue either way. A sweep that found nothing is still a sweep, and an open issue costs the following month its reminder.

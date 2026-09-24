@@ -11,7 +11,7 @@ Four rules carry most of the weight: `DateTimeOffset` is the default type, not `
 
 ## Choosing the type
 
-**Default to `DateTimeOffset`; pick a narrower type only when the data genuinely has no time, no date, or no clock.** Microsoft says so outright: "consider `DateTimeOffset` as the default date and time type for application development". ([Compare types related to date and time](https://learn.microsoft.com/dotnet/standard/datetime/choosing-between-datetime))
+**Default to `DateTimeOffset`; pick a narrower type only when the data has no time, no date, or no clock.** Microsoft says so outright: "consider `DateTimeOffset` as the default date and time type for application development". ([Compare types related to date and time](https://learn.microsoft.com/dotnet/standard/datetime/choosing-between-datetime))
 
 | Need                                      | Type             | Why                                                                         |
 | ----------------------------------------- | ---------------- | --------------------------------------------------------------------------- |
@@ -44,7 +44,7 @@ TimeZoneRules: 2019a                   ← optional, for resumable re-derivation
 
 The same holds for recurring events — "10 AM in New York every week" is a rule, not a series of instants. ([Meziantou: 39 misconceptions](https://www.meziantou.net/misconceptions-about-date-and-time.htm)) Two operational corollaries: IANA publishes multiple tzdb releases a year, sometimes days before they take effect, so updating the base image is also the trigger to re-derive the UTC column; and persist IANA ids, not Windows ids — .NET converts between the families, but Windows ids tie data to a platform.
 
-Provider mechanics worth knowing ([EF Core](https://learn.microsoft.com/ef/core/), Microsoft Learn):
+Provider mechanics ([EF Core](https://learn.microsoft.com/ef/core/), Microsoft Learn):
 
 - EF Core 8+ maps `DateOnly` ↔ SQL Server `date` and `TimeOnly` ↔ `time`, and scaffolding generates those types instead of `DateTime`/`TimeSpan` ([EF8 announcement](https://devblogs.microsoft.com/dotnet/announcing-ef8-preview-1/)). The old `DateTime`-for-a-date mapping is a legacy shape.
 - SQL Server has a real `datetimeoffset` column type; PostgreSQL does not. Do not assume a `DateTimeOffset` property is portable across providers.
@@ -53,7 +53,7 @@ Provider mechanics worth knowing ([EF Core](https://learn.microsoft.com/ef/core/
 
 ### When the BCL types aren't enough
 
-**Reach for [NodaTime](https://nodatime.org/) when the domain models future or recurring local-time events across zones — the schema above — and stay on the BCL types otherwise.** NodaTime turns this file's conventions into compile-time properties: `Instant` for machine timestamps, `LocalDateTime` + `DateTimeZone` for the human-supplied columns, `ZonedDateTime` for the derived conversion — the argument that a local date and time is not yet an instant is the library's founding design case. The cost is an adapter at every boundary the BCL types cross natively (`NodaTime.Serialization.SystemTextJson`, per-provider EF Core plugins such as `Npgsql.NodaTime`, model binding), which is why it is the escape hatch and not the default — `DateTimeOffset`, `DateOnly`/`TimeOnly`, and `TimeProvider` cover the ordinary service from the BCL, with nothing to add. Conflict of interest: the source cited here created NodaTime. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
+**Use [NodaTime](https://nodatime.org/) when the domain models future or recurring local-time events across zones — the schema above — and stay on the BCL types otherwise.** NodaTime turns this file's conventions into compile-time properties: `Instant` for machine timestamps, `LocalDateTime` + `DateTimeZone` for the human-supplied columns, `ZonedDateTime` for the derived conversion — the argument that a local date and time is not yet an instant is the library's founding design case. The cost is an adapter at every boundary the BCL types cross natively (`NodaTime.Serialization.SystemTextJson`, per-provider EF Core plugins such as `Npgsql.NodaTime`, model binding), which is why it is the exception and not the default — `DateTimeOffset`, `DateOnly`/`TimeOnly`, and `TimeProvider` cover the ordinary service from the BCL, with nothing to add. Conflict of interest: the source cited here created NodaTime. ([Skeet: More fun with DateTime](https://codeblog.jonskeet.uk/2012/05/02/more-fun-with-datetime/))
 
 ## Services: inject `TimeProvider`, stop writing your own clock
 
@@ -90,7 +90,7 @@ For date-sensitive logic, exercise the awkward instants deliberately: a DST spri
 ## UI and hosts
 
 - **The user's zone lives in the browser, not the server.** In interactive-server Blazor, register a scoped per-circuit `TimeProvider` filled from JS interop — the pattern is in [ui-frameworks.md](ui-frameworks.md#blazor).
-- **Run hosts in UTC and convert at the edges.** The server's own local zone should never be load-bearing: express a scheduled job's schedule in an explicit zone, because a cron-style job pinned to server-local time either runs twice or not at all on DST transition days.
+- **Run hosts in UTC and convert at the edges.** Nothing should depend on the server's own local zone: express a scheduled job's schedule in an explicit zone, because a cron-style job pinned to server-local time either runs twice or not at all on DST transition days.
 - **Container images must actually carry tzdata and ICU** for any of the zone conversion above to work — image tags, invariant mode, and the failure modes are in [globalization.md](globalization.md#containers-chiseled-and-alpine-images-drop-this-data), along with the display-side rule: format for humans with their culture, for machines with the invariant one.
 
 ## Smaller traps

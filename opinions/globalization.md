@@ -16,7 +16,7 @@ sources:
 
 # Globalization & localization
 
-The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, culture selection via request localization middleware, ICU as the culture-data engine on every platform. The decisions that bite are all defaults — culture leaking into machine-facing strings, invariant mode arriving by template rather than by choice, and container images that quietly ship without the data the runtime needs.
+The mechanism is settled: `.resx` resources behind `IStringLocalizer<T>`, culture selection via request localization middleware, ICU as the culture-data engine on every platform. The decisions that cause trouble are all defaults — culture leaking into machine-facing strings, invariant mode arriving by template rather than by choice, and container images that ship without the data the runtime needs.
 
 ## Opinions
 
@@ -49,7 +49,7 @@ With `TreatWarningsAsErrors` already on, that turns "someone forgot a `StringCom
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 
-**Decide invariant mode on its own merits, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU entirely and use built-in invariant data — a legitimate size and startup win for a service that renders no localized output, and a trap when it arrives attached to an unrelated decision. Verified on SDK 10.0.400: `dotnet new webapi` does not set it, `dotnet new webapiaot` does, sitting in the generated project file next to `<PublishAot>true</PublishAot>`. So it typically enters a codebase because someone went Native AOT (see [runtime-performance.md](runtime-performance.md)), and then quietly changes how every `ToString` and `Compare` in the app behaves.
+**Decide invariant mode on its own merits, and comment the property where you set it.** `<InvariantGlobalization>true</InvariantGlobalization>` makes the runtime skip ICU entirely and use built-in invariant data — a legitimate size and startup win for a service that renders no localized output, and a trap when it arrives attached to an unrelated decision. Verified on SDK 10.0.400: `dotnet new webapi` does not set it, `dotnet new webapiaot` does, sitting in the generated project file next to `<PublishAot>true</PublishAot>`. So it typically enters a codebase because someone went Native AOT (see [runtime-performance.md](runtime-performance.md)), and then changes how every `ToString` and `Compare` in the app behaves.
 
 What turning it on costs:
 
@@ -61,7 +61,7 @@ What turning it on costs:
 
 ### Pin ICU only when reproducible comparison beats current comparison
 
-**Take the default — system ICU — unless you have a stated reason not to.** Globalization has run on ICU on every platform since .NET 5, including Windows, which ships `icu.dll`. Three escape hatches exist, in descending order of how often they are right:
+**Take the default — system ICU — unless you have a stated reason not to.** Globalization has run on ICU on every platform since .NET 5, including Windows, which ships `icu.dll`. Three alternatives exist, in descending order of how often they are right:
 
 - **`System.Globalization.AppLocalIcu`** plus a `Microsoft.ICU.ICU4C.Runtime` package reference carries a pinned ICU with the app, so collation and CLDR data are byte-identical across every deployment. The right answer when a sort order is part of your contract.
 - **`DOTNET_ICU_VERSION_OVERRIDE`** pins a system ICU version on Linux. Note the .NET 10 rename — it was `CLR_ICU_VERSION_OVERRIDE` before — and that it only applies to Microsoft-built .NET, not distro builds. ([Breaking changes in .NET 10](https://learn.microsoft.com/dotnet/core/compatibility/10))
@@ -110,7 +110,7 @@ Designer-generated strongly-typed resource classes are the compile-time-safe alt
 
 The two missing pieces fail differently, and so does the ICU one depending on what the app asks for:
 
-- **No ICU — and the image has already decided for you.** The base images set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` as an image environment variable, so the app runs in invariant mode however it was built. An app that names a culture throws `CultureNotFoundException` at startup — `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above dies before serving a request. An app that only leans on `CurrentCulture` fails quietly instead, formatting and comparing as invariant. Because the setting lives in the environment rather than the project file, `<InvariantGlobalization>false</InvariantGlobalization>` does not undo it — installing `icu-libs` and `icu-data-full` by hand means clearing the variable too. Taking `-extra` is the version that works, because those images simply omit the variable.
+- **No ICU — and the image has already decided for you.** The base images set `DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=true` as an image environment variable, so the app runs in invariant mode however it was built. An app that names a culture throws `CultureNotFoundException` at startup — `PredefinedCulturesOnly` defaults to true here, so the `RequestLocalizationOptions` above dies before serving a request. An app that only leans on `CurrentCulture` fails without an exception instead, formatting and comparing as invariant. Because the setting lives in the environment rather than the project file, `<InvariantGlobalization>false</InvariantGlobalization>` does not undo it — installing `icu-libs` and `icu-data-full` by hand means clearing the variable too. Taking `-extra` is the version that works, because those images simply omit the variable.
 - **No tzdata — a loud failure.** `TimeZoneInfo.FindSystemTimeZoneById` throws `TimeZoneNotFoundException`, which is unaffected by invariant mode and so survives as a real exception. `RUN apk add --no-cache tzdata` fixes that one alone. ([Gordon: TimeZoneNotFoundException in Alpine Based Docker Images](https://www.stevejgordon.co.uk/timezonenotfoundexception-in-alpine-based-docker-images))
 
 ### Localization makes dates look right, not be right
