@@ -1,7 +1,7 @@
 ---
 targets: [net10.0]
 last-reviewed: 2026-09-14
-last-used: 2026-09-25
+last-used: 2026-09-26
 sources: [meziantou, ms-learn, house]
 ---
 
@@ -23,7 +23,7 @@ Supply-chain hygiene is not optional in the agentic era.
 
 - **Restore** with `--locked-mode` so a lock-file drift fails the build rather than floating a version, but only where the repo commits `packages.lock.json` (`RestorePackagesWithLockFile=true`). [templates/Directory.Build.props](../templates/Directory.Build.props) pins the dependency graph via CPM without lock files, so the example below restores plain; adding the flag without a lock file fails every restore with `NU1004`.
 - **Build** once, in `Release`, with `-warnaserror`. Keep the switch even though the template sets `TreatWarningsAsErrors`: the property covers compiler and analyzer diagnostics, while the switch also promotes MSBuild engine warnings (e.g. MSB3277 assembly-version conflicts) that the property leaves as warnings. **House:** `TreatWarningsAsErrors` is set unconditionally in [templates/Directory.Build.props](../templates/Directory.Build.props), so those warnings fail the build on every workstation, not only in CI. This file previously recommended CI-only enforcement to keep local iteration fluid, and the house rule supersedes it, because a build that is only red in CI is a warning that already reached a PR. Enforce style the same way: analyzers in the build, `dotnet format --verify-no-changes` as a step. ([Meziantou: Enforce .NET code style in CI](https://www.meziantou.net/enforce-dotnet-code-style-in-ci-with-dotnet-format.htm), [Meziantou: The Roslyn analyzers I use](https://www.meziantou.net/the-roslyn-analyzers-i-use.htm))
-- **Test** via `dotnet test` on Microsoft.Testing.Platform, which requires the `test.runner` opt-in in `global.json` (see [testing](testing.md)); without it the SDK routes through VSTest, and on .NET 10 that fails before the build, so `--no-build` cannot rescue it. Publish TRX and coverage as build artifacts so failures are diagnosable without a rerun. ([Microsoft Learn: What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
+- **Test** via `dotnet test` on Microsoft.Testing.Platform, which requires the `test.runner` opt-in in `global.json` (see [testing](testing.md)); without it the SDK routes through VSTest, and on .NET 10 that fails before the build, so `--no-build` cannot rescue it. Publish TRX and coverage as build artifacts so failures are diagnosable without a rerun. Under xunit.v3 the TRX switch is `--report-xunit-trx` with `--results-directory`, as in the example below, and upload the results even when the step fails, since that is the run they diagnose. VSTest's `--logger trx` is rejected under MTP (see [testing.md](testing.md)). ([Microsoft Learn: What's new in .NET 10: SDK](https://learn.microsoft.com/dotnet/core/whats-new/dotnet-10/overview))
 - **Publish/pack** with `--no-build` and upload the output as the single artifact that later stages (deploy, release) consume. Never rebuild for deployment. No `--output` flag: with the artifacts layout from [templates/Directory.Build.props](../templates/Directory.Build.props), publish output lands at `artifacts/publish/<Project>/release` for a single-TFM, non-RID publish (the pivot gains `_<tfm>`/`_<rid>` suffixes otherwise) and pack output at `artifacts/package/<configuration>`, with no project segment (see [project-structure.md](project-structure.md)). Keep the deploy artifact deploy-only: test projects set `<IsPublishable>false</IsPublishable>` as [templates/projects/Example.Library.Tests.csproj](../templates/projects/Example.Library.Tests.csproj) does, otherwise a solution-level publish writes the test host and a second copy of every referenced library into `artifacts/publish`. ([Microsoft Learn: Artifacts output layout](https://learn.microsoft.com/dotnet/core/sdk/artifacts-output))
 
 ```yaml
@@ -42,7 +42,12 @@ jobs:
           global-json-file: global.json
       - run: dotnet restore
       - run: dotnet build --no-restore --configuration Release -warnaserror
-      - run: dotnet test --no-build --configuration Release
+      - run: dotnet test --no-build --configuration Release --report-xunit-trx --results-directory artifacts/test-results
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: artifacts/test-results
       - run: dotnet publish --no-build --configuration Release
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:

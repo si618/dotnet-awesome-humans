@@ -121,6 +121,7 @@ These rules cover every piece of prose this repository carries. That includes op
 - Code samples must compile against the declared `targets`.
 - **Use a table when the same attributes repeat across items.** Options, versions or frameworks compared on the same few points read faster as rows than as parallel paragraphs, as in [datetime.md](opinions/datetime.md). Reasoning stays in sentences: a cell holds a fact, not the argument for it.
 - One topic per file under `opinions/`; keep files under ~300 lines, and split rather than sprawl.
+- **Transition guidance carries an expiry.** A note that matters only while the ecosystem moves, such as a migration off a tool being retired, opens with the marking `**Review by YYYY-MM-DD.**` and says what ends it. `audit-freshness` reports a marking whose date has passed. Drop the note, or re-date it after checking it still applies; never delete the marking alone.
 
 ## Workflow
 
