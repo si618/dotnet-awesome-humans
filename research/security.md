@@ -213,7 +213,7 @@ In .NET 11 the allowed-origins list will also decide which cross-origin requests
 
 ### HTTPS behind a proxy
 
-`ms-learn` extends the hosting opinion's proxy contract to TLS: "If the proxy also handles HTTPS redirection, there's no need to use HTTPS redirection middleware. If the proxy server also handles writing HSTS headers... then the app doesn't require HSTS middleware." And `UseHsts` "isn't recommended in development because the HSTS settings are highly cacheable by browsers." ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl), reviewed 2026-07-29). Put simply, whichever layer terminates TLS owns redirection and HSTS. It is a sentence to add to the hosting opinion rather than an opinion of its own.
+`ms-learn` extends the hosting opinion's proxy contract to TLS: "If the proxy also handles HTTPS redirection, there's no need to use HTTPS redirection middleware. If the proxy server also handles writing HSTS headers... then the app doesn't require HSTS middleware." And `UseHsts` "isn't recommended in development because the HSTS settings are highly cacheable by browsers." ([Microsoft Learn: Enforce HTTPS in ASP.NET Core](https://learn.microsoft.com/aspnet/core/security/enforcing-ssl), reviewed 2026-07-29). So whichever layer terminates TLS owns redirection and HSTS. It is a sentence to add to the hosting opinion rather than an opinion of its own.
 
 ### Output encoding, CSP and security headers
 
@@ -324,7 +324,7 @@ Preview-gated: everything in section 6, plus `SlhDsa`, `CompositeMLDsa` and the 
 
 4. **aspnet-core.md has three gaps of its own making, one of them new this pass.** It ships containers without saying where the Data Protection keys live. It credits SDK container publish with patching that only happens on rebuild. And its passkeys opinion should carry the `amr` caveat while [dotnet/aspnetcore#64881](https://github.com/dotnet/aspnetcore/issues/64881) stays open, because a reader building step-up authentication on top of it will get a wrong answer from the claim.
 
-5. **Four areas moved from blocked to ready, all through one admission.** Browser authentication and BFF, the security-header baseline, password hashing parameters, and token-binding practice (DPoP, PAR, client assertions) are all `damien-bowden`. That is worth noticing as a roster result rather than only a research one: one well-chosen admission closed more of this topic's map than the previous four passes of sweeping did.
+5. **Four areas moved from blocked to ready, all through one admission.** Browser authentication and BFF, the security-header baseline, password hashing parameters, and token-binding practice (DPoP, PAR, client assertions) are all `damien-bowden`. One admission closed more of this topic's map than the previous four passes of sweeping did.
 
 6. **The two gaps that remain are narrow.** API-key handling still rests on one **Corroborate.** source, and `damien-bowden` does not cover it, which was the best remaining hope. No source recommends a setting for `AnalysisModeSecurity`. Both stay open rather than being filled from general knowledge.
 
