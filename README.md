@@ -25,6 +25,7 @@ The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one
 - **[Logging & tracing](opinions/logging.md):** structured logging, source-generated log messages, OpenTelemetry over OTLP
 - **[Project structure & SDK](opinions/project-structure.md):** project files, solution formats, central package management, analyzers, source generators
 - **[Runtime & BCL](opinions/runtime-performance.md):** performance idioms, `Span<T>`/memory, async, GC awareness
+- **[Security](opinions/security.md):** secrets, deserialization, cryptography, servicing cadence
 - **[Testing](opinions/testing.md):** framework choice, naming and structure, integration tests, coverage
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
 - **Libraries:** what to use and what to avoid, spread across the files above
@@ -76,6 +77,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── logging.md
 │   ├── project-structure.md
 │   ├── runtime-performance.md
+│   ├── security.md
 │   ├── testing.md
 │   └── ui-frameworks.md
 ├── research/                 ← saved research topics (staging: promote or discard)
