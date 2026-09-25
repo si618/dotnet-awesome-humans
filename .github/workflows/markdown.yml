@@ -2,6 +2,11 @@ name: Markdown
 
 on:
   pull_request:
+  # A pull request can only restore caches saved on its own ref or on main, so
+  # without a run on main after each merge, every PR restores the cache from the
+  # last weekly run and discards it as older than --max-cache-age.
+  push:
+    branches: [main]
   workflow_dispatch:
   schedule:
     # Weekly, Mondays 06:00 UTC — the link check needs to run on a cadence, not
@@ -13,8 +18,9 @@ permissions:
 
 jobs:
   format-and-lint:
-    # Formatting and structure are deterministic and offline — they gate PRs.
-    if: github.event_name != 'schedule'
+    # Formatting and structure are deterministic and offline, so they gate PRs.
+    # On a push to main they would only repeat what the merged PR already passed.
+    if: github.event_name != 'schedule' && github.event_name != 'push'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
