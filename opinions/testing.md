@@ -1,7 +1,7 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-15
-last-used: 2026-09-25
+last-used: 2026-09-26
 sources: [ms-learn, meziantou, andrew-lock, house, dotnet-blog]
 ---
 
@@ -37,6 +37,10 @@ Tests are first-class code: same review bar, same conventions.
   ```
 
   The reference carries no version: central package management is mandatory (see [project-structure.md](project-structure.md)), so the pin lives in [templates/Directory.Packages.props](../templates/Directory.Packages.props). No `Microsoft.NET.Test.Sdk` reference: that is the VSTest world, and the `xunit.v3` package is self-sufficient under MTP. Do not pin `Microsoft.Testing.Platform` yourself either: xunit.v3 4.0.0 dropped MTP v1 and brings its own v2, and a separate pin overrides it (via transitive pinning under CPM) into a runtime `TypeLoadException`.
+
+- **Moving an existing suite from VSTest to MTP breaks two things the build does not catch.** **Review by 2027-11-30.** This is migration guidance: drop it once VSTest-era workflows are rare, or re-date it.
+  - **`--logger` is not an MTP option.** VSTest's `--logger "console;verbosity=normal"` or `--logger trx` makes the test application exit with code 5, invalid command-line arguments, without running a test. Every CI line that carries it fails the moment `global.json` opts in. MTP has no central logger switch, because each reporter registers its own option. Use `--output Detailed` for console verbosity, and `--report-xunit-trx` for TRX, which xunit.v3 builds in. The `--report-trx` in Microsoft's migration guide belongs to the `Microsoft.Testing.Extensions.TrxReport` package, and a test application without it rejects the option the same way. ([Microsoft Learn: Migration guide from VSTest to Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/testing/migrating-vstest-microsoft-testing-platform), [Microsoft Learn: Microsoft.Testing.Platform exit codes](https://learn.microsoft.com/dotnet/core/testing/microsoft-testing-platform-exit-codes), [xUnit.net: Microsoft Testing Platform](https://xunit.net/docs/getting-started/v3/microsoft-testing-platform))
+  - **A multi-targeted test project runs its target frameworks at the same time.** Each target framework builds its own test executable, and MTP runs test modules in parallel by default, up to `Environment.ProcessorCount`, where VSTest ran them in turn. A fixture holding a fixed temp directory, port, file or database name now races the other framework's process: one run's `Dispose` deletes the directory the other is still writing to. Make that state unique per instance, for example with `Guid.NewGuid()` in the name. Do not set `--max-parallel-test-modules 1` instead, which hides the race and gives back the speed MTP was adopted for. ([Microsoft Learn: dotnet test command with Microsoft.Testing.Platform](https://learn.microsoft.com/dotnet/core/tools/dotnet-test-mtp))
 
 - **Getting off VSTest gains more speed than switching framework.** Meziantou benchmarked xUnit v3 4.0.0, NUnit 4.6.1, MSTest 4.4.0 and TUnit 1.65.68 on the .NET 10 SDK at up to 10,000 tests. The legacy VSTest path ran 4.9× slower than the MTP executable for xUnit v3, 5.1× slower for MSTest and 1.5× slower for NUnit, a gap he puts at three to four times what the choice of framework is worth. Per-test marginal cost separates the frameworks far less: 15µs for MSTest, 42µs for TUnit, 56µs for xUnit v3, 85µs for NUnit. Read those figures as a reason to keep the `global.json` opt-in above, not as a reason to leave xUnit. ([Meziantou: Benchmarking .NET test frameworks: xUnit v3, NUnit, MSTest, and TUnit](https://www.meziantou.net/benchmarking-dotnet-test-frameworks-xunit-v3-nunit-mstest-and-tunit.htm))
 
