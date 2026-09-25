@@ -75,18 +75,19 @@ Every row here has cleared all four criteria. What separates them is recorded pe
 
 Never quotable as primary sources for opinions — `scripts/validate-sources.cs` rejects a watch-list id in any `sources:` list, whatever the age or quality of the source's back catalogue. Usable for discovery and cross-checking: follow a claim found here to a citable source and cite that one. Re-evaluate periodically.
 
-| id                | Source                                                          | Focus                                             | Since |
-| ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
-| `barry-dorrans`   | [Barry Dorrans: idunno.org](https://idunno.org/)                | .NET security, CVE triage, supply chain           | 2025  |
-| `chris-sainty`    | [Chris Sainty](https://chrissainty.com/)                        | Blazor components, routing, auth                  | 2018  |
-| `duende-blog`     | [Duende Software blog](https://duendesoftware.com/blog)         | IdentityServer, BFF, OpenID Connect and SAML      | 2020  |
-| `mikesdotnetting` | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/) | ASP.NET web dev, Razor Pages                      | 2007  |
-| `morning-brew`    | [The Morning Brew](https://blog.cwa.me.uk/)                     | Daily .NET link aggregation                       | 2008  |
-| `nick-polyak`     | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                  | Avalonia/WPF/XAML architecture, reactive patterns | 2008  |
-| `scott-brady`     | [Scott Brady](https://www.scottbrady.io/)                       | OAuth, OpenID Connect, identity, cryptography     | —     |
-| `syncfusion-blog` | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)           | Release summaries, performance roundups           | —     |
-| `telerik-blog`    | [Telerik Blogs: .NET](https://www.telerik.com/blogs)            | Release summaries                                 | —     |
-| `udi-dahan`       | [Udi Dahan: The Software Simplist](https://udidahan.com/)       | SOA, messaging, service boundaries, domain events | ~2007 |
+| id                | Source                                                                        | Focus                                                                             | Since |
+| ----------------- | ----------------------------------------------------------------------------- | --------------------------------------------------------------------------------- | ----- |
+| `barry-dorrans`   | [Barry Dorrans: idunno.org](https://idunno.org/)                              | .NET security, CVE triage, supply chain                                           | 2025  |
+| `chris-sainty`    | [Chris Sainty](https://chrissainty.com/)                                      | Blazor components, routing, auth                                                  | 2018  |
+| `dotnet-skills`   | [Aaronontheweb/dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills) | Agent skills for .NET: C#, Akka.NET, Aspire, EF Core, testing, AOT, OpenTelemetry | 2025  |
+| `duende-blog`     | [Duende Software blog](https://duendesoftware.com/blog)                       | IdentityServer, BFF, OpenID Connect and SAML                                      | 2020  |
+| `mikesdotnetting` | [Mike Brind: Mikesdotnetting](https://www.mikesdotnetting.com/)               | ASP.NET web dev, Razor Pages                                                      | 2007  |
+| `morning-brew`    | [The Morning Brew](https://blog.cwa.me.uk/)                                   | Daily .NET link aggregation                                                       | 2008  |
+| `nick-polyak`     | [Nick Polyak (Dev.to)](https://dev.to/npolyak)                                | Avalonia/WPF/XAML architecture, reactive patterns                                 | 2008  |
+| `scott-brady`     | [Scott Brady](https://www.scottbrady.io/)                                     | OAuth, OpenID Connect, identity, cryptography                                     | —     |
+| `syncfusion-blog` | [Syncfusion Blogs](https://www.syncfusion.com/blogs/)                         | Release summaries, performance roundups                                           | —     |
+| `telerik-blog`    | [Telerik Blogs: .NET](https://www.telerik.com/blogs)                          | Release summaries                                                                 | —     |
+| `udi-dahan`       | [Udi Dahan: The Software Simplist](https://udidahan.com/)                     | SOA, messaging, service boundaries, domain events                                 | ~2007 |
 
 ## Source notes
 
@@ -103,7 +104,7 @@ His 2026 "Software 2.0" series is the most concrete .NET-specific writing found 
 Accuracy is sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono, and ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
 **Cite the engineering posts:** a large share of the catalogue is essays on the .NET ecosystem, open-source economics and running a business, which argue from experience rather than evidence.
 **Petabridge posts for mechanism, not adoption:** it is his company's blog and carries Akka.NET release announcements alongside the technical posts.
-**Not the skills repository:** [dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills) states current principles, but as of 2026-09-25 its samples pin xUnit v2 and FluentAssertions 6 and 7, float `Version="*"`, hold collections in records, and include a value object that fails to compile with CS0111, so it lags the writing and is not cited under this id.
+**Not the skills repository:** [dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills) is vetted separately and watch-listed as `dotnet-skills`, so it is not cited under this id.
 **Conflict of interest:** he is CEO of Petabridge, which sells Akka.NET support plans, consulting and training and the Phobos monitoring product through Sdkbin, a marketplace he built, so never cite him alone on adopting Akka.NET, the actor model or Phobos.
 His free AI tooling (dotnet-skills, dotnet-slopwatch, Netclaw) is promoted in the posts that describe his workflow, a milder conflict worth flagging where an opinion names one of them.
 He removed FluentAssertions from Akka.NET on licensing grounds on [2026-06-10](https://petabridge.com/blog/why-akkadotnet-remove-fluentassertions/), a decision that cost convenience, which is evidence of distance from convenient adoption rather than against it
@@ -191,6 +192,23 @@ Cite him for the shape of an argument, never alone, and flag the sponsorship on 
 ### `dotnet-blog` — Citable
 
 Includes Stephen Toub's annual "Performance Improvements in .NET" posts and the "What's new" series
+
+### `dotnet-skills` — Watch list
+
+Longevity, accuracy and authorship, in that order; each alone would hold it here.
+The repository was created on 2025-11-12, so its record is under a year old, and it is a set of agent skills rather than prose, published as 37 skills and 6 subagents with v1.6.0 on 2026-09-16.
+It counts as authored documentation under the admission rules, which is why it needed its own vetting rather than riding on `aaron-stannard`'s record.
+Accuracy is the substantive blocker, because nothing compiles its samples: its own `AGENTS.md` says "There is no build system, tests, or compiled output."
+Checked on 2026-09-25 against SDK 10.0.400, the `testcontainers` samples fail with CS0246 against Testcontainers 4.15.0, the version their own `Version="*"` references restore, and a `csharp-coding-standards` value object fails with CS0111.
+The same skill's records hold collections, which breaks value equality, and a validating record can be bypassed with `with`.
+The package examples pin xUnit v2, FluentAssertions 6 and 7 and `Verify.Xunit`, which pulls in xUnit v2, and six skills ship CI on `dotnet-version: 9.0.x` with 22 mutable action tags and no SHA pins.
+It does issue corrections: its release notes record fixing "fabricated APIs, compile errors" in the OpenTelemetry skill and guidance that wrongly called adding optional parameters binary-compatible.
+Its [evaluations](https://github.com/Aaronontheweb/dotnet-skills-evals) are real but small, covering 15 Akka.NET tasks judged by the model that wrote the code.
+Authorship is split: Stannard made 68 of 82 commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, `opentelementry-dotnet-instrumentation`) came largely from Daniel Marbach, Mauro Servienti and Tomasz Masternak of Particular Software, so admitting the repository would admit bylines nobody has vetted, the `duende-blog` blocker.
+Where one of those authors has a written track record, vet the human instead.
+Six skills and a subagent cover Akka.NET, and `slopwatch` is his own tool, so the `aaron-stannard` conflict applies here too.
+Usable for discovery and cross-checking on the usual terms; the `ai-usage` research topic maps every skill against the opinions.
+Re-evaluate from 2027-11, and sooner only if the repository starts compiling its samples
 
 ### `duende-blog` — Watch list
 
@@ -415,3 +433,4 @@ The 2005–2016 archive stays usable for discovery and cross-checking, and `ms-l
 | 2026-09-15 | Defined references (no roster change) | A package an opinion or template names may have its own documentation, release notes, issues and nuget.org page linked inline to corroborate a roster-sourced claim, and so may the standard behind a named format; none of it enters `sources:` or needs vetting. Raised in review of #74, where the xUnit Native AOT configuration and its C#-only limit were documented only at xunit.net |
 | 2026-09-20 | Collapsed Tier 1 and Tier 2 into one **Citable** table | The two tiers were operationally identical: `validate-sources.cs` bucketed them together, and no skill, check or rule read one differently from the other. Longevity now needs two years and is carried precisely by the `Since` column, and the independence cap becomes a usage limit recorded in a source's notes, which is where all four capped sources already kept the real constraint. No source's citability changed |
 | 2026-09-25 | Admitted `aaron-stannard` | Sixteen years of writing across his own blog and Petabridge's, live on both, with depth in engineering posts that reason through versioning, property testing and performance regressions in code, and in-post corrections on record. Admitted to give the `ai-usage` research topic a .NET-specific practitioner source; Petabridge and Phobos are recorded as a conflict, and his dotnet-skills repository is excluded because its samples lag his writing |
+| 2026-09-25 | Watch-listed `dotnet-skills` | Vetted on its own because authored documentation counts, and the `aaron-stannard` admission had excluded it by note rather than by evidence. Held on longevity, under a year old, and on accuracy, with samples verified not to compile against current packages, and multi-author besides; the evidence is recorded in Notes for a re-evaluation from 2027-11 |
