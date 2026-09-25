@@ -14,20 +14,20 @@ Collate what the vetted sources have published since the last sweep and refine t
 
 ## Orchestration
 
-Where the host supports worker agents, fan the per-source sweeps (step 3) out to **lower-cost worker agents** in parallel — they fetch, search, and return raw findings (links, dates, extracted claims) only. The orchestrating model acts as the **editor**: it alone triages findings, resolves conflicts between sources, and edits `opinions/` and `templates/`. Never delegate the final edit to a cheap model.
+Per [AGENTS.md: Orchestration and model economy](../../AGENTS.md#orchestration-and-model-economy), fan the per-source sweeps (step 3) out to worker agents; the editor alone triages their findings and edits `opinions/` and `templates/`.
 
 ## Steps
 
 1. **Load the roster** from [AWESOME-HUMANS.md](../../AWESOME-HUMANS.md). Only sources in the **Citable** table feed opinions. Watch-list sources are for discovery and cross-checking only — anything found there needs a citable corroboration or a `vet-source` admission before it can shape an opinion.
 2. **Determine the sweep window.** Use the most recent harvest entry in the decision log of `AWESOME-HUMANS.md` (or the newest `last-reviewed` date across `opinions/` if none). Sweep from then to today.
-3. **Sweep each source** for posts in the window. Sources whose notes section carries the `**Discovery-only.**` marking (currently `awesome-dotnet`, `fsharp-weekly`, `csharp-digest`, `awesome-blazor`, `awesome-avalonia`) are leads to primary posts — follow the links; never cite the discovery source itself in `sources:`, which CI rejects.
+3. **Sweep each source** for posts in the window. Sources whose notes section carries the `**Discovery-only.**` marking are leads to primary posts — follow the links; never cite the discovery source itself in `sources:`, which CI rejects.
 4. **Triage each notable post** into one of:
    - **Changes an existing opinion:** the guidance supersedes or refines something in `opinions/`. Queue an edit.
    - **Suggests a new opinion:** a recurring theme with no home yet. Create a stub opinion with frontmatter, the source link, and a `TODO`, then index it in `README.md` (a linked Scope bullet and a Repository layout entry) in the same commit — CI fails the PR otherwise.
    - **Noise:** release chatter, product marketing, one-off tips that don't generalise. Skip.
-5. **Apply the edits on a working branch** (never the default branch) named `harvest/<YYYY-MM-DD>`, dated the day the sweep window ends, per the branch names in [AGENTS.md](../../AGENTS.md):
+5. **Apply the edits in a worktree** on branch `harvest/<YYYY-MM-DD>`, dated the day the sweep window ends, per [AGENTS.md](../../AGENTS.md):
    - Keep opinions opinionated — one recommendation. If a new post contradicts the current opinion, prefer the stronger-sourced or better-evidenced position and note the supersession in one line.
-   - **Never remove, dilute, or un-mark house content** (`house` source id, `**House:**` marking — canonical rules in [HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). If a source contradicts a house opinion, the house opinion stands per those rules; if a source newly agrees, add the citation alongside the marking — the marking stays.
+   - **Never remove, dilute, or un-mark house content** ([HOUSE-OPINIONS.md: How this works](../../HOUSE-OPINIONS.md#how-this-works)). Where a source newly agrees with one, add the citation beside the marking.
    - Add the post's source id to the opinion's `sources:` frontmatter and update `last-reviewed:`.
 6. **Record the sweep** in the `AWESOME-HUMANS.md` decision log: date, window covered, and what was folded in, at the length of the entries already there. Per-source findings go in the PR (step 7), not the table cell.
 7. **Open a PR** to the default branch summarising per-source findings and per-opinion changes. A human reviews before it becomes "the opinion". If an open `Harvest due: <Month> <Year>` issue asked for this sweep, put `Closes #<number>` in the PR body so merging retires it. The `Harvest reminder` workflow opens that issue on the 1st and skips the month when an open one already carries the title, so an issue left behind swallows the next reminder rather than merely looking untidy. If the PR is ever replaced by another, carry the keyword across to the replacement — the reference does not survive on its own.

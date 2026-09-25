@@ -35,22 +35,7 @@ A new opinion file must appear both here, in title order above **Libraries**, an
 
 Opinions target the latest released versions of .NET, C#, and F#, never an older LTS, with preview features confined to "Coming next" asides. New versions are folded in by the [skills](#maintenance-via-skills) below.
 
-Every resource carries metadata recording when it was last reviewed, so staleness is visible rather than silent. `opinions/` and `templates/` files also record when each was last used as a reference; `research/` topics don't, because the only way to consult one is to build on it, which re-verifies it. An opinion's YAML frontmatter (a research topic carries the same block minus `last-used`):
-
-```yaml
----
-targets: [net10.0, csharp-14, fsharp-10]
-last-reviewed: 2026-08-12
-last-used: 2026-08-12
-sources: [dotnet-blog, andrew-lock]
----
-```
-
-Template files carry the same fields in a first-line comment header instead — an XML or INI file cannot open with a `---` block and stay valid for MSBuild or the editors that read it (the two JSON templates have no comment syntax at all and are exempt):
-
-```xml
-<!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-08-12 | last-used: 2026-08-12 | sources: ms-learn -->
-```
+Every resource records when it was last reviewed, so staleness is visible, and `opinions/` and `templates/` also record when each was last used as a reference. Opinions and research topics carry the fields as YAML frontmatter; templates carry them in a first-line comment header, because an XML or INI file cannot open with a `---` block. [AGENTS.md: Metadata](AGENTS.md#metadata) defines the fields and their rules, and CI enforces them.
 
 ## Awesome humans
 
@@ -164,7 +149,7 @@ Run them from the repository root, exactly as CI does:
 dotnet run scripts/validate-metadata.cs
 ```
 
-[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the header-carrying `templates/` files and parses the first-line comment header that carries the same fields on them (see [Freshness policy](#freshness-policy) for why templates use a comment instead). None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
+[`Opinions.cs`](scripts/Opinions.cs) lists the opinion files, [`Frontmatter.cs`](scripts/Frontmatter.cs) parses the YAML frontmatter on `opinions/` and `research/` files, and [`CommentHeader.cs`](scripts/CommentHeader.cs) lists the header-carrying `templates/` files and parses their first-line comment header. None of the three helpers runs alone: each declares no top-level statements, and compiles into whichever script `#:include`s it.
 
 The SDK comes from [`global.json`](global.json), whose floor is the feature band that understands `#:include`. It is not tied to [`templates/global.json`](templates/global.json): each pin follows what its own consumers need, and `rollForward: latestFeature` picks up newer bands without an edit. One check is still Python — the Agent Skills spec validator, published only to PyPI.
 
