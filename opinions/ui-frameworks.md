@@ -56,7 +56,8 @@ Blazor for web UI, .NET MAUI for mobile + desktop, Avalonia for cross-platform d
 
 - **Abstract platform billing/purchases behind a single interface (`IBillingService`) with conditional compilation per store, and always validate purchases server-side.** ([Versluis: Cross-platform in-app billing](https://devblogs.microsoft.com/dotnet/cross-platform-billing-dotnet-maui/))
 - **Enable Material 3 on Android (`<UseMaterial3>true</UseMaterial3>`, MAUI 10.0.60+)** for current-generation theming. ([Versluis: Material 3 makeover](https://devblogs.microsoft.com/dotnet/dotnet-maui-material-3/))
-- **Treat trimming compliance as a release requirement** (store mandates like Google Play's 16 KB page size; exclude problem assemblies explicitly rather than disabling trimming). (Versluis — trimming and store-compliance posts)
+- **Keep trimming on, and exclude a problem assembly rather than disabling it:** root it in a `Linker.xml` referenced by `<TrimmerRootDescriptor Include="Linker.xml" />`. Turning `PublishTrimmed` off is a diagnostic step to confirm trimming is the cause, not the fix. ([Versluis: Excluding Assemblies from Trimming in .NET MAUI](https://blog.verslu.is/maui/exclude-assemblies-from-trimming/))
+- **Google Play's 16 KB page-size requirement is native-library alignment, not trimming**, and targeting .NET 9 or later meets it out of the box. ([Versluis: Preparing Your .NET MAUI Apps for Google Play's 16 KB Page Size Requirement](https://devblogs.microsoft.com/dotnet/maui-google-play-16-kb-page-size-support/))
 - **Test preview SDKs with `sdk.paths` in `global.json`** rather than polluting the machine default, and ignore the `.dotnet/` folder it installs into — setup and caveats in [project-structure.md](project-structure.md). ([Versluis: test preview SDKs locally](https://blog.verslu.is/maui/test-dotnet-maui-preview-sdk-locally/))
 
 ### App lifecycle
