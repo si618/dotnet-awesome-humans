@@ -300,7 +300,8 @@ The 2008–2024 archive remains usable for discovery
 
 "What's new" and "Breaking changes" pages per release.
 Scope widened 2026-08-24 from the .NET docs to first-party technical documentation across `learn.microsoft.com`, taking in the .NET architecture e-books and the Azure Architecture Center pattern catalogue — same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
-Two rules follow from the breadth: cite for mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption, and quote the page's own review date, because these age unevenly — the microservices e-book is 2018 content reviewed in 2023 and 2024, while the pattern catalogue is revised on a rolling basis
+Two rules follow from the breadth: cite for mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption, and quote the page's own review date from the `ms.date` metadata field, never `updated_at`, which is a docset build timestamp shared across every page in a bulk republish and can run years ahead of the text.
+The field matters because these pages age unevenly: the microservices e-book is 2018 and 2021 content that has not been reviewed since, carrying `updated_at` values of 2023 and 2024 that are republishes rather than reviews, while the Azure Architecture Center pattern pages are revised on a rolling basis and carry genuinely recent `ms.date` values
 
 ### `nicholas-blumhardt` — Citable
 
@@ -422,6 +423,7 @@ The 2005–2016 archive stays usable for discovery and cross-checking, and `ms-l
 | 2026-09-03 | Admitted `jeremy-miller` (Tier 1, marked **Corroborate.**) | Writing since 2007; writes almost only about the stack his company sells |
 | 2026-09-03 | Admitted `derek-comartin` (Tier 1, marked **Corroborate.**) | Blog clears the writing scope on its own; marked for no code or measurements and in-body sponsorship |
 | 2026-09-03 | Admission pass aimed at `opinions/architecture.md` | Added `mark-seemann` as the unmarked design source the file lacked |
+| 2026-09-04 | Named the date field in the `ms-learn` citation rule (no tier change) | The rule said to quote "the page's own review date" without naming it, and a research pass followed it into six wrong dates by quoting `updated_at`, a build timestamp; the rule now names `ms.date` |
 | 2026-09-10 | Admitted `ardalis` (Tier 1, marked **Corroborate.**) | Writing since 2003, covering DevIQ and his documentation; marked for mixed depth; conflict recorded |
 | 2026-09-12 | Admitted `damien-bowden` (Tier 1) | Writing since 2013-01-31; the BFF and browser-app authentication depth source the `security` research topic lacked |
 | 2026-09-12 | Watch-listed `barry-dorrans` | Blog only since 2025-11-18; strong writing recorded in notes; re-evaluate from 2027-11 |
