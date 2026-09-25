@@ -15,9 +15,11 @@ sources:
 
 # Module boundaries and events
 
-Research for the open TODO in [architecture.md](../opinions/architecture.md), which asks for corroboration from an independent Tier 1 source and then three extensions: messaging between modules, transactional boundaries, and when a module has earned a process boundary. Event sourcing and event-driven architecture sit in the same topic because the three extensions all reach for them.
+Research for the open TODO in [architecture.md](../opinions/architecture.md), which now reads "extend with transactional boundaries across modules, and when a module has earned a process boundary". Event sourcing and event-driven architecture sit in the same topic because both extensions reach for them.
 
-This is the third pass. The first, on 2026-08-24, had one independent source and reported that half the TODO was blocked. The second, on 2026-09-04, swept the four sources admitted on 2026-09-03 and found they split the five opinions rather than confirming the file. This pass sweeps `ardalis`, admitted 2026-09-10, and it lands on the two opinions the second pass left least settled.
+**The TODO was longer when this topic opened, and the difference is the point.** It asked first for corroboration from an independent source, then for messaging between modules, and only then for the two extensions that remain. The harvest of 2026-09-14 discharged the first two: it added `mark-seemann`, `ms-learn` and `derek-comartin` to the file's `sources:`, added the boundary-explicitness and integration-event opinions, and narrowed the comment. So the corroboration question is not open, and this file is no longer answering it. What it does instead is audit the discharge — and the audit does not come out clean, because the opinion the harvest left untouched is the one no source swept supports.
+
+This is the third pass. The first, on 2026-08-24, had one independent source and reported that half the TODO was blocked. The second, on 2026-09-04, swept the four sources admitted on 2026-09-03 and found they split the opinions rather than confirming the file. This pass sweeps `ardalis`, admitted 2026-09-10, and it lands on the two opinions the second pass left least settled.
 
 **The headline is that the disagreement over layering was smaller than it looked, because one side of it was a single author quoted twice.** The second pass weighed `ms-learn`, which prescribes layering solution-wide, against `mark-seemann` and `jeremy-miller`, who reject the application layer. The `ms-learn` page making that case is written by `ardalis`, and admitting him puts both citations under one name. He has also moved: the 2021 article gives an unqualified three-project prescription, and by 2024 he is calling Clean Architecture one option among several, denying that it delivers modularity at all, and shipping a second template that organises by vertical slice.
 
@@ -27,16 +29,16 @@ The pass also closes the commands-versus-events gap that the second pass left op
 
 ## Sources swept
 
-| id                | Tier                                                                       | Used for                                                                                   |
-| ----------------- | -------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
-| `ms-learn`        | 1, independent _except_ on the architecture e-book, which `ardalis` writes | Corroboration, transactional boundaries, process boundaries, idempotency, event sourcing   |
-| `ardalis`         | 1, **Corroborate.**                                                        | Layering scope, boundary enforcement in EF Core, command and event ownership, Conway's Law |
-| `mark-seemann`    | 1, independent, unmarked                                                   | Boundary explicitness, module contracts, coupling, layering                                |
-| `jeremy-miller`   | 1, **Corroborate.**                                                        | Modular monolith criteria, vertical slices, outbox, event sourcing scope                   |
-| `oskar-dudycz`    | 1, **Corroborate.**                                                        | Slices and modules, internal and external events, event sourcing scope, cutting services   |
-| `derek-comartin`  | 1, **Corroborate.**                                                        | Boundary ownership, commands versus events, the cost of decoupling                         |
-| `milan-jovanovic` | 1, conflict of interest noted                                              | Module communication patterns, event sourcing framing (carried from the first pass)        |
-| `andrew-lock`     | 1, independent                                                             | Swept 2026-08-24, nothing on this ground (negative result, recorded below)                 |
+| id                | Standing                                                                                                                                                         | Used for                                                                                   |
+| ----------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------ |
+| `ms-learn`        | Citable, independent of the other sources but not of two of them by authorship: the architecture e-book pages are written by `ardalis` and by `james-montemagno` | Corroboration, transactional boundaries, process boundaries, idempotency, event sourcing   |
+| `ardalis`         | Citable, **Corroborate.**                                                                                                                                        | Layering scope, boundary enforcement in EF Core, command and event ownership, Conway's Law |
+| `mark-seemann`    | Citable, independent, unmarked                                                                                                                                   | Boundary explicitness, module contracts, coupling, layering                                |
+| `jeremy-miller`   | Citable, **Corroborate.**                                                                                                                                        | Modular monolith criteria, vertical slices, outbox, event sourcing scope                   |
+| `oskar-dudycz`    | Citable, **Corroborate.**                                                                                                                                        | Slices and modules, internal and external events, event sourcing scope, cutting services   |
+| `derek-comartin`  | Citable, **Corroborate.**                                                                                                                                        | Boundary ownership, commands versus events, the cost of decoupling                         |
+| `milan-jovanovic` | Citable, conflict of interest noted                                                                                                                              | Module communication patterns, event sourcing framing (carried from the first pass)        |
+| `andrew-lock`     | Citable, independent                                                                                                                                             | Swept 2026-08-24, nothing on this ground (negative result, recorded below)                 |
 
 `jimmy-bogard` and `kamil-grzybek` remain unvetted and no claim here rests on them. Their status is settled in item 4 at the end.
 
@@ -44,7 +46,9 @@ The `ardalis` id covers three properties and they are not of equal weight. The b
 
 ## 1. Corroboration, opinion by opinion
 
-The first pass answered the TODO at the level of the file. Four sources later that is too coarse, because they split the five opinions differently. Taken one at a time:
+The first pass answered the TODO at the level of the file. Four sources later that is too coarse, because they split the opinions differently. Taken one at a time:
+
+`architecture.md` now carries seven opinions. The five below are the ones this sweep bears on and the ones that predate it. The two the 2026-09-14 harvest added — that a module boundary should be something the compiler propagates, and that integration events go out while domain events stay in — came from this topic's own sources and are already the repository's position, so they are treated as settled here and their material is developed in [section 2](#2-messaging-between-modules) rather than re-adjudicated.
 
 ### "Default to a modular monolith, not microservices"
 
@@ -164,7 +168,7 @@ Verbs over nouns and functions over entities are the same claim. Both sources ar
 
 ### Negative result worth keeping
 
-`andrew-lock` was swept on 2026-08-24 as the other obvious independent Tier 1 candidate and carries nothing on module boundaries, messaging or the outbox. His background-work catalogue is Quartz.NET and `IHostedService` mechanics, which is hosting rather than architecture. Do not re-sweep him for this topic.
+`andrew-lock` was swept on 2026-08-24 as the other obvious independent citable candidate and carries nothing on module boundaries, messaging or the outbox. His background-work catalogue is Quartz.NET and `IHostedService` mechanics, which is hosting rather than architecture. Do not re-sweep him for this topic.
 
 ## 2. Messaging between modules
 
@@ -412,7 +416,7 @@ Where they still part company is scope. Seemann and Miller would remove the appl
 
 **Correction carried from the first pass, affecting every `ms-learn` citation.** The roster rule for `ms-learn` is to quote the page's own review date. The page's own review date is the `ms.date` metadata field, which the author sets. The first pass quoted `updated_at`, which is a docset build timestamp and is shared across every page in a bulk republish.
 
-| Page                                                     | First pass claimed | Actual `ms.date` | Author             |
+| Page                                                     | First pass claimed | Actual `ms.date` | `author` field     |
 | -------------------------------------------------------- | ------------------ | ---------------- | ------------------ |
 | Common web application architectures                     | 2026-07-08         | **2021-12-12**   | `ardalis`          |
 | Challenges and solutions for distributed data management | 2023-10-12         | **2018-09-20**   | `jamesmontemagno`  |
@@ -421,13 +425,15 @@ Where they still part company is scope. Seemann and Miller would remove the appl
 | Event Sourcing pattern                                   | 2026-08-15         | **2026-03-27**   | `claytonsiemens77` |
 | Idempotent Consumer pattern                              | not read           | **2026-08-13**   | `claytonsiemens77` |
 
-The quoted field is demonstrably a build stamp: Event Sourcing and Idempotent Consumer share both `updated_at: 2026-08-15T05:02:00Z` and `git_commit_id: d73cd1632ffa489eff78a16bba4d101c510a1810`. One commit, two pages, one timestamp.
+The last column is the page's `author` metadata, a GitHub handle, not the `ms.author` alias beside it — `ardalis` is `wiwagn`, `jamesmontemagno` is `jamont`, `claytonsiemens77` is `pnp`. Two of the three handles are roster ids under a different spelling: `ardalis` and `james-montemagno`. That is picked up in [What this reveals](#what-this-reveals-about-the-repository).
+
+The quoted field is demonstrably a build stamp, twice over. Event Sourcing and Idempotent Consumer share both `updated_at: 2026-08-15T05:02:00Z` and `git_commit_id: d73cd1632ffa489eff78a16bba4d101c510a1810`: one commit, two pages, one timestamp. And the stamp keeps moving without the text: re-checked on 2026-09-25, Event Sourcing reads `updated_at: 2026-09-25T05:03:00Z` while its `ms.date` still reads 2026-03-27. Six weeks of republishes, no review.
 
 **What follows from the correction.** The microservices e-book material is 2018 and 2021 text, not 2023 and 2024. The first pass's argument that age is not disqualifying still holds, because the reasoning is durable and the DDD citations it rests on are older still, but it now has to hold against 2018. Two consequences carry into any opinion: the e-book is framed for containerised microservices rather than modular monoliths, so every claim above has been read across a boundary the source did not write for; and it predates the modular monolith becoming a named pattern, which is part of why it is silent on slices. Only the two Azure Architecture Center pattern pages are genuinely current.
 
 **A second dating problem, on the source admitted this pass.** The `ms-learn` correction above turned on quoting the wrong metadata field. DevIQ has the sharper version of the same trouble: it shows a reader no date at all. Every page sampled carries its dates only in unrendered metadata, and on every one of them the published and modified values are identical, so nothing distinguishes an original from a revision. The domain-events entry stamps 2015-09-20 in all four of its date slots while its body teaches MediatR with `INotification` and `INotificationHandler`; the modular monolith entry stamps 2026-03-01 for both. Neither number can be quoted as a review date the way the roster's `ms-learn` rule now requires, because there is no evidence either was ever reviewed rather than published once and edited silently. Cite DevIQ for definition and taxonomy, and date the claim from a blog post or another source rather than from the entry.
 
-**Authorship overlap, which is a freshness problem as well as an independence one.** `ms-learn`'s architecture e-book pages and the `ardalis` blog are the same author, so the e-book's 2018 and 2021 dates are not a second opinion holding steady across five years. They are one person's older position, still published, beside his newer one. Anywhere this file cites both, it is citing him twice.
+**Authorship overlap, which is a freshness problem as well as an independence one.** The e-book pages carry individual authors, and two of them are roster ids. Common web application architectures and the `ardalis` blog are the same author, so the page's 2021 date is not a second opinion holding steady across five years; it is one person's older position, still published, beside his newer one, and anywhere this file cites both it is citing him twice. The three microservices pages are `james-montemagno`, whose row carries a live independence concern and a pre-2024 citation cap — which their 2018 dates satisfy, but which is worth knowing before treating them as the independent leg of an argument.
 
 **On the other sources.** `ardalis`'s blog material runs 2020 to 2024 and is C# throughout where it carries code, which is rarely; the two properties that matter most to the layering argument, the template documentation and DevIQ, carry no reader-visible date at all. `mark-seemann`'s layering position is 2025-04-01 and his boundary series is 2024, both within tolerance and both C#. His slice remark is 2023-09-18. `jeremy-miller`'s design essays run 2024-04 to 2026-06, all C#. `oskar-dudycz`'s slice post is 2026-08-10 but its examples are TypeScript, which the roster row requires flagging; his event-sourcing posts are 2021 and his internal-and-external-events post is 2023 and uses Marten. `derek-comartin`'s material is 2022 to 2026 and carries no code by design.
 
@@ -435,13 +441,15 @@ Nothing in this topic is preview-gated. All of it is GA guidance.
 
 ## What this reveals about the repository
 
-1. **The TODO in `architecture.md` is now dischargeable, and discharging it changes three opinions rather than citing five.** Opinions one, three and five gain corroboration. Opinion two gains corroboration from three marked sources while the one unmarked source reads its central term differently. Opinion four keeps its verdict but on new footing: its headline is unsupported by every source swept, and that now includes the advocate of the pattern it names. Route through `resolve-research`; the weaving is `harvest-sources` work that decision-log row 139 already anticipated.
+1. **The remaining TODO is dischargeable, and the part already discharged needs revisiting.** Of the five older opinions, one, three and five gain corroboration and need only citations. Opinion two gains corroboration from three marked sources while the one unmarked source reads its central term differently, so it should stop implying the framing is uncontested. Opinion four is the one that has to be rewritten rather than cited: its headline is unsupported by every source swept, and that now includes the advocate of the pattern it names. Sections 3 and 4 answer the two extensions the comment still asks for.
+
+   The 2026-09-14 harvest closed the corroboration ask and the messaging extension, and it closed them correctly as far as it went — the two opinions it added hold up against this sweep. What it did not do is re-read the opinions already there against the sources it was adding, which is how opinion four kept a headline that `mark-seemann` and `jeremy-miller` both contradict and that `ardalis` has since walked away from. Route the whole thing through `resolve-research`, and treat this as evidence that a harvest adding sources to a file should re-check the claims already in it.
 
 2. **The roster can say that a source has a conflict, but not that two sources share one.** This pass found the second instance and it is a different shape from the first, which is what makes it structural rather than incidental.
    - **One product, two people.** `jeremy-miller` created Marten; `oskar-dudycz` co-maintains it. Their agreement that event sourcing is a module-level decision is one voice.
-   - **One person, two ids.** The `ms-learn` architecture e-book is written by `ardalis`. Citing both on layering cites him twice.
+   - **One person, two ids, twice over.** The `ms-learn` architecture e-book is not one anonymous voice. The `author` field on the pages cited here names `ardalis` on Common web application architectures, and `james-montemagno` on all three microservices pages — distributed data management, domain events, and simplified CQRS. Both are Citable roster ids in their own right. Citing `ms-learn` beside `ardalis` on layering cites him twice; citing the microservices pages as independent corroboration cites a source whose own row carries a live independence concern and, since the re-vetting of 2026-08-23, a pre-2024 cap. The pages are 2018, which is inside that cap, so nothing here has to be withdrawn — but the independence those citations were counted for is thinner than the id suggests.
 
-   The second is the more dangerous, because `scripts/validate-sources.cs` counts ids and nothing else. A file citing `[ms-learn, ardalis]` passes the **Corroborate.** check, since `ms-learn` is unmarked and stands beside the marked `ardalis`, while both citations rest on one author. The check cannot catch this and should not try, since authorship is not in the roster's data. What the roster can do is carry the pairing in Notes on both rows, the way it already carries single-source conflicts. Worth raising with `vet-source` on three rows: `jeremy-miller`, `oskar-dudycz`, and `ardalis` and `ms-learn` together.
+   The second shape is the more dangerous, because `scripts/validate-sources.cs` counts ids and nothing else. A file citing `[ms-learn, ardalis]` passes the **Corroborate.** check, since `ms-learn` is unmarked and stands beside the marked `ardalis`, while both citations rest on one author. The check cannot catch this and should not try, since authorship is not in the roster's data. What the roster can do is carry the pairing in Notes, the way it already carries single-source conflicts. Worth raising with `vet-source` on four rows: `jeremy-miller` and `oskar-dudycz` as a pair, and `ms-learn` against both `ardalis` and `james-montemagno`.
 
 3. **The `ms-learn` citation rule is fixed, and DevIQ now needs the same fix for a worse version of the problem.** The rule now names `ms.date` and says what `updated_at` is, which closed the error that put six dates in the previous pass wrong. DevIQ shows a reader no date at all, and its metadata dates are identical for published and modified on every page sampled, so there is no field to name. The honest rule is that DevIQ is citable for definition and taxonomy but cannot date a claim, and anything time-sensitive taken from it needs its date from somewhere else. This is a `vet-source` amendment to the `ardalis` row, and the row's existing "reference-grade on definitions and taxonomy" wording is already most of the way there.
 
