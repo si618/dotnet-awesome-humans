@@ -45,7 +45,7 @@ Use an extension member when the operation is a pure query or transform over a t
 
 ### The `field` keyword
 
-**Use the `field` keyword instead of hand-written backing fields** when a property needs simple validation, normalisation, or lazy logic in an accessor. Declare an explicit backing field only when it is used outside the accessors. This removes the field/property naming ceremony and the risk of code bypassing the accessor by writing to the field directly.
+**Use the `field` keyword instead of hand-written backing fields** when a property needs simple validation, normalisation, or lazy logic in an accessor. Declare an explicit backing field only when it is used outside the accessors. This removes the field/property naming convention and the risk of code bypassing the accessor by writing to the field directly.
 
 Before:
 
@@ -136,7 +136,7 @@ The one cost: the target type must be explicit (`List<int> ids = [...]`, not `va
 
 ### Nullable reference types
 
-**Enable nullable reference types in every project and promote nullable warnings to errors** — `<Nullable>enable</Nullable>` plus `<WarningsAsErrors>nullable</WarningsAsErrors>` in `Directory.Build.props`, so annotations are load-bearing rather than advisory. Never start a new project without it; never use `#nullable disable` in new code. Reserve the null-forgiving operator `!` for cases the flow analysis genuinely cannot see (e.g. values populated by a serializer or test setup), and treat every `!` as a code smell to justify in review. In annotated code, `ArgumentNullException.ThrowIfNull` at public API boundaries is still correct — annotations are compile-time only and do not protect against un-annotated or reflection-based callers. ([Microsoft Learn: Nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references))
+**Enable nullable reference types in every project and promote nullable warnings to errors** — `<Nullable>enable</Nullable>` plus `<WarningsAsErrors>nullable</WarningsAsErrors>` in `Directory.Build.props`, so annotations are enforced rather than advisory. Never start a new project without it; never use `#nullable disable` in new code. Reserve the null-forgiving operator `!` for cases the flow analysis cannot see (e.g. values populated by a serializer or test setup), and treat every `!` as a code smell to justify in review. In annotated code, `ArgumentNullException.ThrowIfNull` at public API boundaries is still correct — annotations are compile-time only and do not protect against un-annotated or reflection-based callers. ([Microsoft Learn: Nullable reference types](https://learn.microsoft.com/dotnet/csharp/nullable-references))
 
 ### Analyzers
 
@@ -173,7 +173,7 @@ The built-in analyzers ship with the SDK and track it; `latest-recommended` keep
   }
   ```
 
-- **A collection member breaks value equality.** Generated `Equals` compares each member with `EqualityComparer<T>.Default`, and the immutable collections do not override `Equals`/`GetHashCode` — so `ImmutableList<T>` and friends compare by reference, and two records with identical contents are unequal. Hold a collection in a record only where reference equality is genuinely what you want (shared instances within one object graph); otherwise expose the collection outside the record, or accept that equality is identity and document it. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
+- **A collection member breaks value equality.** Generated `Equals` compares each member with `EqualityComparer<T>.Default`, and the immutable collections do not override `Equals`/`GetHashCode` — so `ImmutableList<T>` and friends compare by reference, and two records with identical contents are unequal. Hold a collection in a record only where reference equality is what you want (shared instances within one object graph); otherwise expose the collection outside the record, or accept that equality is identity and document it. ([Skeet: Records and Collections](https://codeblog.jonskeet.uk/2025/03/27/records-and-collections/))
 
 ### Smaller opinions
 

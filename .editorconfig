@@ -43,7 +43,7 @@ indent_size = 2
 # Layout only. The house C#/F# *style* rules live in templates/.editorconfig, which is
 # root = true and so governs templates/ alone — it cannot reach this directory. The
 # scripts follow that style by hand; copying the rules here is what would let the two
-# drift, and the IDExxxx rules would need EnforceCodeStyleInBuild to bite anyway.
+# drift, and the IDExxxx rules would need EnforceCodeStyleInBuild to take effect anyway.
 [*.cs]
 indent_size = 4
 

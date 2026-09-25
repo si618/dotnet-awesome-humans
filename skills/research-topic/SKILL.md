@@ -18,7 +18,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 ## Steps
 
-1. **Clarify intent in at most one question**, and only when the request genuinely forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately, no ceremony.
+1. **Clarify intent in at most one question**, and only when the request forks: _learning_ it (explain + idioms), _deciding_ on it (trade-offs + maturity), or _migrating_ to it (diffs from the old way + breaking changes). A clear request gets researched immediately.
 2. **Start a research branch** (never the default branch): `git switch -c research/<topic-slug>` — e.g. `research/union-types`. One branch per topic, created before the first write, so the research topic and the `last-used` bumps land together and stay reviewable. The slug is the topic kebab-cased as the repository already names it — `union-types`, not `union-type` — so branch, research topic, and opinions stay searchable by one term. The branch names in [AGENTS.md](../../AGENTS.md) outrank the host environment's convention; where the host will only push under its own prefix, keep `research/<topic-slug>` as the trailing part so the topic stays legible.
 3. **Start at home.** Read the matching `opinions/` file(s) — the repository may already hold the distilled answer or a "Coming next" aside. Surface **House:**-marked content as "local convention, not community consensus". Update `last-used` frontmatter on every opinion consulted.
 4. **Sweep the roster in precedence order:**
@@ -40,7 +40,7 @@ Where the host supports worker agents, fan the per-source reading out to **lower
 
 ## Persistence and lifecycle
 
-**Save the research topic by default** to `research/<topic-slug>.md` with the frontmatter a topic carries (`targets`, `last-reviewed`, `sources`) — skip saving only if the user says the question was throwaway. A saved research topic records the state of a moment; `last-reviewed` is its honesty mechanism. There is no `last-used`: building on a topic re-verifies it, so the two dates would never diverge.
+**Save the research topic by default** to `research/<topic-slug>.md` with the frontmatter a topic carries (`targets`, `last-reviewed`, `sources`) — skip saving only if the user says the question was throwaway. A saved research topic records the state of a moment; `last-reviewed` says when that moment was. There is no `last-used`: building on a topic re-verifies it, so the two dates would never diverge.
 
 The research topic and the `last-used` bumps it made to the opinions it consulted are committed on the `research/<topic-slug>` branch from step 2 and opened as a PR to the default branch — the same branch-and-review flow every other writing skill uses. Merging that PR is a lifecycle step, not the end of it: the merge puts the research on record and in front of reviewers, and only then does `resolve-research` pick it up, on its own branch and PR. Research and resolution are two PRs by design — never fold the promote-or-discard decision into the still-open research PR. The topic slug is shared by the branch and the file, so `research/union-types` the branch carries `research/union-types.md` the file. If the user declined saving, the branch is never needed; delete it and answer in conversation only.
 

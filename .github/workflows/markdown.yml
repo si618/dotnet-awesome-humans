@@ -40,7 +40,7 @@ jobs:
     # roster are the substance of this repository, so a dead link is a content
     # defect that should not merge. The cost is that a third-party host being
     # down fails an otherwise good PR — lychee.toml keeps that rare (retries,
-    # browser user agent, 403/429 accepted), and a genuinely unrelated outage is
+    # browser user agent, 403/429 accepted), and an unrelated outage is
     # a re-run once the host recovers, not a reason to merge past the signal.
     # audit-freshness reads this workflow's result as its link-health signal.
     steps:
