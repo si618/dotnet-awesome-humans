@@ -92,6 +92,48 @@ The pattern is a pack that states current principles and ships stale or broken e
 An agent follows the example, not the principle, so a pack's samples are what to audit.
 Stale test-package pins turn up in the Microsoft pack too, so this is a property of uncompiled samples rather than of one author.
 
+### Crossover with other opinions
+
+Most of the 37 skills reach past `csharp.md`, so the pack was mapped against every opinion file on 2026-09-25.
+Worker agents did the reading. Every conflict below was re-checked against the skill file, and code was compiled where a claim needed it.
+Four worker claims failed that check and are left out:
+
+- The Akka.NET `ITimeProvider` registration does compile: it is Akka's own interface, not a misspelt BCL type.
+- The `Context.Child(...).GetOrElse(...)` lookup compiles and routes correctly, because `GetOrElse` treats `Nobody` as missing.
+- A local tool manifest does not contradict `project-structure.md`, whose `dnx` advice is for one-shot tools.
+- The Verify package complaint was right, but for a different reason (see the table).
+
+**Across the pack:** six skills ship CI workflows pinned to `dotnet-version: 9.0.x` and none to 10. There are 22 `uses:` lines on mutable action tags and none on a commit SHA, which is exactly what [ci.md](../opinions/ci.md) forbids.
+
+| Opinion                                                  | Skill                                                 | Conflict, verified                                                                                                                                                                                                                                                                                                         |
+| -------------------------------------------------------- | ----------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [testing.md: Coverage](../opinions/testing.md#coverage)  | `crap-analysis`                                       | Recommends 80% line and 60% branch thresholds in a `coverage.props` "for CI enforcement". `testing.md`: "do not gate merges on an absolute percentage".                                                                                                                                                                    |
+| [testing.md](../opinions/testing.md)                     | `testcontainers`                                      | Every sample uses `new TestcontainersBuilder<TestcontainersContainer>()`, which fails with CS0246 against Testcontainers 4.15.0, the version its own `Version="*"` reference restores. The typed builders replaced it.                                                                                                     |
+| [testing.md](../opinions/testing.md)                     | `snapshot-testing`, `verify-email-snapshots`          | `dotnet add package Verify.Xunit`, whose current 31.12.5 depends on `xunit.extensibility.execution` 2.9.3, so it drags xUnit v2 in. xUnit v3 needs `Verify.XunitV3`.                                                                                                                                                       |
+| [testing.md](../opinions/testing.md)                     | `aspire-integration-testing`, `akka-testing-patterns` | Reference `Microsoft.NET.Test.Sdk` with `xunit.runner.visualstudio`, the VSTest pairing `testing.md` rules out. The Aspire skill also sleeps with `Task.Delay(2000)`, which the pack's own slopwatch flags.                                                                                                                |
+| [logging.md](../opinions/logging.md)                     | `aspire-service-defaults`                             | Presents `AddOpenTelemetry().UseOtlpExporter()` as the whole setup. `logging.md`: in-process OTLP export "batches in memory and has no on-disk queue", so run a collector on localhost.                                                                                                                                    |
+| [project-structure.md](../opinions/project-structure.md) | `project-structure`                                   | Its complete `Directory.Build.props` omits `UseArtifactsOutput`, `EnforceCodeStyleInBuild` and nullable-as-errors. Its CPM setup omits `CentralPackageTransitivePinningEnabled`, and its `global.json` has no `test.runner`, all of which [the templates](../templates/) carry. It pins SDK 9.0.200 and `net8.0`/`net9.0`. |
+| [architecture.md](../opinions/architecture.md)           | `database-performance`                                | Splits each feature into `IUserReadStore`/`IUserWriteStore` implementations. That is the pattern-named layering `architecture.md` argues against, although the files sit inside a feature folder.                                                                                                                          |
+| [ci.md](../opinions/ci.md)                               | `local-tools`                                         | Gates formatting with CSharpier. `ci.md` uses `dotnet format --verify-no-changes`. A choice rather than an error, but an agent following the skill replaces the repository's gate.                                                                                                                                         |
+
+**Agreement is broad where the pack stays on principle.** `aot-trimming` matches [runtime-performance.md: Native AOT](../opinions/runtime-performance.md) and the source-generated JSON advice in `testing.md`.
+`csharp-type-design-performance` matches its `ValueTask` and `FrozenDictionary` guidance, and `csharp-concurrency-patterns` its rules on blocking and `ConfigureAwait`.
+`efcore-patterns` matches `data-access.md` on `ExecuteUpdateAsync`, `r3-reactive-extensions` matches [datetime.md](../opinions/datetime.md) on `TimeProvider` and `FakeTimeProvider` exactly, and `slopwatch` matches the **House:** suppression rule.
+
+**Gaps the pack covers and the opinions do not.**
+These are harvest leads, not guidance: the pack itself cannot be cited, so each needs a roster source.
+Where `aaron-stannard`'s blog already covers the ground, the lead is citable today:
+
+- **Citable through his blog:** public API compatibility, which has no opinion file at all. `csharp-api-design` teaches extend-only design, the binary-breaking optional-parameter trap and API approval tests, and the same arguments are in ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/). His ["Stop Failing The `git clone && run` Test"](https://aaronstannard.com/git-clone-and-run/) (2025-10-17) backs the Testcontainers and Aspire first-run material, which no opinion covers.
+- **Needs another roster source:**
+  - [data-access.md](../opinions/data-access.md) already lists these as unsourced TODOs, and `efcore-patterns` and `database-performance` cover them: tracking defaults, the migrations workflow, `ExecutionStrategy` with transactions inside it, split queries against cartesian explosion, and `IDbContextFactory` for long-lived owners. `aspnet-core.md` applies `AsNoTracking()` per query, where the skill makes no-tracking the global default, so the owner will have to pick one posture.
+  - The Options pattern (`ValidateOnStart`, `IValidateOptions<T>`, the `IOptions`/`IOptionsSnapshot`/`IOptionsMonitor` lifetimes) and DI registration conventions, including the scoped-in-singleton trap. No opinion covers either.
+  - Metrics: `logging.md` covers logs and traces but never `Meter`, instrument naming or cardinality.
+  - Trimming attributes and the IL2xxx/IL3xxx warning families, beyond `runtime-performance.md`'s one paragraph.
+  - The escalation path from `async` to `Channel<T>` to Rx to actors, and serialization format choice beyond System.Text.Json.
+  - Blazor end-to-end testing detail from `playwright-blazor`, such as waiting on DOM elements rather than network idle, for [ui-frameworks.md](../opinions/ui-frameworks.md).
+  - `DOTNET_HOSTBUILDER__RELOADCONFIGONCHANGE=false` for test suites that start many hosts, which applies to `WebApplicationFactory` suites as well.
+
 ## Isolation and supply chain
 
 - **Run an agent with bypassed permission prompts only inside a microVM.** Andrew Lock recommends Docker Sandboxes because "unlike containers, which share the host kernel, each sandbox has its own kernel". Network traffic goes through a proxy that blocks host access and injects credentials, so the agent never holds them. He pairs each sandbox with its own git worktree, which matches how this repository already works. ([Andrew Lock: Running AI agents safely in a microVM using docker sandbox](https://andrewlock.net/running-ai-agents-safely-in-a-microvm-using-docker-sandbox/), 2026-04-07, `andrew-lock`) The post does not cover a .NET SDK or NuGet configuration inside the sandbox.
@@ -120,6 +162,7 @@ Noted so a follow-up topic has somewhere to start, with nothing weighed:
   - `ci.md`: agent isolation (`andrew-lock`), and auditing skill packs as dependencies.
   - `csharp.md`: only if the owner settles the `.editorconfig` question below.
 - **Open question for the owner:** keep `EnforceCodeStyleInBuild` and have agents run `dotnet format` first, or accept Stannard's measured cost and relax it for agent loops. This could be a **House:** call.
+- **Harvest leads from the crossover map:** the API compatibility material is citable now through `aaron-stannard`'s blog and has no opinion file, so it may deserve a topic of its own. The `data-access.md` TODOs, Options and DI, and metrics each need a roster source first.
 - **dotnet-skills stays out of citation** under the roster notes. Revisit the exclusion through `vet-source` if the repository starts compiling its samples.
 - **Other `vet-source` candidate, unvetted:** Rockford Lhotka ([blog.lhotka.net](https://blog.lhotka.net/)), whose 2026 series on building agents in .NET includes "Tools and Skills: Better Together".
 - **Harvest lead:** Oskar Dudycz's "Vibing, Harness and OODA loop" (2026-04-26) was not read; `oskar-dudycz` is already citable.
