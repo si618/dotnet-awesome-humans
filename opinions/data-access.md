@@ -1,8 +1,8 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-14
+last-reviewed: 2026-09-25
 last-used: 2026-09-25
-sources: [code-with-mukesh, milan-jovanovic, shay-rojansky]
+sources: [code-with-mukesh, milan-jovanovic, ms-learn, shay-rojansky]
 ---
 
 # Data access
@@ -30,6 +30,15 @@ EF Core is the default ORM. Write set-based work as set-based SQL; keep the chan
 - **Choose indexes from the queries the application runs, then prove each one with `EXPLAIN ANALYZE`.** The schema does not tell you what to index; the access paths do. For a B-tree, lead with the columns compared by equality and put the column you range over or sort by last. Measure before and after, because the plan is the only evidence that the index is used at all. Jovanović's issue-tracker demo over a million comments takes a count from a 17ms sequential scan to a 0.6ms index-only scan, and the issue-and-user query from 436ms to roughly half a millisecond. Those are his numbers on his data, so reproduce them on yours. ([Jovanović: SQL indexing explained: composite indexes and column order](https://www.milanjovanovic.tech/blog/how-to-design-the-right-sql-index))
 - **A global query filter is a convenience, not tenant isolation: put row-level security under it.** EF Core adds the predicate to the SQL it generates and to nothing else, so `ExecuteSql`, an attached entity you save, and anything behind `IgnoreQueryFilters()` walk straight past it. A PostgreSQL policy attaches to every statement for every non-exempt role, so it holds when someone forgets the filter. Three details decide whether it actually holds. Connect as a role that owns nothing, because owners, superusers and `BYPASSRLS` roles skip policies, and run migrations as a separate owner. Add `FORCE ROW LEVEL SECURITY` so the owner is covered too. Write the predicate so an unset tenant matches no rows instead of every row. ([Jovanović: PostgreSQL row-level security with EF Core and Npgsql](https://www.milanjovanovic.tech/blog/postgres-row-level-security-with-ef-core))
 - **Set the tenant when the connection opens, not when the request begins.** EF Core opens a connection per command and closes it afterwards, and Npgsql resets pooled session state, so a `SET` issued at the start of a request lands on a connection the next query never sees. Disabling that reset is worse, because the pooled connection then arrives carrying the previous request's tenant. A `DbConnectionInterceptor` overriding `ConnectionOpened` runs on whichever physical connection the pool hands out, which is the only place the setting is reliably in scope. ([Jovanović: PostgreSQL row-level security with EF Core and Npgsql](https://www.milanjovanovic.tech/blog/postgres-row-level-security-with-ef-core))
+- **Write raw SQL through the interpolated methods, and never pass input to a `*Raw` one.** "The FromSql and FromSqlInterpolated methods are safe against SQL injection, and always integrate parameter data as a separate SQL parameter. However, the FromSqlRaw method can be vulnerable to SQL injection attacks, if improperly used", and the same split holds for `ExecuteSql` against `ExecuteSqlRaw` and `SqlQuery` against `SqlQueryRaw` ([Microsoft Learn: SQL Queries](https://learn.microsoft.com/ef/core/querying/sql-queries)). Reserve the `*Raw` overloads for SQL your own code composes, such as a table name from a fixed list, and never for a value that reached you from a request.
+
+  ```csharp
+  // Interpolated: the value becomes a parameter, not part of the statement.
+  var orders = await db.Orders
+      .FromSql($"SELECT * FROM Orders WHERE Status = {status}")
+      .ToListAsync(cancellationToken);
+  ```
+
 - **For inserts, batched `SaveChanges` is the default; switch to a bulk-copy path only above roughly ten thousand rows.** `AddRange` + one `SaveChanges` keeps interceptors and audit trails working and is fast enough for ordinary write paths. Adding entities one at a time in a loop is the anti-pattern, an order of magnitude slower than the batched call for no benefit. ([Mukesh: Fastest way to bulk insert thousands of rows in EF Core](https://codewithmukesh.com/blog/ef-core-bulk-insert/))
 
 ## Source redundancy
