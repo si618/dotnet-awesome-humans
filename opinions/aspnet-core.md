@@ -84,7 +84,7 @@ var v1 = orders.MapGroup("/api/orders").HasApiVersion(1.0);
 
 ### Server push
 
-**Use Server-Sent Events (`TypedResults.ServerSentEvents`) for one-way server push** before reaching for SignalR/WebSockets. ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
+**Use Server-Sent Events (`TypedResults.ServerSentEvents`) for one-way server push.** ([What's new in ASP.NET Core 10](https://learn.microsoft.com/aspnet/core/release-notes/aspnetcore-10.0))
 
 ### Authentication: passkeys first
 
@@ -117,7 +117,7 @@ Timeouts do not fire while a debugger is attached, so verify this one without.
 
 ### Rate limiting
 
-**Put named `Microsoft.AspNetCore.RateLimiting` policies on your public endpoints, rejecting with 429.** The default rejection status is 503 — always override it. Partition by a stable identity (authenticated user, API key tier), never by raw client-controlled input like spoofable IP headers. Choose fixed window as the default algorithm, concurrency limiter for expensive endpoints where in-flight work is the real constraint.
+**Put named `Microsoft.AspNetCore.RateLimiting` policies on your public endpoints, rejecting with 429.** The default rejection status is 503 — always override it ([Microsoft Learn: RateLimiterOptions.RejectionStatusCode](https://learn.microsoft.com/dotnet/api/microsoft.aspnetcore.ratelimiting.ratelimiteroptions.rejectionstatuscode)). Partition by a stable identity (authenticated user, API key tier), never by raw client-controlled input like spoofable IP headers. Use the concurrency limiter for expensive endpoints where in-flight work is the real constraint.
 
 ```csharp
 builder.Services.AddRateLimiter(options =>

@@ -83,7 +83,7 @@ let describe payment =
   ```
 
 - **Scope warning suppression with `#nowarn`/`#warnon` pairs** around the exact lines concerned — never leave a bare `#nowarn` suppressing to end-of-file. ([Introducing F# 10](https://devblogs.microsoft.com/dotnet/introducing-fsharp-10/))
-- **Enable `ParallelCompilation` on multi-project F# solutions** for graph-based type checking and parallel IL generation (preview in F# 10; adopt when it exits preview or if build time hurts today). ([What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
+- **Enable `ParallelCompilation` on multi-project F# solutions** for graph-based type checking, parallel IL generation and parallel optimization (preview in F# 10; adopt when it exits preview or if build time hurts today). ([What's new in F# 10](https://learn.microsoft.com/dotnet/fsharp/whats-new/fsharp-10))
 
 ## Mixed C#/F# solutions
 
@@ -94,7 +94,7 @@ let describe payment =
 
 ## Testing F#
 
-**Use xUnit v3 for F# test projects — the same stack as the rest of the solution.** F# works first-class with xUnit (`[<Fact>]` on `let`-bound functions, no class required), it is the officially documented path for F# unit testing, and one test stack means shared fixtures, tooling, and CI config across a mixed C#/F# solution (see [testing.md](testing.md)). Expecto's tests-as-values model is elegant, but a second runner and assertion dialect in the same solution costs more than it returns. ([Unit testing F# with dotnet test and xUnit](https://learn.microsoft.com/dotnet/core/testing/unit-testing-fsharp-with-dotnet-test))
+**Use xUnit v3 for F# test projects — the same stack as the rest of the solution.** F# works first-class with xUnit (`[<Fact>]` on `let`-bound functions, no class required, as Microsoft Learn's F# walkthrough shows), and one test stack means shared fixtures, tooling, and CI config across a mixed C#/F# solution (see [testing.md](testing.md)). Expecto's tests-as-values model is elegant, but a second runner and assertion dialect in the same solution costs more than it returns. ([Unit testing F# with dotnet test and xUnit](https://learn.microsoft.com/dotnet/core/testing/unit-testing-fsharp-with-dotnet-test))
 
 ```fsharp
 module EmailAddressTests

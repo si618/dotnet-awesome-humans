@@ -69,7 +69,7 @@ Tests are first-class code: same review bar, same conventions.
 ## Integration testing
 
 - **Integration-test ASP.NET Core apps with `WebApplicationFactory<TEntryPoint>` instead of unit-testing controllers or endpoint handlers.** It boots the real app in-memory (routing, model binding, filters, DI, middleware all live) via `Microsoft.AspNetCore.Mvc.Testing`, so a handful of factory-based tests catch the wiring bugs that controller unit tests structurally cannot. Unit-test the domain logic the endpoints call, not the endpoints themselves. ([Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests), [Andrew Lock: Should you unit-test API/MVC controllers?](https://andrewlock.net/should-you-unit-test-controllers-in-aspnetcore/))
-- **Override services for tests through `WithWebHostBuilder`/`ConfigureTestServices`, never through production code branches** — the app under test must be the app you ship, with only its edges (database, outbound HTTP) swapped. ([Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests))
+- **Override services for tests through `ConfigureTestServices`, scoped to the test with `WithWebHostBuilder`.** ([Integration tests in ASP.NET Core](https://learn.microsoft.com/aspnet/core/test/integration-tests))
 
 ## Deterministic time
 
@@ -132,7 +132,7 @@ Tests are first-class code: same review bar, same conventions.
 
 ## Coverage
 
-- **Collect line coverage on every CI run and watch the trend; do not gate merges on an absolute percentage.** Coverage is a diagnostic that finds untested areas, not a quality score — a hard bar breeds assertion-free tests written to satisfy the number. Investigate drops and conspicuously dark areas instead. ([Use code coverage for unit testing](https://learn.microsoft.com/dotnet/core/testing/unit-testing-code-coverage))
+- **Collect line coverage on every CI run, and read it as a pointer to untested code, not a quality score.** Coverage shows which lines ran, not whether a test asserted anything about them, so a high number is no proof of good tests. ([Use code coverage for unit testing](https://learn.microsoft.com/dotnet/core/testing/unit-testing-code-coverage), [Meziantou: Is the code coverage a sufficient metric?](https://www.meziantou.net/is-the-code-coverage-a-sufficient-metric.htm))
 
 ## F#
 

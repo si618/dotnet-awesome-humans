@@ -45,7 +45,7 @@ The analyzers find the call sites: CA1304/CA1305 for culture-less formatting, CA
 dotnet_diagnostic.CA1307.severity = warning
 ```
 
-With `TreatWarningsAsErrors` already on, that turns "someone forgot a `StringComparison`" into a build failure. Meziantou.Analyzer (see [csharp.md](csharp.md)) covers the same ground from the other direction; a `BannedApiAnalyzers` list for the two invariant comparisons is the optional second step, and lost here because CA1309 already catches them without a second third-party analyzer.
+With `TreatWarningsAsErrors` already on, that turns "someone forgot a `StringComparison`" into a build failure. Meziantou.Analyzer (see [csharp.md](csharp.md)) covers the same ground from the other direction; a `BannedApiAnalyzers` list for the two invariant comparisons is the optional second step, and lost here because CA1309 already catches them.
 
 ### Treat `InvariantGlobalization` as an explicit decision, never an inherited template line
 

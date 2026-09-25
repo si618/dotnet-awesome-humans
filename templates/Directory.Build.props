@@ -37,9 +37,9 @@
   </PropertyGroup>
 
   <ItemGroup Label="Analyzers">
-    <!-- The one third-party analyzer this repository recommends: correctness rules the
-         SDK set misses (culture-sensitive strings, CancellationToken forwarding, async
-         pitfalls) at a low false-positive rate. Version pinned in Directory.Packages.props. -->
+    <!-- Correctness rules the SDK set misses (culture-sensitive strings, CancellationToken
+         forwarding, async pitfalls); see opinions/csharp.md. Version pinned in
+         Directory.Packages.props. -->
     <PackageReference Include="Meziantou.Analyzer" PrivateAssets="all" />
   </ItemGroup>
 
