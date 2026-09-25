@@ -4,6 +4,7 @@ last-reviewed: 2026-09-25
 sources:
   [
     aaron-stannard,
+    dotnet-skills,
     andrew-lock,
     dotnet-blog,
     jetbrains-dotnet,
@@ -65,7 +66,7 @@ Skills are the fix, but a skill pack is somebody's opinions in a form the agent 
 
 - **[dotnet/skills](https://github.com/dotnet/skills)**, from the .NET team: about 100 skills across 16 plugins as of 2026-09-25. Each skill is scored against a no-skill baseline, explicitly not assuming "more context always yields better results" ([.NET Blog: Extend your coding agent with .NET Skills](https://devblogs.microsoft.com/dotnet/extend-your-coding-agent-with-dotnet-skills/), 2026-03-09, `dotnet-blog`). The results are published on a [skill value dashboard](https://dotnet.github.io/skills/) showing activation and not-passed rates per model.
   Three caveats, read from the repository itself. Its only test-authoring skill is `writing-mstest-tests`, and `dotnet-test-migration` converts xUnit to MSTest, which cuts against [testing.md](../opinions/testing.md)'s xUnit v3 choice. Two MSBuild skills still show xUnit `2.7.0` and `2.9.0` in their samples. And its `dotnet11` plugin covers .NET 11 APIs, which are **in preview as of 2026-09-25 and not an opinion**.
-- **[Aaronontheweb/dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills)**, **unvetted**: `aaron-stannard`'s roster notes exclude this repository from his id, because its samples lag his writing. MIT licensed, created 2025-11-12, 1,187 stars, v1.6.0 on 2026-09-16. It has 37 skills and 6 subagents for Claude Code, Codex, Copilot and OpenCode, strongest on Akka.NET, Aspire and testing, which the Microsoft pack barely covers.
+- **[Aaronontheweb/dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills)**, `dotnet-skills`, **watch list**: vetted in this pull request and held on longevity, accuracy and authorship (see [Vetting dotnet-skills](#vetting-dotnet-skills)). MIT licensed, created 2025-11-12, 1,187 stars, v1.6.0 on 2026-09-16. It has 37 skills and 6 subagents for Claude Code, Codex, Copilot and OpenCode, strongest on Akka.NET, Aspire and testing, which the Microsoft pack barely covers.
   - **Its evaluations are real but small.** [dotnet-skills-evals](https://github.com/Aaronontheweb/dotnet-skills-evals) (2026-02-20) covered the five Akka.NET skills only. With a skill loaded, Sonnet beat its no-skill baseline in 13 of 15 tasks, a mean gain of 1.60 on a 1–5 scale. The judge was also Sonnet, and 15 cases is a signal rather than a result.
   - Two findings from those evals generalise. A terse routing index of about 15 lines in the system prompt beat listing every skill's full description, on every model tested. Cutting skills over 500 lines down to 500 helped the general-knowledge skills and hurt the specialised ones, which argues for a short `SKILL.md` with reference files loaded on demand.
   - **Nothing compiles its samples.** Its own `AGENTS.md` says "There is no build system, tests, or compiled output." Its release notes record fixing "fabricated APIs, compile errors" in the OpenTelemetry skill (v1.4.1) and guidance that wrongly called adding optional parameters binary-compatible. Those corrections are to its credit, and they are also why the table below still finds live defects.
@@ -91,6 +92,24 @@ Each row was checked on 2026-09-25, and the three code rows were compiled or run
 The pattern is a pack that states current principles and ships stale or broken examples.
 An agent follows the example, not the principle, so a pack's samples are what to audit.
 Stale test-package pins turn up in the Microsoft pack too, so this is a property of uncompiled samples rather than of one author.
+
+### Vetting dotnet-skills
+
+`aaron-stannard`'s admission (#90) excluded the repository in a note, without vetting it.
+Authored documentation in a repository counts under the admission rules, so the exclusion needed evidence.
+The criteria, applied to the repository as a source in its own right:
+
+| Criterion        | Evidence                                                                                                                                                                                                                                                                                                                                                                                                                                        |
+| ---------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Longevity**    | Created 2025-11-12, with 82 commits and v1.6.0 on 2026-09-16. It is active, but under a year old, well short of two.                                                                                                                                                                                                                                                                                                                            |
+| **Depth**        | Mixed. `aot-trimming`, `csharp-nullable-reference-types` and the OpenTelemetry suite are reference-grade: the workers found no defects in them, and they cover ground no opinion here does. `csharp-coding-standards`, `package-management` and `project-structure` restate principles over stale examples. It is the only pack examined that publishes evaluations, and they are small.                                                        |
+| **Accuracy**     | The blocker. Nothing compiles the samples, and its `AGENTS.md` says so. Verified on SDK 10.0.400: CS0246 in every `testcontainers` sample against the Testcontainers version its `Version="*"` restores, and CS0111 in a `csharp-coding-standards` value object, plus the record and package defects in the tables above. In its favour, its release notes record corrections, including fabricated APIs and a wrong binary-compatibility rule. |
+| **Independence** | Stannard's Petabridge conflict carries over: six skills and a subagent cover Akka.NET, and `slopwatch` is his own tool. Authorship is split, though: 68 of 82 commits are his, but the strongest skills came largely from Daniel Marbach, Mauro Servienti and Tomasz Masternak of Particular Software. Admitting the repository would therefore admit bylines nobody has vetted, the blocker recorded for `duende-blog`.                        |
+
+**Decision: watch list**, as `dotnet-skills`, with the evidence in its roster notes and a re-evaluation from 2027-11.
+Declining it would lose the discovery value the crossover map below depends on.
+Folding it into `aaron-stannard` would make his id carry writing that is neither his alone nor verified.
+The watch list keeps it usable for exactly what this topic uses it for: leads to follow to a citable source.
 
 ### Crossover with other opinions
 
@@ -121,7 +140,7 @@ Four worker claims failed that check and are left out:
 `efcore-patterns` matches `data-access.md` on `ExecuteUpdateAsync`, `r3-reactive-extensions` matches [datetime.md](../opinions/datetime.md) on `TimeProvider` and `FakeTimeProvider` exactly, and `slopwatch` matches the **House:** suppression rule.
 
 **Gaps the pack covers and the opinions do not.**
-These are harvest leads, not guidance: the pack itself cannot be cited, so each needs a roster source.
+These are harvest leads, not guidance: `dotnet-skills` is on the watch list, so each lead needs a citable roster source.
 Where `aaron-stannard`'s blog already covers the ground, the lead is citable today:
 
 - **Citable through his blog:** public API compatibility, which has no opinion file at all. `csharp-api-design` teaches extend-only design, the binary-breaking optional-parameter trap and API approval tests, and the same arguments are in ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/). His ["Stop Failing The `git clone && run` Test"](https://aaronstannard.com/git-clone-and-run/) (2025-10-17) backs the Testcontainers and Aspire first-run material, which no opinion covers.
@@ -163,6 +182,7 @@ Noted so a follow-up topic has somewhere to start, with nothing weighed:
   - `csharp.md`: only if the owner settles the `.editorconfig` question below.
 - **Open question for the owner:** keep `EnforceCodeStyleInBuild` and have agents run `dotnet format` first, or accept Stannard's measured cost and relax it for agent loops. This could be a **House:** call.
 - **Harvest leads from the crossover map:** the API compatibility material is citable now through `aaron-stannard`'s blog and has no opinion file, so it may deserve a topic of its own. The `data-access.md` TODOs, Options and DI, and metrics each need a roster source first.
-- **dotnet-skills stays out of citation** under the roster notes. Revisit the exclusion through `vet-source` if the repository starts compiling its samples.
+- **`dotnet-skills` is watch-listed** in this pull request; re-evaluate from 2027-11, or sooner if it starts compiling its samples.
+- **Possible `vet-source` candidate:** Daniel Marbach, who wrote much of the pack's strongest material (AOT and trimming, nullable reference types, OpenTelemetry). Vetting him as a person could reach that material without admitting the repository.
 - **Other `vet-source` candidate, unvetted:** Rockford Lhotka ([blog.lhotka.net](https://blog.lhotka.net/)), whose 2026 series on building agents in .NET includes "Tools and Skills: Better Together".
 - **Harvest lead:** Oskar Dudycz's "Vibing, Harness and OODA loop" (2026-04-26) was not read; `oskar-dudycz` is already citable.
