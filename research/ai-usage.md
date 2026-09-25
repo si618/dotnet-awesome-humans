@@ -61,7 +61,7 @@ Whether that answers the cost he measured is untested, and whether to adopt it i
 ## Skill packs: grounding that needs auditing
 
 **Prefer skills from the platform or package owner, give agents live package data, and read any pack before trusting it.**
-A model's .NET knowledge is months stale at best, which is why an unguided agent reaches for xUnit v2, `Newtonsoft.Json` or a package version that no longer exists.
+A model's .NET knowledge is months stale at best, which is why an unguided agent picks xUnit v2, `Newtonsoft.Json` or a package version that no longer exists.
 Skills are the fix, but a skill pack is somebody's opinions in a form the agent will obey, and both packs examined here ship samples that contradict this repository.
 
 - **[dotnet/skills](https://github.com/dotnet/skills)**, from the .NET team: about 100 skills across 16 plugins as of 2026-09-25. Each skill is scored against a no-skill baseline, explicitly not assuming "more context always yields better results" ([.NET Blog: Extend your coding agent with .NET Skills](https://devblogs.microsoft.com/dotnet/extend-your-coding-agent-with-dotnet-skills/), 2026-03-09, `dotnet-blog`). The results are published on a [skill value dashboard](https://dotnet.github.io/skills/) showing activation and not-passed rates per model.
@@ -171,7 +171,7 @@ Both are essays, which `aaron-stannard`'s notes put outside what a citation may 
 Noted so a follow-up topic has somewhere to start, with nothing weighed:
 
 - `Microsoft.Extensions.AI` (`IChatClient`) reached GA on 2025-05-21 ([.NET Blog: AI and Vector Data Extensions are now Generally Available](https://devblogs.microsoft.com/dotnet/ai-vector-data-dotnet-extensions-ga/), `dotnet-blog`).
-- Microsoft Agent Framework reached 1.0 on 2026-04-03, bringing together Semantic Kernel and AutoGen ([Microsoft Agent Framework Version 1.0](https://devblogs.microsoft.com/agent-framework/microsoft-agent-framework-version-1-0/), the package's own release post, so a reference).
+- Microsoft Agent Framework reached 1.0 on 2026-04-03, bringing together Semantic Kernel and AutoGen ([Microsoft Agent Framework: Microsoft Agent Framework Version 1.0](https://devblogs.microsoft.com/agent-framework/microsoft-agent-framework-version-1-0/), the package's own release post, so a reference).
 - The C# MCP SDK and a `dotnet new mcpserver` template are official ([Microsoft Learn: Create a minimal MCP server](https://learn.microsoft.com/dotnet/ai/quickstarts/build-mcp-server)).
 
 ## Closing the loop

@@ -22,7 +22,7 @@ Track the API surface in the repository so every change to it shows up in review
 Design by extension only: add overloads and types rather than changing the ones consumers compiled against.
 Signal breaks through SemVer on the package and a major-only `AssemblyVersion`, and retire APIs through `[Obsolete]` over successive major versions rather than deleting them.
 
-This matters to anyone who ships a package, or a library another team consumes as a binary.
+It applies to anyone who ships a package, or a library another team consumes as a binary.
 An application that recompiles everything it references on each build pays no binary cost, only source and behavioural ones.
 
 **The topic has no opinion file.** [ci.md](../opinions/ci.md) asks NuGet packages to ship "with package validation enabled", which this research finds insufficient on its own.

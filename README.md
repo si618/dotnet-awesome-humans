@@ -29,7 +29,7 @@ The main areas of modern .NET. The opinions live in [`opinions/`](opinions), one
 - **[UI frameworks](opinions/ui-frameworks.md):** Blazor/WebAssembly, .NET MAUI, and cross-platform desktop (Avalonia)
 - **Libraries:** what to use and what to avoid, spread across the files above
 
-A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order — CI fails the pull request otherwise.
+A new opinion file must appear both here, in title order above **Libraries**, and in [Repository layout](#repository-layout), in file-name order, or CI fails the pull request.
 
 ## Freshness policy
 
@@ -39,7 +39,7 @@ Every resource records when it was last reviewed, so staleness is visible, and `
 
 ## Awesome humans
 
-Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: two years of sustained writing at minimum, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage — an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
+Opinions have to be earned. Each one traces back to a vetted source: an individual (Stephen Toub, Andrew Lock) or a publication (the .NET Blog, Microsoft Learn). Admission is on track record: two years of sustained writing at minimum, plus depth, accuracy, and independence of signal. Video, talks and podcasts are out of scope at this stage, because an opinion cites text a reader can check. The roster and the full criteria are in [AWESOME-HUMANS.md](AWESOME-HUMANS.md).
 
 How a source gets in, and what its standing lets it do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
@@ -101,18 +101,18 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 
 The repository maintains itself through agent skills following the [Agent Skills specification](https://agentskills.io/specification), so any compliant agent can run them. Each is a directory under [`skills/`](skills) with a `SKILL.md`.
 
-They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor — the only one that writes to the opinions and templates.
+They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor, the only one that writes to the opinions and templates.
 
-| Skill                                                                | Purpose                                                                                        |
-| -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------- |
-| [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them        |
-| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions     |
-| [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline             |
-| [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                         |
-| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                     |
-| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House      |
-| [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources — cited and saved |
-| [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic — weave it into the opinions and templates, or discard it       |
+| Skill                                                                | Purpose                                                                                       |
+| -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them       |
+| [`harvest-sources`](skills/harvest-sources/SKILL.md)                 | Sweep the awesome-humans sources for new posts and fold notable guidance into the opinions    |
+| [`vet-source`](skills/vet-source/SKILL.md)                           | Evaluate a candidate source against the track-record criteria and admit or decline            |
+| [`audit-freshness`](skills/audit-freshness/SKILL.md)                 | Report resources whose `last-reviewed` date has drifted past tolerance                        |
+| [`verify-project`](skills/verify-project/SKILL.md)                   | Check an external project against the template files and report deviations                    |
+| [`weave-house-opinion`](skills/weave-house-opinion/SKILL.md)         | Weave a repository-owner opinion into the opinions and templates, visibly marked as House     |
+| [`research-topic`](skills/research-topic/SKILL.md)                   | Research a .NET topic conversationally using the opinions and vetted sources, cited and saved |
+| [`resolve-research`](skills/resolve-research/SKILL.md)               | Resolve a saved research topic by weaving it into the opinions and templates, or discard it   |
 
 ### Research lifecycle
 
@@ -135,7 +135,7 @@ A scheduled GitHub Action ([`.github/workflows/dotnet-release-watch.yml`](.githu
 
 ## Repository scripts
 
-The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps — no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
+The checks that gate a pull request are written in the stack this repository has opinions about. [`scripts/`](scripts) holds them as .NET 10 file-based apps: no project file, no build step, dependencies declared inline with `#:package` and shared code pulled in with `#:include`.
 
 | Script                                                         | Checks                                                                                                                                                                                                                                      |
 | -------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |

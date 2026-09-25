@@ -10,8 +10,8 @@
 #:property Nullable=enable
 #:property TreatWarningsAsErrors=true
 
-// Verifies that every resource carries the metadata fields AGENTS.md requires —
-// targets, last-reviewed, sources, plus last-used outside research/ — and that the
+// Verifies that every resource carries the metadata fields AGENTS.md requires
+// (targets, last-reviewed, sources, plus last-used outside research/) and that the
 // dates are ISO 8601.
 //
 // Three resource kinds carry them two ways. opinions/ and research/ use YAML
@@ -141,7 +141,7 @@ Console.WriteLine(
     + $"({opinions.Length} opinions, {research.Length} research, {templates.Length} templates).");
 return 0;
 
-// A key that is present but carries nothing — null, "", [] — is as much a gap as
+// A key that is present but carries nothing (null, "", []) is as much a gap as
 // a missing key, so both fail the same way.
 static bool IsEmpty(object? value) => value switch
 {

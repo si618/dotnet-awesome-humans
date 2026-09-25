@@ -57,16 +57,16 @@ if (!File.Exists(RosterPath))
 // The reserved id for house opinions: the repository owner is not on the roster.
 HashSet<string> reserved = ["house"];
 
-// Which level-2 headings open which bucket. Anything outside them — the admission
-// criteria, the decision log — carries no source rows.
+// Which level-2 headings open which bucket. Anything outside them, such as the admission
+// criteria and the decision log, carries no source rows.
 (string Bucket, string[] Prefixes)[] sections =
 [
     ("citable", ["## Citable"]),
     (WatchBucket, ["## Watch list"]),
 ];
 
-// The roster tables carry only id, Source, Focus and Since. The evidence behind each row —
-// and with it the two markings — lives under '## Source notes', one '### `id`' section per
+// The roster tables carry only id, Source, Focus and Since. The evidence behind each row,
+// and with it the two markings, lives under '## Source notes', one '### `id`' section per
 // source. Splitting them is what keeps a diff readable: a table row is a short line, and a
 // reworded sentence in a note touches that sentence rather than a 4,000-character row.
 const string NotesHeading = "## Source notes";
@@ -365,7 +365,7 @@ internal static partial class Patterns
     internal static partial Regex SourceId();
 
     // A notes heading opens with the id and then says where the source stands:
-    // '### `ardalis` — Citable, **Corroborate.**'.
+    // '### `ardalis`: Citable, **Corroborate.**'.
     [GeneratedRegex(@"\A### `([a-z0-9-]+)`")]
     internal static partial Regex NotesHeadingId();
 }

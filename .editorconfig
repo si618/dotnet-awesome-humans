@@ -1,13 +1,13 @@
 # This repository's own editor config, per the opinion in
 # opinions/project-structure.md ("every repository carries a root .editorconfig").
 #
-# It is NOT the template — templates/.editorconfig is the canonical file shipped
+# It is NOT the template: templates/.editorconfig is the canonical file shipped
 # to consumers, and it carries the C#/F# house style. This one governs the prose
 # and configuration that this repository actually contains. Keep the two separate:
 # editing this file changes how we work, editing the template changes our advice.
 #
 # Values here match what `npm run format` (prettier) produces for the files it owns
-# — Markdown, JSON, JSONC and YAML — so the editor and the formatter agree rather
+# (Markdown, JSON, JSONC and YAML), so the editor and the formatter agree rather
 # than fighting across saves. The C# and TOML settings below have no formatter
 # behind them; there, this file is the only thing holding the line.
 
@@ -23,7 +23,7 @@ trim_trailing_whitespace = true
 
 # Markdown: two trailing spaces are a hard line break, so trimming them silently
 # changes rendered output. prettier preserves them; the editor must too.
-# indent_size is unset because markdown nesting is content, not indentation —
+# indent_size is unset because markdown nesting is content, not indentation:
 # an ordered-list continuation lines up under "1. " at three columns, and any
 # fixed multiple would flag prettier's own correct output.
 [*.md]
@@ -33,15 +33,15 @@ indent_size = unset
 [*.{json,jsonc,yml,yaml,toml}]
 indent_size = 2
 
-# MSBuild and solution files under templates/ — templates/.editorconfig is
+# MSBuild and solution files. Under templates/, templates/.editorconfig is
 # root = true and governs them, but these settings apply to any such file added
 # elsewhere in the repository.
 [*.{props,targets,csproj,fsproj,slnx,slnf,config}]
 indent_size = 2
 
-# C#: the repository now contains some of its own, under scripts/ — the CI checks.
+# C#: the repository now contains some of its own, under scripts/: the CI checks.
 # Layout only. The house C#/F# *style* rules live in templates/.editorconfig, which is
-# root = true and so governs templates/ alone — it cannot reach this directory. The
+# root = true and so governs templates/ alone, so it cannot reach this directory. The
 # scripts follow that style by hand; copying the rules here is what would let the two
 # drift, and the IDExxxx rules would need EnforceCodeStyleInBuild to take effect anyway.
 [*.cs]
@@ -53,7 +53,7 @@ indent_size = 4
 [scripts/*.cs]
 dotnet_analyzer_diagnostic.severity = warning
 
-# Verbatim third-party text — the Apache 2.0 licence is reproduced exactly as
+# Verbatim third-party text: the Apache 2.0 licence is reproduced exactly as
 # published, indentation included. Never reformat it.
 [LICENSE]
 indent_size = unset

@@ -83,7 +83,7 @@ if (scope is not null)
     }
 
     // Scope is kept alphabetical so a new bullet lands in one predictable place. By title,
-    // not file name — "Application architecture" is architecture.md — and ignoring case, so
+    // not file name ("Application architecture" is architecture.md), and ignoring case, so
     // "ASP.NET Core" sorts as a reader expects. An unlinked bullet (Libraries) is a summary
     // across the files above it rather than a topic of its own, so it stays last.
     string? previous = null;
@@ -296,8 +296,8 @@ internal static partial class Patterns
     [GeneratedRegex(@"^\s*\[[^\]]+]:\s*(opinions/[\w.-]+\.md)", RegexOptions.Multiline)]
     internal static partial Regex ReferenceOpinionLink();
 
-    // A Scope bullet's bold title: group 1 when it is a link — **[Title](...):** — and
-    // group 2 when it is plain text — **Libraries:**.
+    // A Scope bullet's bold title: group 1 when it is a link, as in **[Title](...):**, and
+    // group 2 when it is plain text, as in **Libraries:**.
     [GeneratedRegex(@"^- \*\*(?:\[([^\]]+)]|([^*]+?):?\*\*)", RegexOptions.Multiline)]
     internal static partial Regex ScopeBullet();
 
@@ -310,7 +310,7 @@ internal static partial class Patterns
     [GeneratedRegex(@"([\w.-]+\.md)")]
     internal static partial Regex MarkdownFileName();
 
-    // A first cell is a bare id — `vet-source` — or a linked one:
+    // A first cell is a bare id, `vet-source`, or a linked one:
     // [`vet-source`](skills/vet-source/SKILL.md).
     [GeneratedRegex(@"\A(?:\[\s*)?`([\w.-]+)`(?:\s*\]\([^)]*\))?\z")]
     internal static partial Regex TableId();

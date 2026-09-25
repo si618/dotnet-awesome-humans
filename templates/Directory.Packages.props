@@ -1,6 +1,6 @@
 <!-- dotnet-awesome-humans template | targets: net10.0 | last-reviewed: 2026-09-13 | last-used: 2026-09-24 | sources: ms-learn, dotnet-blog, meziantou -->
 <!-- Central Package Management: every PackageReference in the repo takes its version from here. -->
-<!-- Versions verified against nuget.org (latest stable) on 2026-09-13 — refresh via the refresh-dotnet-versions skill. -->
+<!-- Versions verified against nuget.org (latest stable) on 2026-09-13; refresh via the refresh-dotnet-versions skill. -->
 <Project>
 
   <PropertyGroup>
@@ -22,8 +22,8 @@
 
   <!-- No Microsoft.Testing.Platform entry: xunit.v3 carries its own compatible
        version, and pinning MTP separately overrides it via transitive pinning and
-       fails at runtime with a TypeLoadException (opinions/testing.md). This matters
-       more since xunit.v3 4.0.0, which dropped MTP v1 and defaults to v2. -->
+       fails at runtime with a TypeLoadException (opinions/testing.md). The risk is higher
+       since xunit.v3 4.0.0, which dropped MTP v1 and defaults to v2. -->
   <ItemGroup Label="Testing">
     <PackageVersion Include="bunit" Version="2.11.3" />
     <PackageVersion Include="Meziantou.Framework.SnapshotTesting" Version="3.1.8" />
