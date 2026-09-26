@@ -4,7 +4,7 @@ This repository defines opinionated best practices for modern .NET development. 
 
 ## What this repository is
 
-- The **source of truth for "what good looks like"** in .NET: runtime, BCL, SDK/tooling, C#, F#, ASP.NET Core, testing, and library selection.
+- The **source of truth for "what good looks like"** in .NET, one topic per file under `opinions/`. [README.md: Scope](README.md#scope) is the index.
 - A set of **copy-paste-ready template files** under `templates/` that encode those opinions.
 - A **living reference**: every resource records when it was last reviewed (and, outside `research/`, when it was last used), and skills under `skills/` keep it current.
 
