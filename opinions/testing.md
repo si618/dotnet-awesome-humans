@@ -1,8 +1,8 @@
 ---
 targets: [net10.0, csharp-14]
 last-reviewed: 2026-09-15
-last-used: 2026-09-26
-sources: [ms-learn, meziantou, andrew-lock, house, dotnet-blog]
+last-used: 2026-09-28
+sources: [ms-learn, meziantou, andrew-lock, house, dotnet-blog, mark-seemann]
 ---
 
 # Testing
@@ -137,6 +137,28 @@ Tests are first-class code: same review bar, same conventions.
 ## Coverage
 
 - **Collect line coverage on every CI run, and read it as a pointer to untested code, not a quality score.** Coverage shows which lines ran, not whether a test asserted anything about them, so a high number is no proof of good tests. ([Microsoft Learn: Use code coverage for unit testing](https://learn.microsoft.com/dotnet/core/testing/unit-testing-code-coverage), [Meziantou: Is the code coverage a sufficient metric?](https://www.meziantou.net/is-the-code-coverage-a-sufficient-metric.htm))
+
+## Seeing tests fail
+
+- **See every test fail on its assertion before trusting it to pass.** A test that has never failed may hold a tautological assertion, and coverage or a green run cannot tell it from a working one. Writing the test first is not enough on its own: a test that failed only because the member did not exist yet may pass afterwards whatever it is given. So once a test passes, sabotage the code under test once per assertion, see the test fail on that assertion's line, then revert and see it pass. ([Seemann: Tautological assertion](https://blog.ploeh.dk/2019/10/14/tautological-assertion/), [Seemann: Empirical Characterization Testing](https://blog.ploeh.dk/2025/11/03/empirical-characterization-testing/))
+- **Critique a passing suite as the Devil's Advocate.** Write the simplest wrong implementation that still passes every test, then add the test case that catches it. Stop when producing such an implementation means going out of your way. A round trip is the usual gap: two identity functions pass any test that compares only the output with the input, so assert the intermediate value as well. ([Seemann: Devil's advocate](https://blog.ploeh.dk/2019/10/07/devils-advocate/))
+
+  ```csharp
+  [Fact]
+  public void FahrenheitToCelsius_RoundTrip_ReturnsOriginalReading()
+  {
+      // Arrange
+      var celsius = 37d;
+
+      // Act
+      var fahrenheit = Temperature.CelsiusToFahrenheit(celsius);
+      var roundTripped = Temperature.FahrenheitToCelsius(fahrenheit);
+
+      // Assert
+      Assert.Equal(98.6d, fahrenheit, 1e-9); // fails if both conversions return their input
+      Assert.Equal(celsius, roundTripped, 1e-9);
+  }
+  ```
 
 ## F#
 
