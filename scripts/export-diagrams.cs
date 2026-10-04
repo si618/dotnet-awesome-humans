@@ -356,8 +356,14 @@ internal static class Svg
           --sources: #2dd4bf; --research: #38bdf8; --opinions: #a08cf0; --reports: #fbbf24;
         """;
 
+    // Font families are literal rather than custom properties, and set apart from size and
+    // weight rather than through the font shorthand: a browser that rejects either form
+    // drops the whole declaration and draws every label in its default font, which is wider
+    // than the layout allows for. system-ui is left out because privacy-hardened browsers
+    // restrict it. Each stack names a common font per platform before the generic family.
     private const string Fonts = """
-        --sans: "Segoe UI", system-ui, sans-serif; --mono: ui-monospace, "Cascadia Mono", "DejaVu Sans Mono", monospace;
+        .t, .tb, .ts, .gate-t, .check-t { font-family: "Segoe UI", "Noto Sans", "DejaVu Sans", "Helvetica Neue", Arial, sans-serif; }
+        .tm, .th { font-family: "Cascadia Mono", Consolas, "Noto Sans Mono", "DejaVu Sans Mono", Menlo, monospace; }
         """;
 
     private const string Classes = """
@@ -366,18 +372,18 @@ internal static class Svg
         .chip { fill: var(--band); stroke: none; }
         .ext { fill: var(--band); stroke: var(--muted); stroke-width: 1.2; }
         .store { fill: var(--band); stroke: var(--line); stroke-width: 1.2; }
-        .t { fill: var(--fg); font: 500 12.5px var(--sans); }
-        .tb { fill: var(--fg); font: 600 14px var(--sans); letter-spacing: .02em; }
-        .tm { fill: var(--fg); font: 600 12.5px var(--mono); }
-        .ts { fill: var(--muted); font: 400 11.5px var(--sans); }
-        .th { fill: var(--muted); font: 600 11px var(--mono); letter-spacing: .08em; text-transform: uppercase; }
+        .t { fill: var(--fg); font-weight: 500; font-size: 12.5px; }
+        .tb { fill: var(--fg); font-weight: 600; font-size: 14px; letter-spacing: .02em; }
+        .tm { fill: var(--fg); font-weight: 600; font-size: 12.5px; }
+        .ts { fill: var(--muted); font-weight: 400; font-size: 11.5px; }
+        .th { fill: var(--muted); font-weight: 600; font-size: 11px; letter-spacing: .08em; text-transform: uppercase; }
         .edge { stroke: var(--muted); stroke-width: 1.4; fill: none; }
         .edge.dash { stroke-dasharray: 4 4; }
         .arrowhead { fill: var(--muted); }
         .gate { fill: var(--surface); stroke: var(--human); stroke-width: 2; }
-        .gate-t { fill: var(--human); font: 600 11.5px var(--sans); }
+        .gate-t { fill: var(--human); font-weight: 600; font-size: 11.5px; }
         .check { fill: var(--surface); stroke: var(--auto); stroke-width: 2; }
-        .check-t { fill: var(--auto); font: 600 11.5px var(--sans); }
+        .check-t { fill: var(--auto); font-weight: 600; font-size: 11.5px; }
         .decision { fill: var(--surface); stroke: var(--accent); stroke-width: 2; }
         """;
 
@@ -386,9 +392,9 @@ internal static class Svg
     // Wraps the drawing in a standalone, accessible SVG document with its styles and background.
     public static string Document(double width, double height, string title, string description, string body)
     {
-        string style = "\nsvg { " + TokensLight + "\n  " + Fonts + " }\n"
+        string style = "\nsvg { " + TokensLight + " }\n"
             + "@media (prefers-color-scheme: dark) { svg { " + TokensDark + " } }\n\n"
-            + Classes + "\n\n";
+            + Fonts + Classes + "\n\n";
         return "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
             + $"<svg role=\"img\" aria-labelledby=\"title desc\" xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 {N(width)} {N(height)}\">"
             + $"<title id=\"title\">{Escape(title)}</title><desc id=\"desc\">{Escape(description)}</desc><style>{style}</style>{Marker}"
