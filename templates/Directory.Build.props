@@ -1,4 +1,4 @@
-<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-08-20 | last-used: 2026-09-24 | sources: ms-learn, dotnet-blog, house -->
+<!-- dotnet-awesome-humans template | targets: net10.0, csharp-14, fsharp-10 | last-reviewed: 2026-09-25 | last-used: 2026-09-25 | sources: ms-learn, dotnet-blog, meziantou, house -->
 <!-- Copy to the repository root. Every project inherits these; override per-project only with a recorded reason. -->
 <Project>
 
@@ -20,6 +20,10 @@
 
   <PropertyGroup Label="Quality gates">
     <!-- **House:** always on, not just in CI: a warning is an error the moment it's introduced. Suppress with NoWarn/pragma only alongside a comment explaining why. -->
+    <!-- This covers NuGet Audit: NU1901-NU1904 fail restore on purpose, including on a branch nobody
+         has changed, the day an advisory lands against the dependency graph. Suppress a single
+         advisory with NuGetAuditSuppress plus its URL and a reason, never by listing the codes in
+         WarningsNotAsErrors (opinions/ci.md). -->
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <AnalysisLevel>latest-recommended</AnalysisLevel>
@@ -28,8 +32,10 @@
 
   <PropertyGroup Label="Packaging hygiene">
     <ManagePackageVersionsCentrally>true</ManagePackageVersionsCentrally>
-    <!-- CPM above pins the dependency graph; flip this to true and add locked-mode restore in CI
-         if you also want packages.lock.json guarding against feed drift (opinions/ci.md). -->
+    <!-- CPM above pins the version of every package; only the lock file pins its content, because it
+         records each package hash and fails restore when the bytes differ. Flip this to true and add
+         locked-mode restore in CI if you restore through a mirror or a private feed, where content can
+         change under a fixed version (opinions/ci.md). -->
     <RestorePackagesWithLockFile>false</RestorePackagesWithLockFile>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <!-- Doc file feeds IDE tooltips and OpenAPI XML comments; CS1591 exempted so undocumented internals don't fail the build -->
