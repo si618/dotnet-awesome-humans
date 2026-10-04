@@ -43,13 +43,7 @@ Opinions have to be earned. Each one traces back to a vetted source: an individu
 
 How a source gets in, and what its standing lets it do (orientation only: the admission criteria in AWESOME-HUMANS.md and the [`vet-source`](skills/vet-source/SKILL.md) skill are canonical):
 
-```mermaid
-flowchart TD
-    candidate["Candidate source"] --> vet{"vet-source"}
-    vet -->|"2+ years, all four criteria"| citable["Citable: quotable in opinions"]
-    vet -->|"under 2 years, or dormant"| watch["Watch list: leads only"]
-    vet -->|"otherwise"| declined["Declined: off the roster"]
-```
+![Source standing: vet-source sorts a candidate into citable, watch list or declined, and a citable source is unmarked, Corroborate or Discovery-only](assets/diagrams/source-standing.svg)
 
 Standing is never permanent. `vet-source` runs again when an admitted source goes dormant or drops in quality, and when a watch-listed source's blocker clears. There is one citable tier, and two markings in a source's notes section narrow what a citation may rest on: a `**Corroborate.**` source is never the only citation on a claim, and a `**Discovery-only.**` source is never cited at all, only followed to the primary source it points at. Anything else that limits a source, such as an independence concern or a back catalogue that has aged out, is written into its notes as prose rather than encoded in its standing.
 
@@ -64,6 +58,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 ├── AGENTS.md                 ← instructions for AI agents working in this repo
 ├── AWESOME-HUMANS.md         ← vetted sources and admission criteria
 ├── HOUSE-OPINIONS.md         ← the owner's own opinions: intake and audit trail
+├── assets/diagrams/          ← generated SVG diagrams: rerun the script, never edit by hand
 ├── opinions/                 ← the opinions, one topic per file, code examples as needed
 │   ├── architecture.md
 │   ├── aspnet-core.md
@@ -83,6 +78,7 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── CommentHeader.cs      ← shared helper, pulled in with #:include
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
+│   ├── export-diagrams.cs
 │   ├── validate-metadata.cs
 │   ├── validate-readme-index.cs
 │   └── validate-sources.cs
@@ -103,6 +99,10 @@ The repository maintains itself through agent skills following the [Agent Skills
 
 They are built for a cost-aware split: cheaper worker agents fan out across the web searches and source sweeps, and the strongest available model acts as editor, the only one that writes to the opinions and templates.
 
+Every skill but the two report-only ones works on its own branch and lands through a pull request that passes CI and the owner's review (orientation only; each `SKILL.md` is canonical):
+
+![Maintenance pipeline: each skill from what starts it, through CI and the owner's review, to the roster, research/, or the opinions and templates; audit-freshness and verify-project only report](assets/diagrams/maintenance-pipeline.svg)
+
 | Skill                                                                | Purpose                                                                                       |
 | -------------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
 | [`refresh-dotnet-versions`](skills/refresh-dotnet-versions/SKILL.md) | Detect new .NET / C# / F# releases and update all opinions and templates to target them       |
@@ -118,14 +118,7 @@ They are built for a cost-aware split: cheaper worker agents fan out across the 
 
 Research is staged, never merged in place: `research-topic` saves the evidence, `resolve-research` decides what becomes the opinion. Both outcomes end with the file deleted in the same pull request: a topic on disk is unresolved by definition, and deletion is the only promotion marker (orientation only; the two `SKILL.md` files are canonical):
 
-```mermaid
-flowchart TD
-    research["research-topic"] -->|"pull request"| staged["research/{topic}.md"]
-    staged --> resolve{"resolve-research"}
-    resolve -->|"promote"| woven["Opinions and templates updated"]
-    resolve -->|"discard"| dropped["Nothing woven"]
-    resolve -->|"partial promotion"| remainder["Blocked remainder stays staged"]
-```
+![Research lifecycle: research-topic saves research/{topic}.md, and resolve-research promotes, discards or partly promotes it](assets/diagrams/research-lifecycle.svg)
 
 A blocked remainder goes back through `resolve-research` once `vet-source` clears the source it was waiting on, or is discarded.
 
@@ -142,6 +135,7 @@ The checks that gate a pull request are written in the stack this repository has
 | [`validate-metadata.cs`](scripts/validate-metadata.cs)         | Every resource under `opinions/`, `research/` and `templates/` carries `targets`, `last-reviewed` and `sources` (plus `last-used` outside `research/`) with ISO 8601 dates                                                                  |
 | [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables and the notes sections are sorted by id, with no id used twice, and every notes section matches a row |
 | [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions, with Scope sorted by title and the layout tree by file name                                                                                                                |
+| [`export-diagrams.cs`](scripts/export-diagrams.cs)             | Draws the SVG diagrams in `assets/diagrams/` rather than checking anything. CI reruns it and fails when the committed SVGs differ from what it draws                                                                                        |
 
 Run them from the repository root, exactly as CI does:
 

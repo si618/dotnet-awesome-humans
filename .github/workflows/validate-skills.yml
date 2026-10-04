@@ -86,3 +86,16 @@ jobs:
 
       - name: Verify README indexes every opinion and skill
         run: dotnet run scripts/validate-readme-index.cs
+
+      # The SVGs are committed so the README renders them, which leaves them free to
+      # drift from the script that draws them. Redraw and fail on any difference,
+      # including a diagram the script draws that was never committed.
+      - name: Verify the diagrams match the script that draws them
+        run: |
+          set -u
+          dotnet run scripts/export-diagrams.cs
+          if [ -n "$(git status --porcelain -- assets/diagrams)" ]; then
+            git status --short -- assets/diagrams >&2
+            echo "assets/diagrams/ is out of date: run dotnet run scripts/export-diagrams.cs and commit the result" >&2
+            exit 1
+          fi
