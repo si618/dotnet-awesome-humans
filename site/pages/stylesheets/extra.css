@@ -1,0 +1,18 @@
+/* .NET brand purple, the colour Microsoft uses for .NET. While .NET is the only
+   ecosystem it colours the whole site; each ecosystem can take its own once there
+   are more. Dark mode lightens links and the accent so they keep their contrast
+   against the slate background. */
+[data-md-color-scheme="default"],
+[data-md-color-scheme="slate"] {
+  --md-primary-fg-color: #512bd4;
+  --md-primary-fg-color--light: #7a5ce0;
+  --md-primary-fg-color--dark: #3b1f9e;
+  --md-primary-bg-color: #ffffff;
+  --md-accent-fg-color: #512bd4;
+  --md-typeset-a-color: #512bd4;
+}
+
+[data-md-color-scheme="slate"] {
+  --md-accent-fg-color: #a08cf0;
+  --md-typeset-a-color: #a08cf0;
+}

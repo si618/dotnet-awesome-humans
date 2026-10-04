@@ -1,0 +1,45 @@
+name: Site
+
+# Builds the awesome-humans.net documentation site on every pull request. The site's
+# /dotnet/ pages are generated from opinions/, templates/, the roster and README.md, so
+# any change to those can break it, not only a change under site/. Deployment is a
+# separate step, added when the site goes live.
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Set explicitly rather than inherited; see validate-skills.yml for why.
+env:
+  DOTNET_NOLOGO: "true"
+  DOTNET_CLI_TELEMETRY_OPTOUT: "true"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+
+      # global.json decides the SDK, per opinions/ci.md.
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6
+        with:
+          global-json-file: global.json
+
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7
+        with:
+          python-version: "3.14"
+
+      - name: Install Zensical
+        run: pip install -r site/requirements.txt
+
+      - name: Stage the site
+        run: dotnet run scripts/build-site.cs
+
+      # --strict fails the build on a link or anchor that resolves to nothing, which
+      # catches a link build-site.cs rewrote wrongly as well as one broken at source.
+      - name: Build the site
+        run: zensical build --strict -f site/build/zensical.toml

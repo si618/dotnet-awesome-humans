@@ -346,14 +346,14 @@ internal static class Svg
 {
     private const string TokensLight = """
         --bg: #f5f6f8; --surface: #ffffff; --band: #eceef2; --fg: #16181d; --muted: #5b6170; --line: #bcc1cc;
-          --accent: #0f766e; --human: #b4534f; --auto: #1d4ed8;
-          --sources: #7c3aed; --research: #0369a1; --opinions: #0f766e; --reports: #b45309;
+          --accent: #512bd4; --human: #b4534f; --auto: #1d4ed8;
+          --sources: #0f766e; --research: #0369a1; --opinions: #512bd4; --reports: #b45309;
         """;
 
     private const string TokensDark = """
         --bg: #0f1115; --surface: #171a21; --band: #1e222b; --fg: #e6e8ee; --muted: #9aa1b2; --line: #3a404d;
-          --accent: #2dd4bf; --human: #e8948f; --auto: #60a5fa;
-          --sources: #b794f6; --research: #38bdf8; --opinions: #2dd4bf; --reports: #fbbf24;
+          --accent: #a08cf0; --human: #e8948f; --auto: #60a5fa;
+          --sources: #2dd4bf; --research: #38bdf8; --opinions: #a08cf0; --reports: #fbbf24;
         """;
 
     private const string Fonts = """
