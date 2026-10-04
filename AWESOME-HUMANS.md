@@ -1,42 +1,55 @@
-# Awesome Humans
+# Awesome humans
 
-The vetted sources behind every opinion in this repository. Content only enters the opinions if it traces back to a source listed here, or carries the reserved `house` id (see below).
+These are the vetted sources behind every opinion in this repository. Content enters the opinions only if it traces back to a source listed here, or carries the reserved `house` ID described below.
 
 ## Admission criteria
 
-**Scope: published writing.** A source qualifies on text a reader can check by reading it: blog posts, documentation, books, newsletters. Video, conference talks and podcasts are out of scope at this stage, as citable material and as track-record evidence alike. Someone whose output moves to those formats stops qualifying, and someone who starts writing again is a candidate for `vet-source`.
+**Scope: published writing.** A source qualifies on text that a reader can check: blog posts, documentation, books, and newsletters. Videos, conference talks, and podcasts are out of scope for now, both as citable material and as evidence of a track record. A source whose output moves to those formats stops qualifying. If they start writing again, they're a candidate for `vet-source`.
 
-A **source** is the published work of an awesome human: an individual or a publication. Admission requires an **established, proven track record**:
+A **source** is the published work of an awesome human: a person or a publication. To be admitted, a source needs an **established, proven track record**:
 
-1. **Longevity:** sustained, consistent publishing, for at least two years. Under two years is the watch list, however good the writing is. Beyond the bar there is no second band: the `Since` column carries how far back a record goes, which is more than a bucket could say. Depth is handled by the `**Corroborate.**` marking instead, so a thin-but-long-lived source stays citable with a usage limit rather than being filed below a shorter-lived one.
-2. **Depth:** original insight (internals, measurements, worked reasoning), not paraphrased release notes.
-3. **Accuracy:** a history of being right; corrections issued when wrong.
-4. **Independence of signal:** the content stands on its own merit, not on marketing reach or algorithm-chasing.
+1. **Longevity:** At least two years of sustained, consistent publishing. A source with less than two years goes on the watch list, however good the writing is. There's no second tier above the bar: the `Since` column shows how far back a record goes. Thin depth is handled by the `**Corroborate.**` marking instead, so a long-lived but shallow source stays citable with a usage limit.
+2. **Depth:** Original insight, such as internals, measurements, or worked reasoning. Paraphrased release notes don't count.
+3. **Accuracy:** A history of being right, and of issuing corrections when wrong.
+4. **Independence:** The content stands on its own merit, not on marketing reach or chasing an algorithm.
 
-Two qualifying rules:
+Two rules qualify these criteria:
 
-- **Independence is recorded as a usage limit, not a rank.** A source carrying a live independence concern (vendor DevRel or product-team employment producing adoption-focused content with little critical distance) is admitted, and its section under `## Source notes` says what a citation may rest on, typically mechanism rather than adoption, as `avalonia-blog`, `james-montemagno` and `shay-rojansky` each spell out. Vendor employment alone is not a concern: depth with critical distance (`stephen-toub`, `khalid`) needs no limit. A concern grave enough that no limit would contain it is a decline or a watch-listing, as `duende-blog` and `telerik-blog` were.
-- **Dormancy blocks admission, with one exception.** A candidate whose publishing has stopped for over a year is watch-listed, not admitted, unless their **writing** demonstrably continues elsewhere (official documentation, another publication, a book), in which case the track record follows the human and the dormant channel is noted. Repository activity is not evidence: commits, releases and issue threads are not what an opinion cites, so a busy GitHub profile beside a silent blog is a dormant source rather than a live one. Documentation authored in a repository does count: what was published is the test, not where the commits landed. The same rule drives re-evaluation of admitted sources (see `vet-source`).
+- **An independence concern becomes a usage limit, not a lower rank.** A concern is live when vendor developer relations or product-team employment produces adoption-focused content with little critical distance. Such a source is still admitted. Its section under `## Source notes` says what a citation can rest on, usually how something works, not whether to adopt it. `avalonia-blog`, `james-montemagno`, and `shay-rojansky` each spell this out.
+  - Working for a vendor isn't a concern by itself. Depth with critical distance, as from `stephen-toub` or `khalid`, needs no limit.
+  - A concern too serious for any limit to contain leads to a decline or the watch list, as with `duende-blog` and `telerik-blog`.
+- **Dormancy blocks admission, with one exception.** A candidate who hasn't published for over a year goes on the watch list. The exception is a person whose **writing** clearly continues elsewhere, such as official documentation, another publication, or a book. Then the track record follows the person, and the notes record the dormant channel.
+  - Repository activity isn't evidence. An opinion doesn't cite commits, releases, or issue threads, so a busy GitHub profile beside a silent blog is still a dormant source.
+  - Documentation written in a repository does count. The test is what was published, not where the commits landed.
+  - The same rule triggers re-evaluation of admitted sources. For details, see `vet-source`.
 
-Candidates that don't yet qualify are tracked under [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant) and re-evaluated by the `vet-source` skill. Admission and demotion decisions are recorded in the log at the bottom of this file.
+Candidates that don't qualify yet are tracked on the [Watch list](#watch-list-track-record-still-forming-or-previously-strong-but-now-dormant), and the `vet-source` skill re-evaluates them. The log at the end of this file records every admission and demotion.
 
-Each source has a stable `id` used by the `sources:` frontmatter in `opinions/`.
+### How the roster is organised
 
-Rows in every roster table below are sorted alphabetically by `id`, and so are the sections under [Source notes](#source-notes). Insert new sources in order rather than appending them.
+- **IDs:** Each source has a stable `id`, which the `sources:` frontmatter in `opinions/` uses.
+- **Order:** Rows in every roster table, and the sections under [Source notes](#source-notes), are sorted alphabetically by `id`. Insert a new source in order instead of appending it.
+- **Tables:** A table row holds only what identifies a source: its ID, where to read it, what it covers, and how far back it goes.
+- **Notes:** The evidence behind a row lives in its notes section, in the shape that [Source notes](#source-notes) describes, with one sentence per line. This split keeps the roster reviewable: a table row stays short, and a reworded sentence shows up in a diff as that one sentence.
+- **Decision log:** The log is the only table that Prettier doesn't align. It's marked with `<!-- prettier-ignore -->`, because its Detail column has no natural width, and realigning it rewrote every entry whenever one grew. Each entry gives the decision and the fact behind it. The evidence is in the source's notes and the pull request.
 
-The tables carry only what identifies a source: its id, where to read it, what it covers, and how far back it goes. The evidence behind a row lives in its notes section, in the labelled shape [Source notes](#source-notes) sets out, one sentence per line. That split is what keeps the roster reviewable, since a table row stays a short line and a reworded sentence shows up as that sentence rather than as a rewritten row. The decision log below is the one table exempt from Prettier's alignment, marked with `<!-- prettier-ignore -->`: its Detail column has no natural width, so realigning it rewrote every entry whenever one grew. Each entry is the decision and the fact behind it; the evidence is in the source's notes and the pull request.
+### Reserved IDs, markings, and references
 
-**Reserved id: `house`.** The repository owner's own opinions carry the `house` source id; see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority is repository ownership, not track record, so it is exempt from the admission criteria; in exchange, every house opinion must be visibly marked. The marking literal, conflict precedence, and contributor adoption are defined canonically in [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works). The `house` id never appears in the roster tables below.
+**Reserved ID: `house`.** The repository owner's own opinions use the `house` source ID. For details, see [HOUSE-OPINIONS.md](HOUSE-OPINIONS.md). Its authority comes from owning the repository, not from a track record, so it's exempt from the admission criteria. In exchange, every house opinion must be visibly marked. [HOUSE-OPINIONS.md: How this works](HOUSE-OPINIONS.md#how-this-works) is the canonical definition of the marking, of precedence in a conflict, and of contributor adoption. The `house` ID never appears in the roster tables.
 
-**Reserved marking: `**Discovery-only.**`.** Aggregators (link roundups, newsletters, curated lists) are admitted for discovery but never cited: they lead you to a primary source, and that primary source is what an opinion cites. A roster row whose Notes carry this literal is rejected by CI if its id appears in any `sources:` list under `opinions/` or `templates/`. The literal mirrors `**House:**` deliberately: a marking a check can match, not prose a reader has to interpret.
+**Reserved marking: `**Discovery-only.**`.** Aggregators, such as link roundups, newsletters, and curated lists, are admitted for discovery but never cited. They lead you to a primary source, and the opinion cites that source. If a source's notes carry this marking, CI rejects its ID in any `sources:` list under `opinions/` or `templates/`. The marking mirrors `**House:**` on purpose: a check can match it exactly, so nobody has to interpret prose.
 
-**Reserved marking: `**Corroborate.**`.** A source whose track record is real but whose depth is thin (SEO-shaped roundups, course funnels, release paraphrase with occasional substance) is admitted on that track record and marked. The marking is a usage constraint rather than a track-record claim: an opinion may cite it, but never alone, so every claim it carries also rests on an unmarked citable source. `scripts/validate-sources.cs` rejects any opinion or template whose every citable source is marked. Neither `house` nor a Discovery-only id counts as the unmarked one.
+**Reserved marking: `**Corroborate.**`.** Some sources have a real track record but thin depth: SEO-shaped roundups, course funnels, or release paraphrase with occasional substance. They're admitted on their track record and marked. The marking limits how you use the source; it says nothing about its track record. An opinion can cite it, but never alone, so every claim it supports also rests on an unmarked citable source. `scripts/validate-sources.cs` rejects any opinion or template whose citable sources are all marked. Neither `house` nor a Discovery-only ID counts as the unmarked source.
 
-**References: a named package's own material.** When an opinion or template names a package, the project behind it may be linked inline as a reference: its documentation site and in-repository docs, release notes and changelogs, issues and pull requests, and its nuget.org page. The standard or specification behind a named format or protocol qualifies on the same terms, such as an RFC or the IANA time zone database. A reference corroborates and never carries. It can confirm how a thing is set up, what it supports and where it falls short, but the claim it sits beside still rests on a roster source, and a package's own material never decides whether to adopt that package. A reference needs no `vet-source` pass and never appears in `sources:`, so `scripts/validate-sources.cs` does not see it. Cite it in the same `Source: Title` shape as anything else, as in `[xUnit.net: Testing with Native AOT]`.
+**References: a named package's own material.** When an opinion or template names a package, you can link the project behind it inline as a reference. A reference can be the documentation site or in-repository docs, release notes and changelogs, issues and pull requests, or the nuget.org page. The standard or specification behind a named format or protocol qualifies on the same terms, such as an RFC or the IANA time zone database.
+
+- A reference corroborates a claim and never carries it. It can confirm how something is set up, what it supports, and where it falls short. But the claim beside it still rests on a roster source, and a package's own material never decides whether to adopt that package.
+- A reference needs no `vet-source` pass and never appears in `sources:`, so `scripts/validate-sources.cs` doesn't see it.
+- Cite it in the same `Source: Title` form as anything else, as in `[xUnit.net: Testing with Native AOT]`.
 
 ## Citable: quotable in opinions and templates
 
-Every row here has cleared all four criteria. What separates them is recorded per source rather than by bucket: the `Since` column carries the length of the record, and any independence concern, conflict of interest or usage limit lives in that source's section under [Source notes](#source-notes).
+Every source here meets all four criteria. What separates them is recorded per source, not by tier. The `Since` column shows the length of the record. Any independence concern, conflict of interest, or usage limit is in the source's section under [Source notes](#source-notes).
 
 | id                   | Source                                                                                                                                             | Focus                                                                                                           | Since                                       |
 | -------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------------------------------------------------- | ------------------------------------------- |
@@ -73,7 +86,7 @@ Every row here has cleared all four criteria. What separates them is recorded pe
 
 ## Watch list: track record still forming, or previously strong but now dormant
 
-Never quotable as primary sources for opinions: `scripts/validate-sources.cs` rejects a watch-list id in any `sources:` list, whatever the age or quality of the source's back catalogue. Usable for discovery and cross-checking: follow a claim found here to a citable source and cite that one. Re-evaluate periodically.
+A watch-list source is never cited as a primary source for an opinion. `scripts/validate-sources.cs` rejects a watch-list ID in any `sources:` list, however old or good the source's back catalogue is. You can use these sources for discovery and cross-checking: follow a claim you find here to a citable source, and cite that one instead. Re-evaluate them periodically.
 
 | id                | Source                                                          | Focus                                             | Since |
 | ----------------- | --------------------------------------------------------------- | ------------------------------------------------- | ----- |
@@ -90,9 +103,22 @@ Never quotable as primary sources for opinions: `scripts/validate-sources.cs` re
 
 ## Source notes
 
-The evidence behind each row: what the track record is, what a citation may rest on, and any conflict worth declaring. One section per source, alphabetical by id, and a source with nothing to record has none.
+This section holds the evidence behind each row: the track record, what a citation can rest on, and any conflict to declare. Each source has one section, sorted alphabetically by ID. A source with nothing to record has no section.
 
-A section opens with its verdict in a line or two, and for a watch-listed source that is what blocks it. A short note stops there. A longer one continues as a list, one `**Label:**` bullet per criterion or rule with something to record, in this order: **Scope**, **Longevity** or **Dormancy**, **Depth**, **Accuracy**, **Authorship**, **Independence**, **Conflict of interest**, then **Cite** for a citable source or **Use** for a watch-listed one, and **Re-evaluate** last. Leave out a label with nothing under it. Each sentence still takes its own line, with continuation lines indented under their bullet, so a reworded sentence diffs as that sentence.
+Write each section in this shape:
+
+1. **Verdict:** Open with the verdict in a line or two. For a watch-listed source, say what blocks it. A short note stops here.
+2. **Labelled bullets:** A longer note continues as a list, with one `**Label:**` bullet for each criterion or rule that has something to record. Use this order, and leave out any label with nothing under it:
+   1. **Scope**
+   2. **Longevity** or **Dormancy**
+   3. **Depth**
+   4. **Accuracy**
+   5. **Authorship**
+   6. **Independence**
+   7. **Conflict of interest**
+   8. **Cite** for a citable source, or **Use** for a watch-listed one
+   9. **Re-evaluate**
+3. **One sentence per line:** Put each sentence on its own line, and indent continuation lines under their bullet, so a reworded sentence shows up in a diff as that one sentence.
 
 Markings are read from the whole section, heading included, so `**Discovery-only.**` or `**Corroborate.**` in either place marks the source.
 
@@ -101,27 +127,32 @@ Markings are read from the whole section, heading included, so `**Discovery-only
 Citable on the code-backed engineering posts and on the dotnet-skills he wrote himself, with a conflict on anything Petabridge sells.
 
 - **Scope:** Takes in [dotnet-skills](https://github.com/Aaronontheweb/dotnet-skills), published as 37 skills and 6 subagents with v1.6.0 on 2026-09-16, which counts as authored documentation under the admission rules.
-  It was watch-listed as a source of its own on 2026-09-25 and folded in the same day: the track record follows the human, so the repository's 2025-11-12 start does not hold it back.
+  It was watch-listed as a source of its own on 2026-09-25 and folded in the same day: the track record follows the human, so the repository's 2025-11-12 start doesn't hold it back.
 - **Longevity:** Writing since [2010-05-14](https://aaronstannard.com/blog/page19/) on aaronstannard.com, and on the Petabridge blog since 2015; together the two show posts in every year from 2010 to 2026, and both are live, on 2026-08-21 and 2026-09-23.
   The personal blog alone thins to a handful of posts a year from 2016 to 2019, with its longest gap 347 days (2018-10-16 to 2019-09-28), and the Petabridge blog carries the volume across those years.
-- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression unit tests could not catch, ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example, and ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
-  His 2026 "Software 2.0" series is the most concrete .NET-specific writing found on verifying agent-written code, and it reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
+- **Depth:** ["Introducing NBench"](https://aaronstannard.com/introducing-nbench/) starts from a throughput regression that unit tests couldn't catch.
+  ["Property Testing in C# with FsCheck"](https://aaronstannard.com/fscheck-property-testing-csharp-part1/) works a shuffle through to a shrunk counter-example.
+  ["Extend-Only Design"](https://aaronstannard.com/extend-only-design/) and ["OSS Compatibility Standards"](https://aaronstannard.com/oss-compatibility-standards/) reason through schema and API evolution in code.
+  His 2026 "Software 2.0" series is the most concrete .NET-specific writing found on verifying agent-written code.
+  It reports failures as well as wins: ["Planning and Verifying a Greenfield Project"](https://aaronstannard.com/software-2.0-case-study-textforge/) records the agent writing tests that only "checked the 'has test coverage' box".
   dotnet-skills publishes [evaluations](https://github.com/Aaronontheweb/dotnet-skills-evals), real but small: 15 Akka.NET tasks judged by the model that wrote the code.
-- **Accuracy:** Sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono, and ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
+- **Accuracy:** Sound, with in-post corrections on record: [".NET Core is Boiling the Ocean"](https://aaronstannard.com/dotnetcore-boil-ocean/) (2016) carries Miguel de Icaza's correction on WebAssembly and Mono.
+  ["The New Rules for Playing in Microsoft's Open Source Sandbox"](https://aaronstannard.com/new-rules-dotnet-oss/) (2020) carries an `EDIT` retracting a misreading of David Fowler.
   dotnet-skills is weaker, because nothing compiles its samples: its own `AGENTS.md` says "There is no build system, tests, or compiled output."
   Checked on 2026-09-25 against SDK 10.0.400, the `testcontainers` samples fail with CS0246 against Testcontainers 4.15.0, the version their own `Version="*"` references restore, and a `csharp-coding-standards` value object fails with CS0111.
   The same skill's records hold collections, which breaks value equality, and a validating record can be bypassed with `with`.
   The package examples pin xUnit v2, FluentAssertions 6 and 7 and `Verify.Xunit`, which pulls in xUnit v2, and six skills ship CI on `dotnet-version: 9.0.x` with 22 mutable action tags and no SHA pins.
   Its release notes do record corrections, including "fabricated APIs, compile errors" in the OpenTelemetry skill and guidance that wrongly called adding optional parameters binary-compatible.
 - **Authorship:** He made 68 of 82 dotnet-skills commits, but the skills that held up best under checking (`aot-trimming`, `csharp-nullable-reference-types`, `opentelementry-dotnet-instrumentation`) came largely from Daniel Marbach, Mauro Servienti and Tomasz Masternak of Particular Software.
-  Their work is not his writing and is not citable under this id; where one of them has a written track record, vet that person instead.
-- **Conflict of interest:** He is CEO of Petabridge, which sells Akka.NET support plans, consulting and training and the Phobos monitoring product through Sdkbin, a marketplace he built, so never cite him alone on adopting Akka.NET, the actor model or Phobos.
+  Their work isn't his writing and isn't citable under this id; where one of them has a written track record, vet that person instead.
+- **Conflict of interest:** He's CEO of Petabridge, which sells Akka.NET support plans, consulting, and training, and sells the Phobos monitoring product through Sdkbin, a marketplace he built.
+  So never cite him alone on adopting Akka.NET, the actor model, or Phobos.
   Six dotnet-skills skills and a subagent cover Akka.NET, so the same limit applies to them.
   His free AI tooling (dotnet-skills, dotnet-slopwatch, Netclaw) is promoted in the posts that describe his workflow, a milder conflict worth flagging where an opinion names one of them.
   He removed FluentAssertions from Akka.NET on licensing grounds on [2026-06-10](https://petabridge.com/blog/why-akkadotnet-remove-fluentassertions/), a decision that cost convenience, which is evidence of distance from convenient adoption rather than against it.
 - **Cite:** The engineering posts: a large share of the catalogue is essays on the .NET ecosystem, open-source economics and running a business, which argue from experience rather than evidence.
   Petabridge posts for mechanism, not adoption: it is his company's blog and carries Akka.NET release announcements alongside the technical posts.
-  A dotnet-skills skill only after its history shows it is his, and for the principle it states: never its package versions or CI pins, and never a code sample that has not been compiled against the citing file's `targets`.
+  A dotnet-skills skill only after its history shows it is his, and for the principle it states: never its package versions or CI pins, and never a code sample that hasn't been compiled against the citing file's `targets`.
 
 ### `andrew-lock`: Citable
 
@@ -131,9 +162,10 @@ The de facto reference for ASP.NET Core internals outside Microsoft; author of _
 
 Marked because depth is mixed rather than absent, and conflicted on the architecture and data-access topics he would be cited for.
 
-- **Scope:** The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases do not.
+- **Scope:** The id also covers [DevIQ](https://deviq.com/), published by NimblePros with Sarah Dutkiewicz, and the authored documentation at [specification.ardalis.com](https://specification.ardalis.com/) and the [Clean Architecture design decisions](https://ardalis.github.io/CleanArchitecture/), which count as writing where the repositories' commits and releases don't.
 - **Longevity:** Writing since [2003-02-04](https://ardalis.com/first-post/), carried across four earlier blogs onto the current domain, and live rather than dormant: latest post 2026-08-19, cadence settled to roughly monthly as effort moves to video and courses.
-- **Depth:** ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle, whereas ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
+- **Depth:** ["Domain Modeling - Anemic Models"](https://ardalis.com/domain-modeling-anemic-models/) walks a concrete failure through to the principle.
+  By contrast, ["From Microservices to Modular Monoliths"](https://ardalis.com/from-microservices-to-modular-monoliths/) carries no migration guidance and closes on a discount code, and the Specification v9 post is release paraphrase by his own account.
   DevIQ is reference-grade on definitions and taxonomy, strongest on [design patterns](https://deviq.com/design-patterns/), but its entries argue in prose and diagrams rather than code or measurements, so cite a measured source alongside it for any claim an opinion rests on.
 - **Accuracy:** Sound: no claim was found reversed or left standing wrong.
   In ["Avoid Using C# Events"](https://ardalis.com/avoid-using-csharp-events-in-aspnetcore-apps/) the logged memory figures are non-monotonic with no control loop, so cite the argument and not the measurements.
@@ -147,7 +179,7 @@ Marked because depth is mixed rather than absent, and conflicted on the architec
 
 A product-team blog, release-driven and marketing-adjacent, so cite it and the docs for how a thing works, not for whether to adopt it.
 
-- **Scope:** Widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog does not, under the same limit.
+- **Scope:** Widened 2026-08-20 to the project's first-party documentation, which carries mechanism the blog doesn't, under the same limit.
 - **Longevity:** About four years, which clears the bar.
 - **Independence:** The concern holds whatever the longevity becomes.
 
@@ -184,7 +216,7 @@ The 2018–2023 catalogue is strong and usable for cross-checking on the watch-l
 
 ### `code-with-mukesh`: Citable, **Corroborate.**
 
-Blog since 2020, marked for depth: SEO- and roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics are not.
+Blog since 2020, marked for depth: SEO- and roundup-shaped and course-funnelled, so the shape of the guidance is usable and the specifics aren't.
 The 2026 output carries real benchmarks.
 
 ### `csharp-digest`: Citable, **Discovery-only.**
@@ -196,7 +228,7 @@ A discovery channel, not an opinion source itself; archive verified back to 2017
 Independent depth on ASP.NET Core security, OpenID Connect and BFF, built in code rather than described.
 
 - **Longevity:** Writing since [2013-01-31](https://damienbod.com/2013/01/31/welcome-to-my-blog/), technical from the first week, and still publishing on 2026-09-01.
-  Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 were not counted directly, and the years either side of each leave no room for a gap.
+  Every year sampled between those dates carries several pages of posts at a monthly-or-better cadence; 2014, 2017 and 2022 weren't counted directly, and the years either side of each leave no room for a gap.
 - **Depth:** [The BFF post](https://damienbod.com/2024/04/08/bff-secured-asp-net-core-application-using-downstream-api-and-an-oauth-client-credentials-jwt/) carries the OpenID Connect setup, a YARP transform and a token cache, and explains why the downstream API refuses the user's delegated token.
   [The passkey post](https://damienbod.com/2026/01/05/set-the-amr-claim-when-using-passkeys-authentication-in-asp-net-core/) diagnoses an ASP.NET Core defect, links the runtime issue, and gives the re-sign-in workaround against RFC 8176.
 - **Accuracy:** Maintained in the open: posts carry dated History sections recording what each framework version changed.
@@ -225,10 +257,10 @@ Includes Stephen Toub's annual "Performance Improvements in .NET" posts and the 
 Blocked on independence, not longevity, and on five bylines nobody has vetted.
 
 - **Scope:** Dominick Baier's personal blog is a separate channel and is itself dormant, last posting 2024-10-01.
-  It is named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check.
+  It's named rather than linked because the host has stopped completing a TLS handshake, so a citation would fail the link check.
 - **Longevity:** Publishing since [2020-10-01](https://duendesoftware.com/blog/20201001-helloduende) at one to four posts a month, so the six-year record would clear the bar several times over.
 - **Authorship:** Multi-author, so independence and quality vary by byline, which is the `telerik-blog` and `syncfusion-blog` blocker rather than the `avalonia-blog` limit.
-  Where one of the five has a track record, vet the human instead; that is done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
+  Where one of the five has a track record, vet the human instead; that's done for `khalid`, whose posts here are citable under his own id with the limit recorded there.
 - **Independence:** All four posts read in full for this pass end at the paid product the company sells, in the category the post is about, and none carried a caveat against it.
   The depth is what makes that a blocker rather than a footnote: a four-thousand-word piece with code and diagrams still arrives at Duende BFF as the recommendation.
 - **Use:** Discovery and cross-checking on the usual terms.
@@ -247,7 +279,7 @@ On the MAUI team, with the same independence caveat as `james-montemagno`.
 Cite the pre-2024 Xamarin/MAUI catalogue only, and expect nothing new from harvests.
 
 - **Longevity:** Blogging since ~2012 (motzcod.es → montemagno.com).
-  Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he is not dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
+  Re-vetted 2026-08-23 on writing alone, the Merge Conflict podcast having left scope: the blog is still publishing (latest 2025-12-31), so he isn't dormant, but the current output is Copilot and tooling and the last .NET post is 2024-01-19.
 - **Independence:** A live concern: Microsoft DevRel, adoption-focused, with little critical distance, so weigh independence per piece.
 
 ### `jeremy-miller`: Citable, **Corroborate.**
@@ -271,7 +303,7 @@ Created Noda Time; author of _C# in Depth_; Stack Overflow's top contributor.
 - **Longevity:** Low cadence (~4–5 posts a year), and much of the recent output is general data modelling from a personal election-data project.
 - **Independence:** Formerly Google DevRel (Cloud .NET client libraries), between jobs as of 2026-07; the analysis criticises language design he doesn't own, so no independence limit.
 - **Cite:** The C#/BCL posts.
-  _C# in Depth_ 4th ed. (2019) pre-dates records and is not current guidance.
+  _C# in Depth_ 4th ed. (2019) pre-dates records and isn't current guidance.
 
 ### `khalid`: Citable
 
@@ -290,7 +322,7 @@ The personal blog is citable in full, and his Duende posts for platform mechanis
 Twenty years of writing, with depth verifiable in compiling code and real measurements.
 
 - **Longevity:** Writing since 2006-01-05 on [MSDN blogs](https://learn.microsoft.com/archive/blogs/ploeh/) and on the current blog since 2009-01-28, with over 800 posts there alone, thinning in the mid-2010s, still going on 2026-08-13.
-- **Independence:** Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he does not own, so no independence limit.
+- **Independence:** Self-employed in Copenhagen with no vendor attachment, and the criticism lands on design he doesn't own, so no independence limit.
 - **Conflict of interest:** He sells books and video courses and created AutoFixture, a mild conflict on testing and DI.
 - **Cite:** The C#/.NET posts: a consistent third of the technical output is Haskell or F#, and the 2026 run turns from code to language-agnostic essays on AI and software philosophy after ["TDD as induction"](https://blog.ploeh.dk/2026/02/23/tdd-as-induction/) (2026-02-23).
   _Dependency Injection in .NET_ (2011) is superseded by _Dependency Injection Principles, Practices, and Patterns_ (2019).
@@ -325,7 +357,9 @@ The 2008–2024 archive remains usable for discovery.
   Same publisher and editorial standard, so a clarification rather than an admission, following the `avalonia-blog` widening of 2026-08-20.
 - **Cite:** For mechanism and pattern trade-offs, never product marketing or a service page arguing for adoption.
   Quote the page's own review date from the `ms.date` metadata field, never `updated_at`, which is a docset build timestamp shared across every page in a bulk republish and can run years ahead of the text.
-  The field matters because these pages age unevenly: the microservices e-book is 2018 and 2021 content that has not been reviewed since, carrying `updated_at` values of 2023 and 2024 that are republishes rather than reviews, while the Azure Architecture Center pattern pages are revised on a rolling basis and carry recent `ms.date` values.
+  The field matters because these pages age unevenly.
+  The microservices e-book is 2018 and 2021 content that hasn't been reviewed since, and its `updated_at` values of 2023 and 2024 are republishes, not reviews.
+  The Azure Architecture Center pattern pages, by contrast, are revised on a rolling basis and carry recent `ms.date` values.
 
 ### `nicholas-blumhardt`: Citable
 
@@ -339,7 +373,7 @@ Created Autofac and Serilog; founder of Datalust, which sells Seq.
 ### `nick-polyak`: Watch list
 
 Dormancy: demoted from the citable roster on 2026-08-23.
-Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception does not reach him.
+Last post 2025-05-04 on Dev.to, the CodeProject archive (2008–2024) is read-only, and the 2025–26 GitHub output is code and version bumps with no documentation among it, so the exception doesn't reach him.
 Back catalogue not citable while watch-listed; re-vet if the writing resumes.
 
 ### `oskar-dudycz`: Citable, **Corroborate.**
@@ -392,7 +426,7 @@ Independence and depth, not longevity: marketing-adjacent, quality varies by aut
 ### `telerik-blog`: Watch list
 
 Independence and depth, not longevity: marketing-adjacent, quality varies by author.
-The lowered longevity bar does not touch this blocker.
+The lowered longevity bar doesn't touch this blocker.
 
 ### `udi-dahan`: Watch list
 
