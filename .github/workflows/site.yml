@@ -86,9 +86,10 @@ jobs:
     runs-on: ubuntu-latest
     environment:
       name: ${{ github.event_name == 'pull_request' && 'preview' || 'production' }}
-      # A preview's alias URL is stable for the pull request. Production is the custom
-      # domain, which wrangler deploy does not report as a URL.
-      url: ${{ steps.wrangler.outputs.deployment-alias-url || (github.event_name != 'pull_request' && 'https://awesome-humans.net/') || steps.wrangler.outputs.deployment-url }}
+      # A preview links its alias URL, which stays the same across the pull request's
+      # pushes, and falls back to the version URL. Production is the custom domain,
+      # which wrangler deploy does not report as a URL.
+      url: ${{ steps.alias.outputs.url || (github.event_name != 'pull_request' && 'https://awesome-humans.net/') || steps.wrangler.outputs.deployment-url }}
     steps:
       # For site/wrangler.jsonc; the built site comes from the build job.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
@@ -109,3 +110,15 @@ jobs:
           wranglerVersion: "4.147.0"
           workingDirectory: site
           command: ${{ github.event_name == 'pull_request' && format('versions upload --preview-alias pr-{0}', github.event.pull_request.number) || 'deploy' }}
+
+      # wrangler-action v4.1.3 has no output for the alias URL, only Wrangler's printed
+      # "Version Preview Alias URL" line, which may carry terminal colour codes.
+      - name: Read the preview alias URL
+        id: alias
+        if: github.event_name == 'pull_request'
+        env:
+          OUTPUT: ${{ steps.wrangler.outputs.command-output }}
+        run: |
+          url=$(printf '%s\n' "$OUTPUT" | sed 's/\x1b\[[0-9;]*m//g' \
+            | sed -n 's/.*Version Preview Alias URL: *\(https:[^[:space:]]*\).*/\1/p' | head -n 1)
+          echo "url=$url" >> "$GITHUB_OUTPUT"
