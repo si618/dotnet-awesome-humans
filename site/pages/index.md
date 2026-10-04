@@ -1,8 +1,8 @@
 # Awesome Humans
 
-What does good look like in your ecosystem right now? Each ecosystem here answers with opinions distilled from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, independent writing about it. Every opinion leads with its recommendation, cites the sources it rests on, and targets the latest released versions.
+What does good look like in your software ecosystem right now? Each ecosystem here answers with opinions distilled from the published writing of awesome humans: people and publications with at least two years of sustained, accurate, independent writing about it. Every opinion leads with its recommendation, cites the sources it rests on, and targets the latest released versions.
 
-## Ecosystems
+## Software ecosystems
 
 - **[.NET](dotnet/index.md):** C#, F#, ASP.NET Core, EF Core, the runtime and the libraries around them, targeting the latest .NET release.
 
