@@ -19,11 +19,11 @@
 
 /* Wider pages on large screens. The theme caps the page at 61rem with a 12.1rem
    sidebar each side, which leaves the diagrams, drawn 1100 to 1220 units wide,
-   shrunk to about 70% in a column some 880px across. A 90rem cap and narrower
+   shrunk to about 70% in a column some 880px across. An 80rem cap and narrower
    sidebars give the content column most of a desktop window. */
 @media screen and (min-width: 76.25em) {
   .md-grid {
-    max-width: 90rem;
+    max-width: 80rem;
   }
 
   .md-sidebar {
