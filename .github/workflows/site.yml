@@ -1,9 +1,10 @@
 name: Site
 
-# Builds the awesome-humans.net documentation site on every pull request. The site's
-# /dotnet/ pages are generated from opinions/, templates/, the roster and README.md, so
-# any change to those can break it, not only a change under site/. Deployment is a
-# separate step, added when the site goes live.
+# Builds the awesome-humans.net documentation site on every pull request and deploys it
+# to Cloudflare. The site's /dotnet/ pages are generated from opinions/, templates/, the
+# roster and README.md, so any change to those can break it, not only a change under
+# site/. A push to main deploys to awesome-humans.net; a pull request uploads a preview
+# version at its own URL, which the job summary links, without touching the live site.
 on:
   pull_request:
   push:
@@ -18,9 +19,19 @@ env:
   DOTNET_NOLOGO: "true"
   DOTNET_CLI_TELEMETRY_OPTOUT: "true"
 
+# One deployment at a time per branch, and a newer push replaces a queued one.
+concurrency:
+  group: site-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    # Secrets are empty for a pull request from a fork, and until they are added, so the
+    # site still builds there and only the deployment steps are skipped.
+    env:
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
     steps:
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
 
@@ -43,3 +54,34 @@ jobs:
       # catches a link build-site.cs rewrote wrongly as well as one broken at source.
       - name: Build the site
         run: zensical build --strict -f site/build/zensical.toml
+
+      # wranglerVersion pins Wrangler itself, which the action would otherwise take as
+      # whatever v4 is latest. Renovate does not track this input, so bump it by hand.
+      - name: Deploy to awesome-humans.net
+        id: deploy
+        if: github.event_name != 'pull_request' && github.ref == 'refs/heads/main' && env.CLOUDFLARE_API_TOKEN != ''
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.147.0"
+          workingDirectory: site
+          command: deploy
+
+      - name: Upload a preview
+        id: preview
+        if: github.event_name == 'pull_request' && env.CLOUDFLARE_API_TOKEN != ''
+        uses: cloudflare/wrangler-action@953926a2e2182532811c01a25e53647d93bf07c0 # v4.1.3
+        with:
+          apiToken: ${{ env.CLOUDFLARE_API_TOKEN }}
+          accountId: ${{ env.CLOUDFLARE_ACCOUNT_ID }}
+          wranglerVersion: "4.147.0"
+          workingDirectory: site
+          command: versions upload --preview-alias pr-${{ github.event.pull_request.number }}
+
+      - name: Link the deployment
+        if: steps.deploy.outcome == 'success' || steps.preview.outcome == 'success'
+        env:
+          URL: ${{ steps.preview.outputs.deployment-alias-url || steps.preview.outputs.deployment-url || 'https://awesome-humans.net/' }}
+        run: |
+          echo "Site deployed: $URL" >> "$GITHUB_STEP_SUMMARY"

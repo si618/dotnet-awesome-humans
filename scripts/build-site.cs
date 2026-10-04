@@ -11,8 +11,9 @@
 // pages under /dotnet/ are generated from this repository's own files, so the site never
 // carries a second copy to drift: README.md up to its layout section becomes the overview,
 // opinions/ and the roster are copied in full, and every file under templates/ gets a page
-// showing it. Relative links are rewritten to the page they now point at, or to GitHub for
-// a file the site does not carry. The navigation is generated too: the opinions take their
+// showing it. llms.txt at the root points agents at the raw files. Relative links are
+// rewritten to the page they now point at, or to GitHub for a file the site does not
+// carry. The navigation is generated too: the opinions take their
 // titles and order from README.md's Scope list, which validate-readme-index.cs already
 // holds to the opinions directory.
 //
@@ -161,6 +162,26 @@ foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.G
 }
 
 Write(pages[TemplatesDirectory], string.Concat(index));
+
+// llms.txt at the site root, per llmstxt.org: a summary and links an agent can follow, to
+// the raw Markdown of each opinion and the raw template files rather than rendered pages.
+List<string> llms =
+[
+    "# Awesome Humans\n\n",
+    "> Opinionated best practices for each software ecosystem, distilled from the published writing of people and publications with a proven, multi-year track record. ",
+    "Each opinion states its recommendation first, then the rationale, then its sources, and targets the latest released versions.\n\n",
+    $"## {EcosystemName} opinions\n\n",
+    "Follow these when writing or reviewing .NET code. Target the versions in each file's `targets:` frontmatter, never an older one.\n\n",
+    .. Site.ScopeBullet().Matches(readme).Select(bullet =>
+        $"- [{bullet.Groups["title"].Value}]({Site.Raw(bullet.Groups["path"].Value)}): {bullet.Groups["summary"].Value.Trim()}\n"),
+    $"\n## {EcosystemName} templates\n\n",
+    "Copy-paste-ready starting points that encode the opinions. Copy one verbatim and trim it.\n\n",
+    .. templates.Select(template => $"- [{Site.Normalise(Path.GetRelativePath(TemplatesDirectory, template))}]({Site.Raw(template)})\n"),
+    "\n## Optional\n\n",
+    $"- [Awesome humans]({Site.Raw("AWESOME-HUMANS.md")}): the vetted sources the opinions cite, and the admission criteria\n",
+    $"- [House opinions]({Site.Raw("HOUSE-OPINIONS.md")}): the repository owner's own preferences, marked House: where they appear\n",
+];
+Write("llms.txt", string.Concat(llms));
 
 // The navigation, added to the committed configuration as it is staged.
 string Entry(string title, string page) => $"{{ {Site.TomlString(title)} = {Site.TomlString(page)} }}";
@@ -333,7 +354,7 @@ internal static partial class Site
         "\"" + value.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal) + "\"";
 
     // A bullet in README.md's Scope list: - **[Title](opinions/file.md):** what it covers.
-    [GeneratedRegex(@"^- \*\*\[(?<title>[^\]]+)\]\((?<path>opinions/[^)]+)\):\*\*", RegexOptions.Multiline)]
+    [GeneratedRegex(@"^- \*\*\[(?<title>[^\]]+)\]\((?<path>opinions/[^)]+)\):\*\*(?<summary>.*)$", RegexOptions.Multiline)]
     public static partial Regex ScopeBullet();
 
     [GeneratedRegex(@"^(?<text>#{1,6} .*[^\s\\#])(?<hashes>#+)$")]

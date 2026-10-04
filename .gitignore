@@ -24,3 +24,6 @@ node_modules/
 # lychee link-check result cache
 .lycheecache
 site/build/
+
+# Wrangler's local state from `wrangler dev` and dry runs
+site/.wrangler/
