@@ -1,0 +1,350 @@
+#!/usr/bin/env dotnet
+#:package YamlDotNet@18.1.0
+#:include Opinions.cs
+#:include Frontmatter.cs
+#:property PublishAot=false
+#:property Nullable=enable
+#:property TreatWarningsAsErrors=true
+
+// Stages the awesome-humans.net documentation site into site/build, ready for Zensical.
+// The hand-written pages under site/pages are copied as they are. The .NET ecosystem's
+// pages under /dotnet/ are generated from this repository's own files, so the site never
+// carries a second copy to drift: README.md up to its layout section becomes the overview,
+// opinions/ and the roster are copied in full, and every file under templates/ gets a page
+// showing it. Relative links are rewritten to the page they now point at, or to GitHub for
+// a file the site does not carry. The navigation is generated too: the opinions take their
+// titles and order from README.md's Scope list, which validate-readme-index.cs already
+// holds to the opinions directory.
+//
+// Zensical requires the build output inside the directory holding its configuration, so
+// the staged zensical.toml, docs/ and the built public/ all sit under site/build, which is
+// gitignored. site/zensical.toml is the committed configuration this script stages, with
+// the navigation added.
+//
+// A .NET 10 file-based app. Run it from the repository root, then build or preview the site:
+//
+//     dotnet run scripts/build-site.cs
+//     uvx --with-requirements site/requirements.txt zensical build --strict -f site/build/zensical.toml
+//     uvx --with-requirements site/requirements.txt zensical serve -f site/build/zensical.toml
+//
+// Exit codes: 0 staged, 1 a link or file the site needs could not be resolved, 2 not run
+// from the repository root.
+
+using System.Collections;
+using System.Text.RegularExpressions;
+using YamlDotNet.Serialization;
+
+const string SiteDirectory = "site";
+const string PagesDirectory = "site/pages";
+const string StagingDirectory = "site/build";
+const string DocsDirectory = "site/build/docs";
+const string DiagramsDirectory = "assets/diagrams";
+const string TemplatesDirectory = "templates";
+const string Ecosystem = "dotnet";
+const string EcosystemName = ".NET";
+
+if (!Directory.Exists(SiteDirectory) || !Opinions.DirectoryExists)
+{
+    Console.Error.WriteLine("No site/ or opinions/ directory here. Run this script from the repository root.");
+    return 2;
+}
+
+List<string> errors = [];
+
+if (Directory.Exists(DocsDirectory))
+{
+    Directory.Delete(DocsDirectory, recursive: true);
+}
+
+// Hand-written pages, then the diagrams they and the generated pages show.
+foreach (string file in Directory.EnumerateFiles(PagesDirectory, "*", SearchOption.AllDirectories))
+{
+    Write(Path.GetRelativePath(PagesDirectory, file), File.ReadAllText(file));
+}
+
+foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
+{
+    Write($"{DiagramsDirectory}/{Path.GetFileName(file)}", File.ReadAllText(file));
+}
+
+// Where each repository file lands on the site. A link to anything else goes to GitHub.
+string[] templates =
+[
+    .. Directory.EnumerateFiles(TemplatesDirectory, "*", SearchOption.AllDirectories)
+        .Select(Site.Normalise)
+        .Where(path => !path.Split('/').Any(part => part is "artifacts" or "bin" or "obj"))
+        .Order(StringComparer.OrdinalIgnoreCase),
+];
+
+Dictionary<string, string> pages = new(StringComparer.Ordinal)
+{
+    ["README.md"] = $"{Ecosystem}/index.md",
+    ["AWESOME-HUMANS.md"] = $"{Ecosystem}/awesome-humans.md",
+    ["HOUSE-OPINIONS.md"] = $"{Ecosystem}/house-opinions.md",
+    [TemplatesDirectory] = $"{Ecosystem}/templates/index.md",
+    [$"{TemplatesDirectory}/projects"] = $"{Ecosystem}/templates/index.md",
+};
+
+foreach (string name in Opinions.Names())
+{
+    pages[Opinions.PathOf(name)] = $"{Ecosystem}/opinions/{name}";
+}
+
+foreach (string template in templates)
+{
+    pages[template] = $"{Ecosystem}/templates/{Site.TemplatePage(template)}";
+}
+
+foreach (string file in Directory.EnumerateFiles(DiagramsDirectory, "*.svg"))
+{
+    pages[Site.Normalise(file)] = $"{DiagramsDirectory}/{Path.GetFileName(file)}";
+}
+
+// The overview: README.md up to its layout section, which is about the repository rather
+// than the opinions, without the rule for contributors adding an opinion file.
+string readme = File.ReadAllText("README.md").ReplaceLineEndings("\n");
+int layout = readme.IndexOf("\n## Repository layout", StringComparison.Ordinal);
+string overview = string.Join(
+    "\n\n",
+    readme[..layout].Split("\n\n").Where(block => !block.StartsWith("A new opinion file must appear", StringComparison.Ordinal)));
+Write(pages["README.md"], Rewrite("README.md", overview + "\n", anchorsToGitHub: true));
+
+Write(pages["AWESOME-HUMANS.md"], Rewrite("AWESOME-HUMANS.md", File.ReadAllText("AWESOME-HUMANS.md")));
+Write(pages["HOUSE-OPINIONS.md"], Rewrite("HOUSE-OPINIONS.md", File.ReadAllText("HOUSE-OPINIONS.md")));
+
+// Opinions, each with a line under its title giving the metadata from its frontmatter.
+string roster = File.ReadAllText("AWESOME-HUMANS.md");
+IDeserializer deserializer = new DeserializerBuilder().Build();
+foreach (string name in Opinions.Names())
+{
+    string path = Opinions.PathOf(name);
+    IDictionary? meta = Frontmatter.Read(deserializer, path, out string? error);
+    if (meta is null)
+    {
+        errors.Add($"{path}: {error}");
+        continue;
+    }
+
+    string line = string.Join(
+        " · ",
+        $"**Targets:** {string.Join(", ", Site.List(meta["targets"]).Select(target => $"`{target}`"))}",
+        $"**Last reviewed:** {meta["last-reviewed"]}",
+        $"**Sources:** {string.Join(", ", Site.List(meta["sources"]).Select(id => SourceLink(id)))}");
+    string text = Rewrite(path, File.ReadAllText(path));
+    int title = text.IndexOf("\n# ", StringComparison.Ordinal);
+    int titleEnd = text.IndexOf('\n', title + 1);
+    Write(pages[path], text[..titleEnd] + "\n\n" + line + text[titleEnd..]);
+}
+
+// A page per template file, and an index of them.
+List<string> index =
+[
+    "# Templates\n\n",
+    "Copy-paste-ready files that encode the opinions. Copy one verbatim and trim it, rather than writing your own from scratch. ",
+    "Each opens with a comment header giving its targets, review date and sources, except `global.json` and `example.slnf`, which as JSON have no comment syntax.\n",
+];
+foreach (IGrouping<string, string> group in templates.GroupBy(template => Path.GetDirectoryName(template)!.Replace('\\', '/')))
+{
+    index.Add($"\n## `{group.Key}/`\n\n");
+    foreach (string template in group)
+    {
+        index.Add($"- [`{Path.GetFileName(template)}`]({Site.TemplatePage(template)})\n");
+
+        string content = File.ReadAllText(template).ReplaceLineEndings("\n").TrimEnd('\n');
+        string fence = new('`', Math.Max(3, Site.LongestBacktickRun(content) + 1));
+        Write(
+            pages[template],
+            $"# `{Path.GetFileName(template)}`\n\n"
+            + $"[View on GitHub]({Site.GitHub(template, isDirectory: false)}) · [Raw]({Site.Raw(template)})\n\n"
+            + $"{fence}{Site.Language(template)}\n{content}\n{fence}\n");
+    }
+}
+
+Write(pages[TemplatesDirectory], string.Concat(index));
+
+// The navigation, added to the committed configuration as it is staged.
+string Entry(string title, string page) => $"{{ {Site.TomlString(title)} = {Site.TomlString(page)} }}";
+string Section(string title, IEnumerable<string> entries) => $"{{ {Site.TomlString(title)} = [{string.Join(", ", entries)}] }}";
+
+List<string> opinionEntries = [];
+foreach (Match bullet in Site.ScopeBullet().Matches(readme))
+{
+    opinionEntries.Add(Entry(bullet.Groups["title"].Value, pages[bullet.Groups["path"].Value]));
+}
+
+if (opinionEntries.Count != Opinions.Names().Length)
+{
+    errors.Add($"README.md: Scope lists {opinionEntries.Count} opinions but opinions/ holds {Opinions.Names().Length}; run validate-readme-index.cs");
+}
+
+string[] nav =
+[
+    Entry("Home", "index.md"),
+    Entry("How it works", "how-it-works.md"),
+    Section(EcosystemName,
+    [
+        Entry("Overview", pages["README.md"]),
+        Section("Opinions", opinionEntries),
+        Section("Templates", [Entry("Overview", pages[TemplatesDirectory]), .. templates.Select(template => Entry(Path.GetFileName(template), pages[template]))]),
+        Entry("Awesome humans", pages["AWESOME-HUMANS.md"]),
+        Entry("House opinions", pages["HOUSE-OPINIONS.md"]),
+    ]),
+];
+
+string config = File.ReadAllText(Path.Combine(SiteDirectory, "zensical.toml")).ReplaceLineEndings("\n");
+const string ProjectTable = "[project]\n";
+int project = config.IndexOf(ProjectTable, StringComparison.Ordinal);
+if (project == -1)
+{
+    errors.Add("site/zensical.toml: no [project] table to add the navigation to");
+}
+else
+{
+    config = config.Insert(project + ProjectTable.Length, "nav = [\n  " + string.Join(",\n  ", nav) + ",\n]\n");
+    File.WriteAllText(Path.Combine(StagingDirectory, "zensical.toml"), config);
+}
+
+foreach (string error in errors)
+{
+    Console.Error.WriteLine(error);
+}
+
+if (errors.Count > 0)
+{
+    return 1;
+}
+
+Console.WriteLine($"Staged to {StagingDirectory}/");
+return 0;
+
+// A source id links to its notes section in the roster, or to the citable table when it has
+// nothing to record and so no section, and house links to the house opinions.
+string SourceLink(string id)
+{
+    if (id == "house")
+    {
+        return "[house](../house-opinions.md)";
+    }
+
+    Match heading = Regex.Match(roster, $@"^### (`{Regex.Escape(id)}`.*)$", RegexOptions.Multiline);
+    string anchor = heading.Success ? Site.Slug(heading.Groups[1].Value) : "citable-quotable-in-opinions-and-templates";
+    return $"[{id}](../awesome-humans.md#{anchor})";
+}
+
+// Rewrites every relative link in a Markdown file, read from its repository path, to point
+// from its page on the site, and escapes a heading's trailing # (C#, Testing F#), which
+// GitHub keeps but Zensical reads as a closing sequence. Fenced code blocks are left alone.
+string Rewrite(string source, string text, bool anchorsToGitHub = false)
+{
+    string from = pages[source];
+    bool fenced = false;
+    IEnumerable<string> lines = text.ReplaceLineEndings("\n").Split('\n').Select(line =>
+    {
+        if (line.TrimStart().StartsWith("```", StringComparison.Ordinal))
+        {
+            fenced = !fenced;
+        }
+
+        if (fenced)
+        {
+            return line;
+        }
+
+        line = Site.HeadingTrailingHash().Replace(line, match => match.Groups["text"].Value + match.Groups["hashes"].Value.Replace("#", "\\#", StringComparison.Ordinal));
+        return Site.MarkdownLink().Replace(line, match => $"]({Target(source, from, match.Groups["target"].Value, anchorsToGitHub)})");
+    });
+    return string.Join("\n", lines);
+}
+
+string Target(string source, string from, string target, bool anchorsToGitHub)
+{
+    if (target.Contains("://", StringComparison.Ordinal) || target.StartsWith("mailto:", StringComparison.Ordinal))
+    {
+        return target;
+    }
+
+    int hash = target.IndexOf('#');
+    string path = hash == -1 ? target : target[..hash];
+    string anchor = hash == -1 ? "" : target[hash..];
+    if (path.Length == 0)
+    {
+        return anchorsToGitHub ? Site.GitHub(source, isDirectory: false) + anchor : target;
+    }
+
+    string resolved = Site.Normalise(Path.GetRelativePath(".", Path.Combine(Path.GetDirectoryName(source) ?? "", path))).TrimEnd('/');
+    if (pages.TryGetValue(resolved, out string? page))
+    {
+        return Site.Normalise(Path.GetRelativePath(Path.GetDirectoryName(from) ?? "", page)) + anchor;
+    }
+
+    if (File.Exists(resolved) || Directory.Exists(resolved))
+    {
+        return Site.GitHub(resolved, Directory.Exists(resolved)) + anchor;
+    }
+
+    errors.Add($"{source}: link to {target} resolves to {resolved}, which does not exist");
+    return target;
+}
+
+void Write(string page, string content)
+{
+    string path = Path.Combine(DocsDirectory, page);
+    Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+    File.WriteAllText(path, content);
+}
+
+internal static partial class Site
+{
+    private const string Repository = "si618/dotnet-awesome-humans";
+
+    public static string Normalise(string path) => path.Replace('\\', '/');
+
+    public static string GitHub(string path, bool isDirectory) =>
+        $"https://github.com/{Repository}/{(isDirectory ? "tree" : "blob")}/main/{path}";
+
+    public static string Raw(string path) => $"https://raw.githubusercontent.com/{Repository}/main/{path}";
+
+    // Zensical skips dotfiles, so .editorconfig's page drops the leading dot.
+    public static string TemplatePage(string template) =>
+        Normalise(Path.GetRelativePath("templates", template)).Replace("/.", "/", StringComparison.Ordinal).TrimStart('.') + ".md";
+
+    public static string Language(string path) => Path.GetExtension(path) switch
+    {
+        ".props" or ".csproj" or ".fsproj" or ".slnx" => "xml",
+        ".json" or ".slnf" => "json",
+        ".editorconfig" => "ini",
+        ".cs" => "csharp",
+        ".fs" => "fsharp",
+        _ => "text",
+    };
+
+    public static int LongestBacktickRun(string text) =>
+        BacktickRun().Matches(text).Select(match => match.Length).DefaultIfEmpty(0).Max();
+
+    public static IEnumerable<string> List(object? value) =>
+        value is IEnumerable<object> items ? items.Select(item => item.ToString() ?? "") : [value?.ToString() ?? ""];
+
+    // GitHub's heading anchors, which the rest of the repository already links by: lower
+    // case, punctuation dropped, spaces to hyphens.
+    public static string Slug(string heading) =>
+        NotSlug().Replace(heading.ToLowerInvariant(), "").Replace(' ', '-');
+
+    public static string TomlString(string value) =>
+        "\"" + value.Replace("\\", "\\\\", StringComparison.Ordinal).Replace("\"", "\\\"", StringComparison.Ordinal) + "\"";
+
+    // A bullet in README.md's Scope list: - **[Title](opinions/file.md):** what it covers.
+    [GeneratedRegex(@"^- \*\*\[(?<title>[^\]]+)\]\((?<path>opinions/[^)]+)\):\*\*", RegexOptions.Multiline)]
+    public static partial Regex ScopeBullet();
+
+    [GeneratedRegex(@"^(?<text>#{1,6} .*[^\s\\#])(?<hashes>#+)$")]
+    public static partial Regex HeadingTrailingHash();
+
+    [GeneratedRegex(@"\]\((?<target>[^)\s]+)\)")]
+    public static partial Regex MarkdownLink();
+
+    [GeneratedRegex("`+")]
+    private static partial Regex BacktickRun();
+
+    [GeneratedRegex(@"[^\p{L}\p{Nd}\p{Pc} -]")]
+    private static partial Regex NotSlug();
+}

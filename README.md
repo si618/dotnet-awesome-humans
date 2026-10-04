@@ -74,10 +74,12 @@ One human outranks the roster: the repository owner. Their preferences enter thr
 │   ├── testing.md
 │   └── ui-frameworks.md
 ├── research/                 ← saved research topics (staging: promote or discard)
+├── site/                     ← the awesome-humans.net site: configuration and hand-written pages
 ├── scripts/                  ← this repository's own CI checks, as .NET file-based apps
 │   ├── CommentHeader.cs      ← shared helper, pulled in with #:include
 │   ├── Frontmatter.cs        ← shared helper, pulled in with #:include
 │   ├── Opinions.cs           ← shared helper, pulled in with #:include
+│   ├── build-site.cs
 │   ├── export-diagrams.cs
 │   ├── validate-metadata.cs
 │   ├── validate-readme-index.cs
@@ -136,6 +138,7 @@ The checks that gate a pull request are written in the stack this repository has
 | [`validate-sources.cs`](scripts/validate-sources.cs)           | Every source id in `opinions/` and `templates/` resolves to the roster in AWESOME-HUMANS.md and is allowed to cite; the roster tables and the notes sections are sorted by id, with no id used twice, and every notes section matches a row |
 | [`validate-readme-index.cs`](scripts/validate-readme-index.cs) | This README indexes every opinion and skill, in both directions, with Scope sorted by title and the layout tree by file name                                                                                                                |
 | [`export-diagrams.cs`](scripts/export-diagrams.cs)             | Draws the SVG diagrams in `assets/diagrams/` rather than checking anything. CI reruns it and fails when the committed SVGs differ from what it draws                                                                                        |
+| [`build-site.cs`](scripts/build-site.cs)                       | Stages the awesome-humans.net site into `site/build/`, generating its `/dotnet/` pages from this repository's files; CI then builds it with Zensical in strict mode, which fails on any broken link or anchor                               |
 
 Run them from the repository root, exactly as CI does:
 

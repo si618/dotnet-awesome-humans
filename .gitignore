@@ -23,3 +23,4 @@ node_modules/
 
 # lychee link-check result cache
 .lycheecache
+site/build/
