@@ -8,7 +8,7 @@ How to use this project:
 
 - **Point an agent at it.** "Follow the conventions in <https://github.com/si618/dotnet-awesome-humans> when writing .NET code." The opinions cover conventions, project layout, language usage, and library choices.
 - **Scaffold from it.** Copy files out of [`templates/`](templates), or run [`verify-project`](skills/verify-project/SKILL.md) against a codebase you already have.
-- **Read it.** Every opinion starts with the recommendation, then the rationale, then the sources, with code examples where it makes sense.
+- **Read it.** At [awesome-humans.net](https://awesome-humans.net/dotnet/), or here on GitHub. Every opinion starts with the recommendation, then the rationale, then the sources, with code examples where it makes sense.
 
 ## Scope
 
