@@ -16,8 +16,15 @@ repo_url = "https://github.com/si618/dotnet-awesome-humans"
 repo_name = "si618/dotnet-awesome-humans"
 docs_dir = "docs"
 site_dir = "public"
+extra_css = ["stylesheets/extra.css"]
 
 [project.theme]
+# Classic draws the header and tabs in the primary colour; the modern variant keeps
+# them neutral, which leaves the brand colour only on links.
+variant = "classic"
+# System fonts: the default loads Roboto from Google Fonts, a third-party request on
+# every page view.
+font = false
 language = "en"
 features = [
   "content.code.copy",
@@ -30,7 +37,8 @@ features = [
 ]
 
 # Light and dark mode, defaulting to the reader's system preference, with a toggle that
-# cycles through system, light and dark. Teal matches the diagrams' accent.
+# cycles through system, light and dark. The colours are custom, the .NET brand purple
+# set in stylesheets/extra.css.
 [[project.theme.palette]]
 media = "(prefers-color-scheme)"
 toggle.icon = "lucide/sun-moon"
@@ -39,15 +47,15 @@ toggle.name = "Switch to light mode"
 [[project.theme.palette]]
 media = "(prefers-color-scheme: light)"
 scheme = "default"
-primary = "teal"
-accent = "teal"
+primary = "custom"
+accent = "custom"
 toggle.icon = "lucide/sun"
 toggle.name = "Switch to dark mode"
 
 [[project.theme.palette]]
 media = "(prefers-color-scheme: dark)"
 scheme = "slate"
-primary = "teal"
-accent = "teal"
+primary = "custom"
+accent = "custom"
 toggle.icon = "lucide/moon"
 toggle.name = "Switch to system preference"
