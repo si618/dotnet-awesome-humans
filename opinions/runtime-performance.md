@@ -1,6 +1,6 @@
 ---
 targets: [net10.0, csharp-14]
-last-reviewed: 2026-09-14
+last-reviewed: 2026-10-09
 last-used: 2026-09-25
 sources:
   [
@@ -110,4 +110,28 @@ Never use a rented buffer after returning it, and never assume `Rent` gives exac
 
 **Use Native AOT for short-lived and size-sensitive workloads such as CLI tools, serverless functions and sidecars; keep the JIT for long-running services.** AOT wins startup (milliseconds, no JIT warmup) and disk/memory footprint; the JIT wins steady-state throughput via tiered compilation and dynamic PGO, and tolerates reflection-heavy libraries that AOT's trimming breaks. Going AOT means the whole dependency graph must be trim/AOT-safe (source-generated JSON, no runtime codegen). Audit `IsAotCompatible` warnings before committing, and run the test suite as an AOT build too, because the reflection failures this causes appear nowhere else (see [testing.md](testing.md#framework-and-platform)). .NET 10 file-based apps make the CLI-tool case trivial: `dotnet publish app.cs` produces a Native AOT binary by default. ([Microsoft Learn: Native AOT deployment](https://learn.microsoft.com/dotnet/core/deploying/native-aot/), [Microsoft Learn: File-based apps](https://learn.microsoft.com/dotnet/core/sdk/file-based-apps))
 
+**Trim a dependency's dead branch with an ILLink substitution when a library pulls in more than you call.** A property the library checks at run time keeps everything behind it rooted. Stubbing its getter to a constant lets the trimmer remove that whole chain. Andrew Lock measured `Microsoft.Diagnostics.Runtime` stubbing `SymbolServer.get_IsSymweb` to `false`, cutting a Native AOT binary from 3.956 MB to 2.949 MB on win-x64 (25.4%) and by 22.2–22.3% on the four Linux targets. For `PublishAot`, pass the file to ILC directly, because the `Microsoft.DotNet.ILCompiler` targets do not wire up `ILLinkSubstitutionsXmls`, and an `EmbeddedResource` named `ILLink.Substitutions.xml` is ignored. A stub changes the library's behaviour, so stub only a branch you have confirmed your app never takes. ([Lock: Stripping extra dependencies in .NET NativeAOT apps using linker substitutions](https://andrewlock.net/stripping-extra-dependencies-in-.net-nativeaot-apps-using-linker-substitutions/))
+
+```xml
+<!-- ILLink.Substitutions.xml -->
+<linker>
+  <assembly fullname="Microsoft.Diagnostics.Runtime">
+    <type fullname="Microsoft.Diagnostics.Runtime.Implementation.SymbolServer">
+      <method signature="System.Boolean get_IsSymweb()" body="stub" value="false" />
+    </type>
+  </assembly>
+</linker>
+```
+
+```xml
+<!-- in the .csproj -->
+<ItemGroup>
+  <IlcArg Include="--substitution:$(MSBuildThisFileDirectory)ILLink.Substitutions.xml" />
+</ItemGroup>
+```
+
 **Decide invariant globalization separately from AOT.** `dotnet new webapiaot` sets `<InvariantGlobalization>true</InvariantGlobalization>` next to `<PublishAot>true</PublishAot>`, so the property tends to enter a codebase attached to a decision that has nothing to do with it, and it changes what every `ToString` and `Compare` in the app does. Keep it only if you meant it (see [globalization.md](globalization.md)).
+
+## Coming next (preview, not yet the opinion)
+
+.NET 11 (RC1, GA expected November 2026) makes runtime async opt-in without preview flags: `<Features>$(Features);runtime-async=on</Features>` on a `net11.0` project, with neither `LangVersion=preview` nor `EnablePreviewFeatures`. Most of the shared framework already ships compiled that way. Toub measures a synchronously completing two-layer chain at 21.221 ns and 144 B before, 6.151 ns and 0 B after. Exception propagation through 30 frames drops from 51.3 µs and 84.2 KB to 10.7 µs and 5.7 KB. The [Async](#async) opinions above stay as written until .NET 11 ships and the switch is re-checked against the GA docs. ([Toub: Performance Improvements in .NET 11](https://devblogs.microsoft.com/dotnet/performance-improvements-in-net-11/))

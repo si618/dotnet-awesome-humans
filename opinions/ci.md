@@ -1,8 +1,8 @@
 ---
 targets: [net10.0]
-last-reviewed: 2026-09-14
+last-reviewed: 2026-10-09
 last-used: 2026-09-26
-sources: [meziantou, ms-learn, house]
+sources: [meziantou, ms-learn, dotnet-blog, house]
 ---
 
 # CI & automation
@@ -59,7 +59,7 @@ jobs:
 
 ## Artifact signing
 
-**Spend your signing budget on provenance and credential hygiene, not author-signing ceremony.** For NuGet packages: ship deterministic builds with Source Link, symbols, and package validation enabled; publish with a least-privilege, short-lived credential (trusted publishing / scoped API key stored as a repository secret) rather than a long-lived org-wide key. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm)) Author-sign packages only if your organisation already operates certificate infrastructure. nuget.org repository-signs everything it serves, so for most publishers author signing adds cost without a consumer who verifies it. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package)) On the consuming side, pinning is the protection that pays: locked restore, pinned SDK, SHA-pinned actions.
+**Spend your signing budget on provenance and credential hygiene, not author-signing ceremony.** For NuGet packages: ship deterministic builds with Source Link, symbols, and package validation enabled; publish with a least-privilege, short-lived credential (trusted publishing / scoped API key stored as a repository secret) rather than a long-lived org-wide key. ([Meziantou: Publishing a NuGet package using GitHub Actions](https://www.meziantou.net/publishing-a-nuget-package-following-best-practices-using-github.htm)) Author-sign packages only if your organisation already operates certificate infrastructure. nuget.org repository-signs everything it serves, so for most publishers author signing adds cost without a consumer who verifies it. ([Microsoft Learn: Sign a NuGet package](https://learn.microsoft.com/nuget/create-packages/sign-a-package)) On the consuming side, pinning is the protection that pays: locked restore, pinned SDK, SHA-pinned actions. A signer allow list (`signatureValidationMode` `require` with `trustedSigners` in `nuget.config`) is the exception that costs upkeep: each certificate rotation fails installs with `NU3034` until the new SHA-256 fingerprint is added beside the old ones. Microsoft rotated its author-signing certificate from 2026-09-23. ([.NET Blog: Microsoft is updating its author-signing certificate starting September 23, 2026](https://devblogs.microsoft.com/dotnet/microsoft-author-signing-certificate-update-2026/))
 
 ## Dependency updates
 
