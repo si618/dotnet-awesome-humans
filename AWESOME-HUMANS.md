@@ -473,3 +473,4 @@ Dormancy: last post 2016-02-19, a decade silent, and no continuing written chann
 | 2026-09-25 | Admitted `aaron-stannard` | Sixteen years of writing, with depth in code-backed engineering posts; gave the `ai-usage` research topic a .NET practitioner source; Petabridge recorded as a conflict |
 | 2026-09-25 | Watch-listed `dotnet-skills` | Under a year old, samples verified not to compile against current packages, and multi-author; re-evaluate from 2027-11 |
 | 2026-09-25 | Folded `dotnet-skills` into `aaron-stannard` | Same human, so his track record carries the repository; uncompiled samples and co-authored skills became usage limits in his notes |
+| 2026-10-09 | Harvest (2026-09-15 → 2026-10-09) | Folded into `runtime-performance.md` (ILLink substitutions, a .NET 11 runtime async aside) and `ci.md` (signer allow-list upkeep); flagged `khalid`, `james-montemagno` and `nicholas-blumhardt` |
